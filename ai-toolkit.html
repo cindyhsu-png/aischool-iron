@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 工具庫 — AI 未來學院</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090f;--surface:#111118;--surface2:#16161f;--border:rgba(255,255,255,0.07);--accent:#7cffb2;--text:#f0f0f5;--text-muted:rgba(240,240,245,0.45);--text-sub:rgba(240,240,245,0.65);--blue:#5b8fff;--orange:#ff9f43;--purple:#a855f7}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans','Noto Sans TC',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}
+
+/* ── Nav (same as main) ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:72px;background:rgba(9,9,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none}.logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{font-size:0.85rem;color:var(--text-sub);text-decoration:none;transition:color 0.2s}.nav-links a:hover{color:var(--text)}
+.nav-links a.active-page{color:var(--accent)}
+.lang-toggle{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:4px}
+.lang-btn{font-size:0.75rem;font-weight:500;letter-spacing:0.06em;padding:4px 12px;border-radius:100px;border:none;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--text-muted)}.lang-btn.active{background:var(--accent);color:#000}
+
+/* ── Hero ── */
+.tk-hero{padding:140px 5% 80px;text-align:center;position:relative;overflow:hidden}
+.tk-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(124,255,178,0.06),transparent 60%),radial-gradient(ellipse 40% 40% at 80% 70%,rgba(91,143,255,0.05),transparent 50%)}
+.tk-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 80%)}
+.tk-hero-content{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.tk-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;padding:6px 16px;border:1px solid rgba(124,255,178,0.2);border-radius:100px;background:rgba(124,255,178,0.04)}
+.tk-eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.tk-hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,4rem);line-height:1.1;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.tk-hero h1 em{font-style:normal;color:var(--accent)}
+.tk-hero-sub{font-size:1.1rem;color:var(--text-sub);max-width:560px;margin:0 auto 2.5rem;line-height:1.75}
+.tk-hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.tk-stat{text-align:center;padding:16px 24px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.tk-stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--text);display:block}.tk-stat-num span{color:var(--accent)}
+.tk-stat-label{font-size:0.75rem;color:var(--text-muted);margin-top:2px}
+
+/* ── Filter Tabs ── */
+.tk-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:3rem;flex-wrap:wrap}
+.tk-tab{font-size:0.85rem;font-weight:500;padding:10px 22px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sub);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.tk-tab:hover{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.tk-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.tk-tab svg{width:16px;height:16px}
+
+/* ── Sections ── */
+section{padding:80px 5%}.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+.section-desc{color:var(--text-sub);font-size:1rem;max-width:540px;line-height:1.75;margin-bottom:3rem}
+.section-divider{border-top:1px solid var(--border)}
+
+/* ── n8n Workflow Cards ── */
+.wf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.wf-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;cursor:default;display:flex;flex-direction:column}
+.wf-card:hover{border-color:rgba(124,255,178,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.wf-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.wf-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;flex-shrink:0}
+.wf-icon.n8n{background:rgba(255,107,0,0.12)}.wf-icon.n8n svg{stroke:#ff6b00}
+.wf-icon.make{background:rgba(168,85,247,0.12)}.wf-icon.make svg{stroke:var(--purple)}
+.wf-icon svg{width:22px;height:22px;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.wf-badge{font-size:0.65rem;font-weight:600;letter-spacing:0.08em;padding:3px 10px;border-radius:100px;text-transform:uppercase}
+.wf-badge.new{background:rgba(124,255,178,0.12);color:var(--accent);border:1px solid rgba(124,255,178,0.2)}
+.wf-badge.hot{background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.2)}
+.wf-badge.pro{background:rgba(91,143,255,0.12);color:var(--blue);border:1px solid rgba(91,143,255,0.2)}
+.wf-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:8px;letter-spacing:-0.02em}
+.wf-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.65;flex:1}
+.wf-meta{display:flex;align-items:center;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.wf-meta-item{font-size:0.72rem;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.wf-meta-item svg{width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:1.5}
+.wf-actions{display:flex;gap:8px;margin-top:16px}
+.wf-btn{font-size:0.78rem;font-weight:500;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;text-decoration:none}
+.wf-btn-primary{background:var(--accent);color:#000}.wf-btn-primary:hover{box-shadow:0 4px 16px rgba(124,255,178,0.3)}
+.wf-btn-secondary{background:var(--surface2);color:var(--text-sub);border:1px solid var(--border)}.wf-btn-secondary:hover{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.wf-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Skills Section ── */
+.sk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.sk-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;display:flex;gap:20px;align-items:flex-start}
+.sk-card:hover{border-color:rgba(91,143,255,0.3);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.sk-icon{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(91,143,255,0.1);flex-shrink:0}
+.sk-icon svg{width:26px;height:26px;stroke:var(--blue);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sk-content{flex:1;min-width:0}
+.sk-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.sk-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:-0.02em}
+.sk-version{font-size:0.65rem;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(91,143,255,0.12);color:var(--blue);border:1px solid rgba(91,143,255,0.2)}
+.sk-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.65;margin-bottom:12px}
+.sk-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.sk-tag{font-size:0.68rem;padding:3px 10px;border-radius:100px;background:var(--surface2);color:var(--text-muted);border:1px solid var(--border)}
+.sk-actions{display:flex;gap:8px}
+
+/* ── Prompt Section ── */
+.pm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.pm-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s}
+.pm-card:hover{border-color:rgba(255,159,67,0.3);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.pm-top{padding:28px 28px 20px}
+.pm-category{display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.pm-cat-content{background:rgba(255,159,67,0.1);color:var(--orange);border:1px solid rgba(255,159,67,0.2)}
+.pm-cat-code{background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)}
+.pm-cat-biz{background:rgba(91,143,255,0.1);color:var(--blue);border:1px solid rgba(91,143,255,0.2)}
+.pm-cat-design{background:rgba(124,255,178,0.1);color:var(--accent);border:1px solid rgba(124,255,178,0.2)}
+.pm-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:8px;letter-spacing:-0.02em}
+.pm-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.65;margin-bottom:16px}
+.pm-prompt-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;position:relative}
+.pm-prompt-label{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pm-prompt-label svg{width:12px;height:12px;stroke:var(--text-muted);fill:none;stroke-width:2}
+.pm-prompt-text{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--text-sub);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.pm-copy-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all 0.2s}
+.pm-copy-btn:hover{border-color:var(--accent);background:rgba(124,255,178,0.08)}
+.pm-copy-btn svg{width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:1.5}
+.pm-result{border-top:1px solid var(--border);padding:20px 28px;background:rgba(124,255,178,0.02)}
+.pm-result-label{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pm-result-label svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.pm-result-content{font-size:0.85rem;color:var(--text-sub);line-height:1.7}
+.pm-result-img{width:100%;border-radius:8px;margin-top:10px;border:1px solid var(--border)}
+.pm-result-stats{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.pm-result-stat{font-size:0.75rem;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+.pm-result-stat span{color:var(--accent);font-weight:600}
+
+/* ── CTA Banner ── */
+.tk-cta{text-align:center;padding:80px 5%;background:linear-gradient(180deg,var(--bg),#0a0f1a);position:relative;overflow:hidden}
+.tk-cta-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(124,255,178,0.06),transparent 70%);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+.tk-cta-content{position:relative;z-index:2}
+.tk-cta h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:1rem;letter-spacing:-0.03em}
+.tk-cta p{color:var(--text-sub);font-size:1rem;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#000;font-weight:600;font-size:0.9rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;transition:all 0.25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(124,255,178,0.3)}
+
+/* ── Footer ── */
+footer{border-top:1px solid var(--border);padding:48px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--text)}.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;gap:2rem;list-style:none}.footer-links a{font-size:0.82rem;color:var(--text-muted);text-decoration:none;transition:color 0.2s}.footer-links a:hover{color:var(--text)}
+.footer-copy{font-size:0.78rem;color:var(--text-muted)}
+
+/* ── Animations ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── Locked / Premium Gate ── */
+.locked{position:relative;pointer-events:none;user-select:none}
+.locked>*{filter:blur(6px)}
+.locked::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,9,15,0.3) 0%,rgba(9,9,15,0.85) 80%);border-radius:16px;z-index:5}
+.lock-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:6;gap:10px;text-align:center;padding:20px}
+.lock-overlay svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:1.5;opacity:0.8}
+.lock-overlay-text{font-size:0.82rem;color:var(--text-sub);line-height:1.5}
+.lock-overlay-btn{font-size:0.78rem;font-weight:600;padding:8px 20px;border-radius:8px;background:var(--accent);color:#000;border:none;cursor:pointer;pointer-events:auto;transition:all 0.2s}
+.lock-overlay-btn:hover{box-shadow:0 4px 16px rgba(124,255,178,0.3);transform:translateY(-1px)}
+
+/* ── Unlock Modal ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-backdrop.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;max-width:420px;width:90%;text-align:center;position:relative;box-shadow:0 40px 80px rgba(0,0,0,0.5)}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.2s}
+.modal-close:hover{border-color:rgba(255,255,255,0.2)}
+.modal-close svg{width:16px;height:16px;stroke:var(--text-muted);fill:none;stroke-width:2}
+.modal-icon{width:64px;height:64px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;background:rgba(124,255,178,0.08);border-radius:16px;border:1px solid rgba(124,255,178,0.15)}
+.modal-icon svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.modal h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:8px;letter-spacing:-0.02em}
+.modal p{font-size:0.88rem;color:var(--text-muted);margin-bottom:24px;line-height:1.6}
+.modal-input-wrap{position:relative;margin-bottom:16px}
+.modal-input{width:100%;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.95rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.15em;text-align:center;outline:none;transition:border-color 0.2s}
+.modal-input:focus{border-color:var(--accent)}
+.modal-input.error{border-color:#ff6b6b;animation:shake 0.4s ease}
+.modal-error{font-size:0.78rem;color:#ff6b6b;margin-bottom:12px;min-height:20px}
+.modal-submit{width:100%;padding:14px;background:var(--accent);color:#000;font-weight:600;font-size:0.95rem;border:none;border-radius:10px;cursor:pointer;transition:all 0.2s}
+.modal-submit:hover{box-shadow:0 8px 24px rgba(124,255,178,0.3)}
+.modal-footer{margin-top:20px;font-size:0.78rem;color:var(--text-muted)}
+.modal-footer a{color:var(--accent);text-decoration:none}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* ── Load More ── */
+.load-more-wrap{text-align:center;margin-top:32px}
+.load-more-btn{font-size:0.85rem;font-weight:500;padding:12px 32px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sub);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
+.load-more-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text);background:var(--surface2)}
+.load-more-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+.load-more-count{font-size:0.72rem;color:var(--text-muted);margin-top:8px}
+
+/* ── Unlock Success Toast ── */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid rgba(124,255,178,0.3);border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:10px;z-index:1100;box-shadow:0 12px 40px rgba(0,0,0,0.5);transition:transform 0.4s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:2;flex-shrink:0}
+.toast span{font-size:0.88rem;font-weight:500}
+
+/* ── Responsive ── */
+@media(max-width:900px){.nav-links{display:none}.wf-grid{grid-template-columns:1fr}.sk-grid{grid-template-columns:1fr}.pm-grid{grid-template-columns:1fr}.sk-card{flex-direction:column}.modal{padding:32px 24px}}
+</style>
+</head>
+<body>
+
+<!-- ══════ NAV ══════ -->
+<nav>
+  <a href="index.html" class="logo">AI <span>未來學院</span></a>
+  <ul class="nav-links">
+    <li><a href="ai-toolkit.html" class="active-page" data-i18n="nav_toolkit">AI工具庫</a></li>
+    <li><a href="ai-events.html" data-i18n="nav_events">學院活動</a></li>
+    <li><a href="ai-achievements.html" data-i18n="nav_achievements">學員成果</a></li>
+  </ul>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="tk-hero">
+  <div class="tk-hero-bg"></div>
+  <div class="tk-hero-grid"></div>
+  <div class="tk-hero-content">
+    <div class="tk-eyebrow"><span class="tk-eyebrow-dot"></span>會員專屬資源庫</div>
+    <h1>AI <em>工具庫</em></h1>
+    <p class="tk-hero-sub">n8n 自動化工作流、Claude Skills 技能包、高效 Prompt 提示詞 — 拿來即用，讓 AI 立即為你工作。</p>
+    <div class="tk-hero-stats">
+      <div class="tk-stat"><span class="tk-stat-num">45<span>+</span></span><div class="tk-stat-label">n8n 工作流</div></div>
+      <div class="tk-stat"><span class="tk-stat-num">30<span>+</span></span><div class="tk-stat-label">Skills 技能包</div></div>
+      <div class="tk-stat"><span class="tk-stat-num">120<span>+</span></span><div class="tk-stat-label">Prompt 提示詞</div></div>
+      <div class="tk-stat"><span class="tk-stat-num">每週<span>更新</span></span><div class="tk-stat-label">持續擴充中</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FILTER TABS ══════ -->
+<section style="padding:0 5% 20px">
+  <div class="container">
+    <div class="tk-tabs">
+      <button class="tk-tab active" onclick="filterSection('all')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        全部
+      </button>
+      <button class="tk-tab" onclick="filterSection('workflows')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        n8n 工作流
+      </button>
+      <button class="tk-tab" onclick="filterSection('skills')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Skills 技能包
+      </button>
+      <button class="tk-tab" onclick="filterSection('prompts')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Prompt 提示詞
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ N8N WORKFLOWS ══════ -->
+<section id="sec-workflows" class="section-divider">
+  <div class="container">
+    <div class="section-label">Automation Workflows</div>
+    <h2 class="section-title reveal">n8n 自動化工作流</h2>
+    <p class="section-desc reveal">直接匯入即可使用的 n8n 工作流模板，自動化你的日常工作，提升 10 倍效率。</p>
+    <div class="wf-grid">
+
+      <div class="wf-card reveal">
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <span class="wf-badge new">New</span>
+        </div>
+        <div class="wf-title">社群媒體自動排程發文</div>
+        <div class="wf-desc">整合 ChatGPT + Canva + Buffer，一鍵生成圖文內容並自動排程到 IG / FB / LinkedIn。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>12 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>5 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>342 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+      <div class="wf-card reveal" style="transition-delay:0.05s">
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <span class="wf-badge hot">Hot</span>
+        </div>
+        <div class="wf-title">客戶回覆自動化 AI 助理</div>
+        <div class="wf-desc">串接 Gmail + Claude API，自動分析客戶信件語意，生成個人化回覆草稿並通知審核。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>18 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>8 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>528 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+      <div class="wf-card reveal" style="transition-delay:0.1s">
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <span class="wf-badge pro">Pro</span>
+        </div>
+        <div class="wf-title">SEO 文章批量產出系統</div>
+        <div class="wf-desc">從關鍵字研究到成文發布全自動，整合 Perplexity + Claude + WordPress，日產 10 篇 SEO 文章。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>24 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>15 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>267 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+      <div class="wf-card reveal locked premium-content" style="transition-delay:0.15s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <span class="wf-badge new">New</span>
+        </div>
+        <div class="wf-title">競品監控 + 分析報告</div>
+        <div class="wf-desc">自動追蹤競品網站更新、社群動態，每週自動生成分析報告並發送到 Slack / Email。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>16 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>10 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>189 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+      <div class="wf-card reveal locked premium-content" style="transition-delay:0.2s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        </div>
+        <div class="wf-title">YouTube 影片自動轉文章</div>
+        <div class="wf-desc">輸入 YouTube 連結，自動下載字幕、AI 重寫為部落格文章，支援中英文雙語輸出。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>10 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>415 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+      <div class="wf-card reveal locked premium-content" style="transition-delay:0.25s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="wf-card-header">
+          <div class="wf-icon n8n"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <span class="wf-badge hot">Hot</span>
+        </div>
+        <div class="wf-title">電商訂單 AI 客服機器人</div>
+        <div class="wf-desc">Shopify / 蝦皮訂單狀態即時同步，客戶提問自動回覆物流、退換貨等常見問題。</div>
+        <div class="wf-meta">
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>20 節點</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>12 分鐘設置</span>
+          <span class="wf-meta-item"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>298 人使用</span>
+        </div>
+        <div class="wf-actions">
+          <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載工作流</a>
+          <a href="#" class="wf-btn wf-btn-secondary">查看說明</a>
+        </div>
+      </div>
+
+    </div>
+    <div class="load-more-wrap">
+      <button class="load-more-btn" onclick="this.textContent='即將推出更多工作流...';this.disabled=true;this.style.opacity='0.5'">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        載入更多工作流
+      </button>
+      <div class="load-more-count">顯示 6 / 45+ 個工作流</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SKILLS ══════ -->
+<section id="sec-skills" class="section-divider">
+  <div class="container">
+    <div class="section-label">Claude Skills Library</div>
+    <h2 class="section-title reveal">Skills 技能包</h2>
+    <p class="section-desc reveal">預先打包好的 Claude Skills，下載後直接匯入，讓 Claude 成為你的專屬 AI 助手。</p>
+    <div class="sk-grid">
+
+      <div class="sk-card reveal">
+        <div class="sk-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="sk-content">
+          <div class="sk-header">
+            <div class="sk-title">專業文案撰寫師</div>
+            <span class="sk-version">v2.1</span>
+          </div>
+          <div class="sk-desc">精通品牌文案、廣告 Copy、社群貼文、EDM 等多種文案格式，自動套用品牌語調與 CTA 策略。</div>
+          <div class="sk-tags"><span class="sk-tag">文案</span><span class="sk-tag">行銷</span><span class="sk-tag">品牌</span></div>
+          <div class="sk-actions">
+            <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載 Skill</a>
+            <a href="#" class="wf-btn wf-btn-secondary">使用說明</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk-card reveal" style="transition-delay:0.05s">
+        <div class="sk-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg></div>
+        <div class="sk-content">
+          <div class="sk-header">
+            <div class="sk-title">全端程式碼審查員</div>
+            <span class="sk-version">v1.8</span>
+          </div>
+          <div class="sk-desc">自動審查 JavaScript / Python / React 程式碼，找出潛在 Bug、效能問題，並提供最佳實踐建議。</div>
+          <div class="sk-tags"><span class="sk-tag">程式碼</span><span class="sk-tag">Review</span><span class="sk-tag">全端</span></div>
+          <div class="sk-actions">
+            <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載 Skill</a>
+            <a href="#" class="wf-btn wf-btn-secondary">使用說明</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk-card reveal locked premium-content" style="transition-delay:0.1s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="sk-icon"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></div>
+        <div class="sk-content">
+          <div class="sk-header">
+            <div class="sk-title">數據分析報告生成器</div>
+            <span class="sk-version">v1.5</span>
+          </div>
+          <div class="sk-desc">上傳 CSV / Excel 數據，自動分析趨勢、異常值，生成含視覺化圖表的專業分析報告。</div>
+          <div class="sk-tags"><span class="sk-tag">數據分析</span><span class="sk-tag">報告</span><span class="sk-tag">Excel</span></div>
+          <div class="sk-actions">
+            <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載 Skill</a>
+            <a href="#" class="wf-btn wf-btn-secondary">使用說明</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk-card reveal locked premium-content" style="transition-delay:0.15s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="sk-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div class="sk-content">
+          <div class="sk-header">
+            <div class="sk-title">多語系翻譯 + 在地化</div>
+            <span class="sk-version">v2.0</span>
+          </div>
+          <div class="sk-desc">支援 20+ 語言互譯，保留語境和文化差異，適用於產品文案、技術文件、行銷素材的在地化處理。</div>
+          <div class="sk-tags"><span class="sk-tag">翻譯</span><span class="sk-tag">在地化</span><span class="sk-tag">多語系</span></div>
+          <div class="sk-actions">
+            <a href="#" class="wf-btn wf-btn-primary"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>下載 Skill</a>
+            <a href="#" class="wf-btn wf-btn-secondary">使用說明</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="load-more-wrap">
+      <button class="load-more-btn" onclick="this.textContent='即將推出更多技能包...';this.disabled=true;this.style.opacity='0.5'">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        載入更多技能包
+      </button>
+      <div class="load-more-count">顯示 4 / 30+ 個技能包</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ PROMPTS ══════ -->
+<section id="sec-prompts" class="section-divider">
+  <div class="container">
+    <div class="section-label">Prompt Engineering Library</div>
+    <h2 class="section-title reveal">Prompt 提示詞庫</h2>
+    <p class="section-desc reveal">經過反覆測試與優化的高品質 Prompt，附帶真實使用成果，複製即可使用。</p>
+    <div class="pm-grid">
+
+      <div class="pm-card reveal">
+        <div class="pm-top">
+          <div class="pm-category pm-cat-content">內容創作</div>
+          <div class="pm-title">高轉換率 LinkedIn 貼文生成</div>
+          <div class="pm-desc">根據主題和目標受眾，生成符合 LinkedIn 演算法偏好的專業貼文，提升互動率和觸及。</div>
+          <div class="pm-prompt-box">
+            <div class="pm-prompt-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Prompt</div>
+            <button class="pm-copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <div class="pm-prompt-text">你是一位 LinkedIn 內容策略專家。請根據以下資訊生成一篇高互動率的 LinkedIn 貼文：
+
+主題：[填入主題]
+目標受眾：[填入受眾]
+語調：專業但親切，帶有個人洞察
+結構：開頭 hook → 故事/數據 → 核心觀點 → CTA
+字數：150-200 字中文</div>
+          </div>
+        </div>
+        <div class="pm-result">
+          <div class="pm-result-label"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>使用成果</div>
+          <div class="pm-result-content">學員使用此 Prompt 後，平均貼文互動率提升 3.2 倍，觸及人數成長 280%。</div>
+          <div class="pm-result-stats">
+            <span class="pm-result-stat">平均互動率 <span>+320%</span></span>
+            <span class="pm-result-stat">觸及提升 <span>+280%</span></span>
+            <span class="pm-result-stat">粉絲增長 <span>+45%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pm-card reveal" style="transition-delay:0.05s">
+        <div class="pm-top">
+          <div class="pm-category pm-cat-code">程式開發</div>
+          <div class="pm-title">API 設計 + 文件自動生成</div>
+          <div class="pm-desc">輸入需求描述，自動生成 RESTful API 架構、端點定義、Request/Response 範例及 OpenAPI 文件。</div>
+          <div class="pm-prompt-box">
+            <div class="pm-prompt-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Prompt</div>
+            <button class="pm-copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <div class="pm-prompt-text">你是一位資深後端架構師。請根據以下需求設計 RESTful API：
+
+專案：[填入專案名稱]
+功能需求：[填入功能描述]
+
+請提供：
+1. API 端點列表（含 HTTP method）
+2. 每個端點的 Request/Response JSON 範例
+3. 錯誤處理規範
+4. 認證方式建議
+格式：Markdown + 程式碼區塊</div>
+          </div>
+        </div>
+        <div class="pm-result">
+          <div class="pm-result-label"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>使用成果</div>
+          <div class="pm-result-content">使用此 Prompt 設計的 API 架構，平均節省 60% 的文件撰寫時間，團隊溝通效率提升顯著。</div>
+          <div class="pm-result-stats">
+            <span class="pm-result-stat">文件時間 <span>-60%</span></span>
+            <span class="pm-result-stat">開發速度 <span>+40%</span></span>
+            <span class="pm-result-stat">返工次數 <span>-75%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pm-card reveal locked premium-content" style="transition-delay:0.1s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="pm-top">
+          <div class="pm-category pm-cat-biz">商業策略</div>
+          <div class="pm-title">競品分析報告生成器</div>
+          <div class="pm-desc">輸入你的產品和競品資訊，自動生成 SWOT 分析、市場定位圖、差異化策略建議的完整報告。</div>
+          <div class="pm-prompt-box">
+            <div class="pm-prompt-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Prompt</div>
+            <button class="pm-copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <div class="pm-prompt-text">你是一位資深商業分析師。請進行以下競品分析：
+
+我的產品：[填入產品名稱與簡介]
+競品列表：[填入 2-3 個競品]
+目標市場：[填入目標市場]
+
+請提供完整報告含：
+1. SWOT 分析（表格格式）
+2. 功能 / 定價對比矩陣
+3. 差異化策略建議（3-5 條）
+4. 執行優先序建議</div>
+          </div>
+        </div>
+        <div class="pm-result">
+          <div class="pm-result-label"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>使用成果</div>
+          <div class="pm-result-content">新創團隊使用此 Prompt 完成 A 輪融資前的市場分析，投資人評價「分析深度超越多數商業計畫書」。</div>
+          <div class="pm-result-stats">
+            <span class="pm-result-stat">分析時間 <span>2 小時 → 15 分鐘</span></span>
+            <span class="pm-result-stat">採納率 <span>92%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pm-card reveal locked premium-content" style="transition-delay:0.15s">
+        <div class="lock-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="lock-overlay-text">會員專屬內容</div><button class="lock-overlay-btn" onclick="showUnlockModal()">輸入密碼解鎖</button></div>
+        <div class="pm-top">
+          <div class="pm-category pm-cat-design">設計 / UX</div>
+          <div class="pm-title">UI/UX 設計規格書生成</div>
+          <div class="pm-desc">描述產品功能需求，自動產出包含使用者旅程、wireframe 描述、設計規範的完整 UX 文件。</div>
+          <div class="pm-prompt-box">
+            <div class="pm-prompt-label"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Prompt</div>
+            <button class="pm-copy-btn" onclick="copyPrompt(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+            <div class="pm-prompt-text">你是一位資深 UX 設計師。請根據以下需求產出設計規格：
+
+產品：[填入產品名稱]
+核心功能：[填入功能描述]
+目標用戶：[填入用戶 persona]
+
+請提供：
+1. 使用者旅程地圖（步驟 + 情緒曲線）
+2. 關鍵頁面 wireframe 文字描述
+3. 設計系統建議（色彩、字型、間距）
+4. 可用性測試檢查清單</div>
+          </div>
+        </div>
+        <div class="pm-result">
+          <div class="pm-result-label"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>使用成果</div>
+          <div class="pm-result-content">設計團隊使用此 Prompt 將前期 UX 規劃時間從 1 週壓縮到 2 天，且產出品質獲客戶一次通過。</div>
+          <div class="pm-result-stats">
+            <span class="pm-result-stat">規劃時間 <span>-70%</span></span>
+            <span class="pm-result-stat">客戶一次通過率 <span>85%</span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="load-more-wrap">
+      <button class="load-more-btn" onclick="this.textContent='即將推出更多提示詞...';this.disabled=true;this.style.opacity='0.5'">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        載入更多提示詞
+      </button>
+      <div class="load-more-count">顯示 4 / 120+ 個提示詞</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CTA ══════ -->
+<section class="tk-cta">
+  <div class="tk-cta-glow"></div>
+  <div class="tk-cta-content">
+    <h2 class="reveal">解鎖全部 AI 工具庫資源</h2>
+    <p class="reveal">加入 AI 未來學院會員，即可無限使用所有工作流、Skills 與 Prompt，並獲得每週新增資源。</p>
+    <a href="index.html#join" class="btn-primary reveal">預約入學諮詢 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="footer-logo">AI <span>未來學院</span></div>
+  <ul class="footer-links"><li><a href="#">關於我們</a></li><li><a href="#">隱私政策</a></li><li><a href="#">使用條款</a></li><li><a href="#">聯絡我們</a></li></ul>
+  <div class="footer-copy">&copy; 2025 AI 未來學院. All rights reserved.</div>
+</footer>
+
+<!-- ══════ UNLOCK MODAL ══════ -->
+<div class="modal-backdrop" id="unlockModal">
+  <div class="modal">
+    <button class="modal-close" onclick="hideUnlockModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <h3>解鎖完整工具庫</h3>
+    <p>請輸入學員專屬密碼，即可解鎖所有 n8n 工作流、Skills 技能包與 Prompt 提示詞。</p>
+    <div class="modal-input-wrap">
+      <input type="password" class="modal-input" id="unlockPassword" placeholder="請輸入學員密碼" onkeydown="if(event.key==='Enter')attemptUnlock()">
+    </div>
+    <div class="modal-error" id="unlockError"></div>
+    <button class="modal-submit" onclick="attemptUnlock()">解鎖全部內容</button>
+    <div class="modal-footer">還不是學員？<a href="index.html#join">預約入學諮詢</a></div>
+  </div>
+</div>
+
+<!-- ══════ TOAST ══════ -->
+<div class="toast" id="unlockToast">
+  <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span>已解鎖全部會員內容</span>
+</div>
+
+<script>
+// i18n for nav
+const i18n={zh:{nav_toolkit:'AI工具庫',nav_events:'學院活動',nav_achievements:'學員成果'},en:{nav_toolkit:'AI Toolkit',nav_events:'Events',nav_achievements:'Achievements'}};
+function setLang(lang){document.documentElement.lang=lang==='zh'?'zh-TW':'en';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(i18n[lang]&&i18n[lang][k]!==undefined)el.textContent=i18n[lang][k]});document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.toggle('active',(btn.textContent.trim()==='EN'?'en':'zh')===lang))}
+setLang('zh');
+
+// Reveal on scroll
+const obs = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) e.target.classList.add('visible');
+}), { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Filter sections
+function filterSection(type) {
+  document.querySelectorAll('.tk-tab').forEach(t => t.classList.remove('active'));
+  event.target.closest('.tk-tab').classList.add('active');
+  const sections = {
+    workflows: document.getElementById('sec-workflows'),
+    skills: document.getElementById('sec-skills'),
+    prompts: document.getElementById('sec-prompts')
+  };
+  if (type === 'all') {
+    Object.values(sections).forEach(s => s.style.display = '');
+  } else {
+    Object.entries(sections).forEach(([k, s]) => {
+      s.style.display = k === type ? '' : 'none';
+    });
+  }
+}
+
+// ── Unlock System ──
+const UNLOCK_KEY = 'ai_toolkit_unlocked';
+const VALID_PASSWORD = 'aifuture2025'; // 可更換為你想設定的密碼
+
+function showUnlockModal() {
+  document.getElementById('unlockModal').classList.add('show');
+  document.getElementById('unlockPassword').value = '';
+  document.getElementById('unlockError').textContent = '';
+  setTimeout(() => document.getElementById('unlockPassword').focus(), 100);
+}
+function hideUnlockModal() {
+  document.getElementById('unlockModal').classList.remove('show');
+}
+function attemptUnlock() {
+  const input = document.getElementById('unlockPassword');
+  const error = document.getElementById('unlockError');
+  if (input.value === VALID_PASSWORD) {
+    localStorage.setItem(UNLOCK_KEY, 'true');
+    hideUnlockModal();
+    unlockAllContent();
+    // Show toast
+    const toast = document.getElementById('unlockToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  } else {
+    error.textContent = '密碼錯誤，請確認後重新輸入';
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 500);
+  }
+}
+function unlockAllContent() {
+  document.querySelectorAll('.premium-content').forEach(card => {
+    card.classList.remove('locked');
+    const overlay = card.querySelector('.lock-overlay');
+    if (overlay) overlay.remove();
+  });
+}
+// Check on page load
+if (localStorage.getItem(UNLOCK_KEY) === 'true') {
+  unlockAllContent();
+}
+// Close modal on backdrop click
+document.getElementById('unlockModal').addEventListener('click', function(e) {
+  if (e.target === this) hideUnlockModal();
+});
+
+// Copy prompt
+function copyPrompt(btn) {
+  const text = btn.parentElement.querySelector('.pm-prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2"><polyline points="20 6 9 17 4 12"/></svg>';
+    setTimeout(() => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text-muted);fill:none;stroke-width:1.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

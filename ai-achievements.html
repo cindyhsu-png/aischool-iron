@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學員成果 — AI 未來學院</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090f;--surface:#111118;--surface2:#16161f;--border:rgba(255,255,255,0.07);--accent:#7cffb2;--text:#f0f0f5;--text-muted:rgba(240,240,245,0.45);--text-sub:rgba(240,240,245,0.65);--blue:#5b8fff;--purple:#a855f7;--orange:#ff9f43}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans','Noto Sans TC',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}
+
+/* ── Nav ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:72px;background:rgba(9,9,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none}.logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{font-size:0.85rem;color:var(--text-sub);text-decoration:none;transition:color 0.2s}.nav-links a:hover{color:var(--text)}
+.nav-links a.active-page{color:var(--accent)}
+.lang-toggle{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:4px}
+.lang-btn{font-size:0.75rem;font-weight:500;letter-spacing:0.06em;padding:4px 12px;border-radius:100px;border:none;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--text-muted)}.lang-btn.active{background:var(--accent);color:#000}
+
+/* ── Hero ── */
+.ac-hero{padding:140px 5% 80px;text-align:center;position:relative;overflow:hidden}
+.ac-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(124,255,178,0.06),transparent 60%),radial-gradient(ellipse 40% 40% at 80% 70%,rgba(91,143,255,0.05),transparent 50%)}
+.ac-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 80%)}
+.ac-hero-content{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.ac-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;padding:6px 16px;border:1px solid rgba(124,255,178,0.2);border-radius:100px;background:rgba(124,255,178,0.04)}
+.ac-eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.ac-hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5.5vw,4rem);line-height:1.1;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.ac-hero h1 em{font-style:normal;color:var(--accent)}
+.ac-hero-sub{font-size:1.1rem;color:var(--text-sub);max-width:580px;margin:0 auto 2.5rem;line-height:1.75}
+.ac-hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.ac-stat{text-align:center;padding:16px 24px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.ac-stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--text);display:block}.ac-stat-num span{color:var(--accent)}
+.ac-stat-label{font-size:0.75rem;color:var(--text-muted);margin-top:2px}
+
+/* ── Shared Section ── */
+section{padding:80px 5%}.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+.section-desc{color:var(--text-sub);font-size:1rem;max-width:540px;line-height:1.75;margin-bottom:3rem}
+
+/* ── Transformation Stories ── */
+.ac-stories{display:flex;flex-direction:column;gap:32px}
+.ac-story{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;display:flex;gap:32px;align-items:flex-start;transition:all 0.3s}
+.ac-story:hover{border-color:rgba(124,255,178,0.15);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.ac-story-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:16px}
+.ac-story-photo{width:80px;height:80px;border-radius:50%;background-size:cover;background-position:center;border:2px solid rgba(124,255,178,0.3)}
+.ac-before-after{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.ac-before{font-size:0.72rem;color:var(--text-muted);padding:4px 10px;border-radius:6px;background:rgba(255,255,255,0.04);white-space:nowrap}
+.ac-arrow{color:var(--accent);font-size:0.85rem;font-weight:600}
+.ac-after{font-size:0.72rem;color:var(--accent);padding:4px 10px;border-radius:6px;background:rgba(124,255,178,0.08);font-weight:500;white-space:nowrap}
+.ac-story-right{flex:1;min-width:0}
+.ac-story-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:8px;letter-spacing:-0.02em}
+.ac-story-quote{font-size:0.92rem;color:var(--text-sub);line-height:1.75;margin-bottom:20px;position:relative;padding-left:16px;border-left:2px solid rgba(124,255,178,0.3)}
+.ac-story-results{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.ac-result-chip{display:flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:500;padding:8px 14px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.ac-result-chip svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2}
+.ac-result-chip strong{color:var(--accent);font-weight:600}
+.ac-story-tags{display:flex;gap:8px;flex-wrap:wrap}
+.ac-tag{font-size:0.65rem;font-weight:500;letter-spacing:0.04em;padding:3px 10px;border-radius:100px;background:rgba(91,143,255,0.1);color:var(--blue);border:1px solid rgba(91,143,255,0.15)}
+
+/* ── Showcase Section ── */
+.ac-showcase-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ac-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:3rem;flex-wrap:wrap}
+.ac-tab{font-size:0.85rem;font-weight:500;padding:10px 22px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sub);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.ac-tab:hover{border-color:rgba(255,255,255,0.15);color:var(--text)}
+.ac-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.ac-works-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.ac-work-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s}
+.ac-work-card:hover{border-color:rgba(124,255,178,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.ac-work-card[data-visible="false"]{display:none}
+.ac-work-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+.ac-work-thumb-img{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 0.5s}
+.ac-work-card:hover .ac-work-thumb-img{transform:scale(1.05)}
+.ac-work-badge{position:absolute;top:14px;left:14px;font-size:0.65rem;font-weight:600;letter-spacing:0.06em;padding:4px 12px;border-radius:100px;z-index:2;backdrop-filter:blur(8px)}
+.ac-work-badge.n8n{background:rgba(124,255,178,0.2);color:var(--accent);border:1px solid rgba(124,255,178,0.25)}
+.ac-work-badge.tool{background:rgba(91,143,255,0.25);color:var(--blue);border:1px solid rgba(91,143,255,0.3)}
+.ac-work-badge.efficiency{background:rgba(255,159,67,0.2);color:var(--orange);border:1px solid rgba(255,159,67,0.25)}
+.ac-work-body{padding:22px}
+.ac-work-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;letter-spacing:-0.02em;line-height:1.3}
+.ac-work-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.65;margin-bottom:16px}
+.ac-work-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ac-work-author{display:flex;align-items:center;gap:10px}
+.ac-work-avatar{width:28px;height:28px;border-radius:50%;background-size:cover;background-position:center;border:1px solid rgba(124,255,178,0.2)}
+.ac-work-author-name{font-size:0.78rem;color:var(--text-sub)}
+.ac-work-metric{display:flex;align-items:center;gap:5px;font-size:0.75rem;font-weight:500;color:var(--accent);padding:5px 12px;border-radius:8px;background:rgba(124,255,178,0.06);border:1px solid rgba(124,255,178,0.12)}
+.ac-work-metric svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2}
+
+/* ── Metrics Section ── */
+.ac-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.ac-metric-card{padding:36px 20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;transition:all 0.3s}
+.ac-metric-card:hover{border-color:rgba(124,255,178,0.15);transform:translateY(-4px)}
+.ac-metric-icon{width:48px;height:48px;border-radius:12px;background:rgba(124,255,178,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.ac-metric-icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.5}
+.ac-metric-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--text);letter-spacing:-0.03em;margin-bottom:4px}
+.ac-metric-num span{color:var(--accent)}
+.ac-metric-label{font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+
+/* ── CTA ── */
+.ac-cta{text-align:center;padding:100px 5%;position:relative;overflow:hidden}
+.ac-cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(124,255,178,0.06),transparent 70%)}
+.ac-cta h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.03em;margin-bottom:1rem;position:relative;z-index:2}
+.ac-cta h2 em{font-style:normal;color:var(--accent)}
+.ac-cta p{color:var(--text-sub);font-size:1.05rem;max-width:480px;margin:0 auto 2.5rem;line-height:1.75;position:relative;z-index:2}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#000;font-weight:600;font-size:0.9rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;transition:all 0.25s;position:relative;z-index:2}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(124,255,178,0.3)}
+
+/* ── Footer ── */
+footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-muted)}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text)}.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;gap:1.5rem;list-style:none}.footer-links a{color:var(--text-muted);text-decoration:none;transition:color 0.2s}.footer-links a:hover{color:var(--text)}
+.footer-copy{color:var(--text-muted);font-size:0.75rem}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .ac-story{flex-direction:column;padding:28px 22px}
+  .ac-story-left{flex-direction:row;width:100%;justify-content:flex-start}
+  .ac-works-grid{grid-template-columns:1fr}
+  .ac-metrics{grid-template-columns:repeat(2,1fr);gap:16px}
+  .ac-hero-stats{gap:1rem}
+  .ac-stat{padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AI <span>未來學院</span></a>
+  <ul class="nav-links">
+    <li><a href="ai-toolkit.html" data-i18n="nav_toolkit">AI工具庫</a></li>
+    <li><a href="ai-events.html" data-i18n="nav_events">學院活動</a></li>
+    <li><a href="ai-achievements.html" class="active-page" data-i18n="nav_achievements">學員成果</a></li>
+  </ul>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="ac-hero">
+  <div class="ac-hero-bg"></div>
+  <div class="ac-hero-grid"></div>
+  <div class="ac-hero-content">
+    <div class="ac-eyebrow"><span class="ac-eyebrow-dot"></span>學員蛻變 × 實戰作品 × 職涯躍升</div>
+    <h1>學員成果<em>真實展現</em></h1>
+    <p class="ac-hero-sub">從零基礎到 AI 實戰高手，每位學員的作品與成長都是學院最好的證明。看看他們如何透過 AI 翻轉職涯。</p>
+    <div class="ac-hero-stats">
+      <div class="ac-stat"><span class="ac-stat-num">150<span>+</span></span><span class="ac-stat-label">學員作品</span></div>
+      <div class="ac-stat"><span class="ac-stat-num">95<span>%</span></span><span class="ac-stat-label">完課率</span></div>
+      <div class="ac-stat"><span class="ac-stat-num">80<span>%</span></span><span class="ac-stat-label">職涯提升</span></div>
+      <div class="ac-stat"><span class="ac-stat-num">30<span>+</span></span><span class="ac-stat-label">接案成功</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TRANSFORMATION STORIES ══════ -->
+<section id="transformations">
+  <div class="container">
+    <div class="section-label reveal">TRANSFORMATION STORIES</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s">學員蛻變故事</h2>
+    <p class="section-desc reveal" style="transition-delay:0.2s">真實學員的職涯翻轉旅程 — 從傳統角色到 AI 時代的新身份，每一段故事都是可以複製的成功路徑。</p>
+
+    <div class="ac-stories">
+
+      <div class="ac-story reveal" style="transition-delay:0.3s">
+        <div class="ac-story-left">
+          <div class="ac-story-photo" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80')"></div>
+          <div class="ac-before-after">
+            <span class="ac-before">行銷專員</span>
+            <span class="ac-arrow">→</span>
+            <span class="ac-after">AI 自動化顧問</span>
+          </div>
+        </div>
+        <div class="ac-story-right">
+          <div class="ac-story-name">林小明</div>
+          <p class="ac-story-quote">加入學院三個月後，我從一個只會用 Excel 做報表的行銷專員，蛻變成能獨立設計 n8n 自動化工作流的 AI 顧問。現在每月接案收入比原本薪水多出 NT$5 萬，重點是工作更有成就感。</p>
+          <div class="ac-story-results">
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>接案月收 <strong>+NT$5 萬</strong></div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>自動化 <strong>80%</strong> 工作流</div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>每週省下 <strong>20 小時</strong></div>
+          </div>
+          <div class="ac-story-tags">
+            <span class="ac-tag">每週課程</span>
+            <span class="ac-tag">AI 工具庫</span>
+            <span class="ac-tag">接案媒合</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-story reveal" style="transition-delay:0.4s">
+        <div class="ac-story-left">
+          <div class="ac-story-photo" style="background-image:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80')"></div>
+          <div class="ac-before-after">
+            <span class="ac-before">行政助理</span>
+            <span class="ac-arrow">→</span>
+            <span class="ac-after">AI 內容策略師</span>
+          </div>
+        </div>
+        <div class="ac-story-right">
+          <div class="ac-story-name">張雅婷</div>
+          <p class="ac-story-quote">過去每天花大量時間在重複性的行政工作上，透過學院學到的 AI 工具與 Prompt 技巧，我不只優化了工作效率，還成功轉型為公司的 AI 內容策略師，薪資也跟著提升了 40%。</p>
+          <div class="ac-story-results">
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>薪資成長 <strong>+40%</strong></div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>內容產出效率 <strong>3 倍</strong></div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>成功 <strong>轉職升遷</strong></div>
+          </div>
+          <div class="ac-story-tags">
+            <span class="ac-tag">每日知識</span>
+            <span class="ac-tag">每週課程</span>
+            <span class="ac-tag">大師講堂</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-story reveal" style="transition-delay:0.5s">
+        <div class="ac-story-left">
+          <div class="ac-story-photo" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80')"></div>
+          <div class="ac-before-after">
+            <span class="ac-before">應屆畢業生</span>
+            <span class="ac-arrow">→</span>
+            <span class="ac-after">AI 產品開發者</span>
+          </div>
+        </div>
+        <div class="ac-story-right">
+          <div class="ac-story-name">陳威志</div>
+          <p class="ac-story-quote">完全沒有工作經驗的我，靠著學院建立的 AI 作品集，成功拿到三家 AI 新創公司的面試機會。學院不只教會我技術，更讓我學會如何把 AI 能力變成職場競爭力。</p>
+          <div class="ac-story-results">
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>拿到 <strong>3 家 offer</strong></div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>完成 <strong>5 件作品集</strong></div>
+            <div class="ac-result-chip"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>零經驗到 <strong>AI 新創</strong></div>
+          </div>
+          <div class="ac-story-tags">
+            <span class="ac-tag">每週課程</span>
+            <span class="ac-tag">一對一諮詢</span>
+            <span class="ac-tag">接案媒合</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SHOWCASE ══════ -->
+<section id="showcase" class="ac-showcase-section">
+  <div class="container">
+    <div class="section-label reveal">STUDENT SHOWCASE</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s">作品展示</h2>
+    <p class="section-desc reveal" style="transition-delay:0.2s">從 n8n 自動化到 AI 小工具，學員的每一件作品都是可落地、可變現的實戰成果。</p>
+
+    <div class="ac-tabs reveal" style="transition-delay:0.3s">
+      <button class="ac-tab active" onclick="filterWorks('all')">全部</button>
+      <button class="ac-tab" onclick="filterWorks('n8n')">n8n 自動化</button>
+      <button class="ac-tab" onclick="filterWorks('tool')">AI 小工具</button>
+      <button class="ac-tab" onclick="filterWorks('efficiency')">效率提升</button>
+    </div>
+
+    <div class="ac-works-grid reveal" style="transition-delay:0.4s">
+
+      <div class="ac-work-card" data-category="n8n">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80')"></div>
+          <div class="ac-work-badge n8n">n8n 自動化</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">社群媒體自動排程系統</div>
+          <p class="ac-work-desc">整合 Facebook、Instagram、LINE 官方帳號，一鍵排程多平台貼文，並自動追蹤成效數據回報。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&q=80')"></div>
+              <span class="ac-work-author-name">林小明</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>省 15hr/週</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-work-card" data-category="n8n">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=600&q=80')"></div>
+          <div class="ac-work-badge n8n">n8n 自動化</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">客服自動回覆 + 工單分類系統</div>
+          <p class="ac-work-desc">串接 ChatGPT API 自動回覆客戶常見問題，並依類型自動分類工單到對應的負責人。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=60&q=80')"></div>
+              <span class="ac-work-author-name">張雅婷</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>回覆速度 5x</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-work-card" data-category="tool">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&q=80')"></div>
+          <div class="ac-work-badge tool">AI 小工具</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">AI 履歷產生器</div>
+          <p class="ac-work-desc">輸入工作經歷與技能，AI 自動產生針對不同職缺客製化的專業履歷，支援多種模板匯出。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&q=80')"></div>
+              <span class="ac-work-author-name">陳威志</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>200+ 用戶</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-work-card" data-category="tool">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80')"></div>
+          <div class="ac-work-badge tool">AI 小工具</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">智能會議摘要助手</div>
+          <p class="ac-work-desc">錄音檔上傳後自動轉錄、摘要重點、列出待辦事項，並一鍵同步到 Notion 或 Google Docs。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=60&q=80')"></div>
+              <span class="ac-work-author-name">王品萱</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>省 8hr/週</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-work-card" data-category="efficiency">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80')"></div>
+          <div class="ac-work-badge efficiency">效率提升</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">電商數據分析自動化</div>
+          <p class="ac-work-desc">將蝦皮、PChome 銷售數據自動匯入分析，AI 產出每日銷售報告與庫存預警通知。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=60&q=80')"></div>
+              <span class="ac-work-author-name">李建宏</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>營收 +25%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ac-work-card" data-category="efficiency">
+        <div class="ac-work-thumb">
+          <div class="ac-work-thumb-img" style="background-image:url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80')"></div>
+          <div class="ac-work-badge efficiency">效率提升</div>
+        </div>
+        <div class="ac-work-body">
+          <div class="ac-work-title">AI 輔助文案 A/B 測試</div>
+          <p class="ac-work-desc">AI 自動產生多組廣告文案變體，串接 Meta Ads API 自動投放並追蹤最佳表現版本。</p>
+          <div class="ac-work-footer">
+            <div class="ac-work-author">
+              <div class="ac-work-avatar" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=60&q=80')"></div>
+              <span class="ac-work-author-name">黃雅琪</span>
+            </div>
+            <div class="ac-work-metric"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>轉換率 +35%</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ METRICS ══════ -->
+<section id="metrics">
+  <div class="container">
+    <div class="section-label reveal" style="text-align:center">DATA SPEAKS</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s;text-align:center">數據說話</h2>
+    <p class="section-desc reveal" style="transition-delay:0.2s;text-align:center;margin-left:auto;margin-right:auto">不只是故事，真實數據證明學院的學習成效。</p>
+
+    <div class="ac-metrics reveal" style="transition-delay:0.3s">
+      <div class="ac-metric-card">
+        <div class="ac-metric-icon"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <div class="ac-metric-num">3.2<span>x</span></div>
+        <div class="ac-metric-label">學員平均<br>工作效率提升</div>
+      </div>
+      <div class="ac-metric-card">
+        <div class="ac-metric-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <div class="ac-metric-num">87<span>%</span></div>
+        <div class="ac-metric-label">接案媒合<br>成功率</div>
+      </div>
+      <div class="ac-metric-card">
+        <div class="ac-metric-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="ac-metric-num">42<span>+</span></div>
+        <div class="ac-metric-label">作品被企業<br>直接採用</div>
+      </div>
+      <div class="ac-metric-card">
+        <div class="ac-metric-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <div class="ac-metric-num">98<span>%</span></div>
+        <div class="ac-metric-label">學員推薦<br>滿意度</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CTA ══════ -->
+<section class="ac-cta">
+  <div class="ac-cta-glow"></div>
+  <h2 class="reveal">你也可以成為<em>下一位</em></h2>
+  <p class="reveal" style="transition-delay:0.1s">加入 AI 未來學院，用 AI 翻轉你的職涯。下一個被展示的成功故事，可能就是你。</p>
+  <a href="index.html" class="btn-primary reveal" style="transition-delay:0.2s">立即加入學院 →</a>
+</section>
+
+<footer>
+  <div class="footer-logo">AI <span>未來學院</span></div>
+  <ul class="footer-links"><li><a href="#">關於我們</a></li><li><a href="#">隱私政策</a></li><li><a href="#">使用條款</a></li><li><a href="#">聯絡我們</a></li></ul>
+  <div class="footer-copy">© 2025 AI 未來學院. All rights reserved.</div>
+</footer>
+
+<script>
+// i18n
+const i18n={zh:{nav_toolkit:'AI工具庫',nav_events:'學院活動',nav_achievements:'學員成果'},en:{nav_toolkit:'AI Toolkit',nav_events:'Events',nav_achievements:'Achievements'}};
+function setLang(lang){document.documentElement.lang=lang==='zh'?'zh-TW':'en';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(i18n[lang]&&i18n[lang][k]!==undefined)el.textContent=i18n[lang][k]});document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.toggle('active',(btn.textContent.trim()==='EN'?'en':'zh')===lang))}
+setLang('zh');
+
+// Reveal
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Filter
+function filterWorks(cat){
+  document.querySelectorAll('.ac-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.ac-work-card').forEach(c=>{
+    c.dataset.visible=cat==='all'||c.dataset.category===cat?'true':'false';
+  });
+}
+</script>
+</body>
+</html>
