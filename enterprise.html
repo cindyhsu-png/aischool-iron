@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企業 AI 落地服務 — AI 未來學院</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#06040a;--s1:#0b0910;--s2:#100e16;--bd:rgba(255,255,255,.06);--gold:#7cffb2;--gl:#b4ffd8;--tx:#f2f0f5;--dm:rgba(242,240,245,.28);--sb:rgba(242,240,245,.5);--ac:#7cffb2}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans','Noto Sans TC',sans-serif;font-weight:300;overflow-x:hidden}
+::selection{background:rgba(201,168,76,.2);color:#fff}
+
+/* ── Scroll progress ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--ac));z-index:999;width:0;pointer-events:none}
+
+/* ── Nav ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(24px,5vw,72px);height:56px;background:rgba(6,4,10,.75);backdrop-filter:blur(32px);border-bottom:1px solid transparent;transition:border-color .4s}
+nav.scrolled{border-bottom-color:var(--bd)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--tx);text-decoration:none;letter-spacing:-.03em}.logo span{color:var(--ac)}
+.nv{display:flex;gap:2rem;list-style:none}.nv a{font-size:.78rem;color:var(--sb);text-decoration:none;transition:color .3s}.nv a:hover{color:var(--tx)}.nv a.on{color:var(--gold)}
+.lt{display:flex;gap:3px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:100px;padding:3px}
+.lb{font-size:.65rem;font-weight:500;padding:3px 10px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--dm);transition:.2s}.lb.on{background:var(--gold);color:#080808}
+
+/* ── Shared ── */
+.w{max-width:1100px;margin:0 auto;padding:0 clamp(24px,5vw,72px)}
+.lbl{font-size:.56rem;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:block}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border-radius:999px;font-size:.82rem;font-weight:500;text-decoration:none;transition:all .4s cubic-bezier(.22,1,.36,1);cursor:pointer;border:none}
+.pill-g{background:linear-gradient(135deg,var(--gl),var(--gold));color:#0a0a0a;box-shadow:0 2px 4px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.12)}
+.pill-g:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(201,168,76,.2)}
+.pill-o{background:transparent;color:var(--sb);border:1px solid var(--bd)}
+.pill-o:hover{border-color:rgba(201,168,76,.25);color:var(--tx);transform:translateY(-2px)}
+.pill svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.22,1,.36,1),transform 1s cubic-bezier(.22,1,.36,1)}.rv.v{opacity:1;transform:none}
+
+/* ════════════════════════════════════
+   HERO — Typographic impact. The number IS the visual.
+   ════════════════════════════════════ */
+.hero{height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:0 clamp(24px,5vw,72px)}
+.hero-vid{position:absolute;inset:0;z-index:0}
+.hero-vid video{width:100%;height:100%;object-fit:cover;opacity:.4;filter:saturate(.15) brightness(.5) contrast(1.1)}
+.hero-vid::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(6,4,10,.45) 30%,rgba(6,4,10,.5) 70%,var(--bg) 96%)}
+.px-canvas{position:absolute;inset:0;z-index:1;pointer-events:none}
+.hero-ambient{position:absolute;top:15%;right:5%;width:600px;height:500px;background:radial-gradient(ellipse,rgba(201,168,76,.05),transparent 60%);pointer-events:none;z-index:1;animation:ambientDrift 8s ease-in-out infinite alternate}
+@keyframes ambientDrift{0%{transform:translate(0,0);opacity:.7}100%{transform:translate(-30px,20px);opacity:1}}
+.hero-inner{position:relative;z-index:2;max-width:900px;margin:0 auto;text-align:center}
+.hero-pre{font-size:.58rem;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:clamp(28px,4vh,48px);animation:up .7s cubic-bezier(.22,1,.36,1) both}
+/* The devastating number — slot machine flip */
+.hero-num-wrap{display:block;text-align:center;margin-bottom:clamp(16px,2.5vh,28px);animation:up 1s .1s cubic-bezier(.22,1,.36,1) both;position:relative;padding:.05em 0;white-space:nowrap;font-size:0}
+.hero-num-wrap::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4}
+.hn-base{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(5rem,14vw,12rem);line-height:1;letter-spacing:-.04em;background:linear-gradient(135deg,var(--gl) 20%,var(--gold) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;vertical-align:top;font-variant-numeric:tabular-nums}
+.hn-fixed{display:inline-block}
+.hn-slot{display:inline-block;position:relative;overflow:hidden;height:1.2em;width:1ch;text-align:center;vertical-align:top}
+.hn-slot-inner{display:block;transition:transform .4s cubic-bezier(.22,1,.36,1);background:linear-gradient(135deg,var(--gl) 20%,var(--gold) 80%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hn-slot.out .hn-slot-inner{transform:translateY(-100%)}
+.hn-slot.in .hn-slot-inner{transform:translateY(100%)}
+.hn-slot.ready .hn-slot-inner{transform:translateY(0)}
+/* Context line */
+.hero-context{font-family:'Syne',sans-serif;font-weight:600;font-size:clamp(1.3rem,3vw,2.2rem);letter-spacing:-.02em;line-height:1.35;color:var(--sb);margin-bottom:clamp(20px,3vh,36px);animation:up 1s .25s cubic-bezier(.22,1,.36,1) both}
+.hero-context strong{color:var(--tx);font-weight:700}
+.hero-sub{font-size:clamp(.95rem,1.6vw,1.15rem);color:var(--dm);line-height:1.85;max-width:540px;margin:0 auto clamp(24px,3vh,36px);animation:up 1s .38s cubic-bezier(.22,1,.36,1) both}
+.hero-cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;animation:up 1s .5s cubic-bezier(.22,1,.36,1) both}
+.hero-bottom{position:absolute;bottom:0;left:0;right:0;z-index:2;border-top:1px solid var(--bd);display:flex;justify-content:center;gap:clamp(32px,5vw,72px);padding:clamp(16px,2.5vh,28px) clamp(24px,5vw,72px);background:rgba(6,4,10,.6);backdrop-filter:blur(16px);animation:up .9s .65s cubic-bezier(.22,1,.36,1) both}
+.hb-item{text-align:center}
+.hb-n{font-family:'Syne',sans-serif;font-size:clamp(1.2rem,2vw,1.6rem);font-weight:800;letter-spacing:-.04em;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.hb-t{font-size:.6rem;color:var(--dm);margin-top:3px;letter-spacing:.02em}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ════════════════════════════════════
+   BY THE NUMBERS — O&G-inspired giant stats
+   ════════════════════════════════════ */
+.numbers{padding:clamp(80px,10vw,140px) clamp(24px,5vw,72px);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:var(--s1)}
+.numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,48px);max-width:1100px;margin:0 auto;text-align:center}
+.n-item{padding:clamp(16px,2vw,32px) 0}
+.n-val{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;letter-spacing:-.05em;line-height:.9;background:linear-gradient(135deg,var(--gl),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;font-variant-numeric:tabular-nums}
+.n-label{font-size:.76rem;color:var(--dm);margin-top:clamp(8px,1vw,14px);line-height:1.5}
+
+/* ════════════════════════════════════
+   MANIFESTO — Big centered quote
+   ════════════════════════════════════ */
+.manifesto{padding:clamp(100px,14vw,220px) clamp(24px,5vw,72px);text-align:center;position:relative;overflow:hidden}
+.mani-wall{position:absolute;inset:0;z-index:0;pointer-events:none}
+.manifesto-text{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:600;letter-spacing:-.02em;line-height:1.45;max-width:860px;margin:0 auto;color:var(--sb);position:relative;z-index:2}
+.manifesto-text strong{color:var(--tx);font-weight:700}
+.manifesto-text .mani-cursor{display:inline-block;width:3px;height:1em;background:var(--ac);vertical-align:text-bottom;margin-left:2px;animation:cursorBlink .6s step-end infinite}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+.manifesto cite{display:block;margin-top:1.5rem;font-size:.75rem;color:var(--dm);font-style:normal;position:relative;z-index:2}
+
+/* ════════════════════════════════════
+   FEATURE BLOCKS — Alternating (Vexel-style)
+   ════════════════════════════════════ */
+.feature{padding:clamp(80px,10vw,140px) clamp(24px,5vw,72px)}
+.f-block{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);max-width:1100px;margin:0 auto clamp(60px,8vw,120px);align-items:center}
+.f-block:last-child{margin-bottom:0}
+.f-block.reverse .f-text{order:2}.f-block.reverse .f-visual{order:1}
+.f-text .lbl{margin-bottom:1rem}
+.f-text h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.5rem,2.8vw,2.2rem);letter-spacing:-.03em;line-height:1.08;margin-bottom:1rem}
+.f-text p{color:var(--sb);font-size:.9rem;line-height:1.9;margin-bottom:1.5rem}
+.f-text .f-detail{font-size:.8rem;color:var(--dm);line-height:1.75;padding-left:16px;border-left:2px solid rgba(201,168,76,.15);margin-bottom:1.5rem}
+.f-visual{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3}
+.f-visual img{width:100%;height:100%;object-fit:cover;filter:saturate(.35);transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.f-visual:hover img{transform:scale(1.04)}
+.f-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,4,10,.1),rgba(201,168,76,.04))}
+/* CSS mockup visual */
+.f-mock{background:rgba(255,255,255,.015);border:1px solid var(--bd);border-radius:16px;padding:clamp(20px,2.5vw,32px);aspect-ratio:4/3;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s}
+.f-mock>*{position:relative;z-index:2}
+/* Edge border-light that follows cursor */
+.f-mock::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(124,255,178,.25),rgba(124,255,178,.06) 40%,transparent 70%);z-index:0;opacity:0;transition:opacity .4s}
+.f-mock:hover::before{opacity:1}
+/* Inner soft glow */
+.f-mock::after{content:'';position:absolute;inset:0;border-radius:16px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(124,255,178,.06),transparent 60%);z-index:1;opacity:0;transition:opacity .4s;pointer-events:none}
+.f-mock:hover::after{opacity:1}
+/* Specular highlight line */
+.f-mock-glow{position:absolute;width:200px;height:200px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.07),rgba(124,255,178,.03) 40%,transparent 70%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s;z-index:3;filter:blur(2px);mix-blend-mode:screen}
+.f-mock:hover .f-mock-glow{opacity:1}
+.f-mock:hover{box-shadow:0 4px 20px rgba(0,0,0,.3),0 0 60px rgba(124,255,178,.04)}
+.mock-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+.mock-dots{display:flex;gap:5px}.mock-dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.06)}.mock-dots span:first-child{background:rgba(255,90,90,.45)}.mock-dots span:nth-child(2){background:rgba(255,190,60,.45)}.mock-dots span:nth-child(3){background:rgba(80,200,120,.45)}
+.mock-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--sb);letter-spacing:.04em}
+.mock-live{display:flex;align-items:center;gap:5px;font-size:.6rem;color:var(--ac);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.mock-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--ac);animation:pulse 1.5s ease infinite}
+.mock-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.mock-card{background:rgba(255,255,255,.025);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.mock-card-lbl{font-size:.65rem;color:var(--dm);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
+.mock-card-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-.04em}
+.mock-card-val.gold{color:var(--gold)}.mock-card-val.green{color:var(--ac)}
+.mock-card-sub{font-size:.62rem;color:var(--dm);margin-top:3px}
+.mock-bars{display:flex;align-items:flex-end;gap:5px;height:60px;flex:1}
+.mock-bars span{flex:1;border-radius:3px 3px 0 0;transition:height 1s cubic-bezier(.22,1,.36,1)}
+.mock-flow{display:flex;align-items:center;gap:8px;margin-top:12px;padding:12px;background:rgba(255,255,255,.015);border:1px solid var(--bd);border-radius:8px}
+.fn{padding:5px 11px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500}
+.fn-t{background:rgba(124,255,178,.06);color:var(--ac);border:1px solid rgba(124,255,178,.1)}
+.fn-a{background:rgba(201,168,76,.06);color:var(--gold);border:1px solid rgba(201,168,76,.1)}
+.fn-o{background:rgba(91,143,255,.06);color:#5b8fff;border:1px solid rgba(91,143,255,.1)}
+.fa{color:var(--dm);font-size:.65rem}
+/* Animated bar heights */
+.bars-on .mock-bars span:nth-child(1){height:25%}.bars-on .mock-bars span:nth-child(2){height:40%}.bars-on .mock-bars span:nth-child(3){height:35%}.bars-on .mock-bars span:nth-child(4){height:58%}.bars-on .mock-bars span:nth-child(5){height:50%}.bars-on .mock-bars span:nth-child(6){height:72%}.bars-on .mock-bars span:nth-child(7){height:90%}
+.mock-bars span{height:0 !important;background:rgba(201,168,76,.15)}
+.bars-on .mock-bars span{height:var(--h,30%) !important}
+.bars-on .mock-bars span:nth-child(6){background:rgba(201,168,76,.35)}.bars-on .mock-bars span:nth-child(7){background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.25)}
+
+/* ════════════════════════════════════
+   ROI — Data viz section
+   ════════════════════════════════════ */
+.roi{padding:clamp(80px,10vw,140px) clamp(24px,5vw,72px);background:var(--s1);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.roi-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);max-width:1100px;margin:0 auto;align-items:center}
+.roi-left h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.5rem,2.8vw,2.2rem);letter-spacing:-.03em;line-height:1.08;margin-bottom:.8rem}
+.roi-left>p{color:var(--sb);font-size:.88rem;line-height:1.9;margin-bottom:clamp(20px,3vw,36px)}
+.roi-big{margin-bottom:clamp(18px,2.5vw,32px)}
+.roi-big-n{font-family:'Syne',sans-serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:800;letter-spacing:-.06em;line-height:.85;background:linear-gradient(135deg,var(--gl),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.roi-big-t{font-size:.82rem;color:var(--sb);margin-top:8px}
+.roi-smalls{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,24px)}
+.roi-sn{font-family:'Syne',sans-serif;font-size:clamp(1.1rem,1.8vw,1.5rem);font-weight:700;letter-spacing:-.03em}
+.roi-st{font-size:.68rem;color:var(--dm);margin-top:3px;line-height:1.5}
+/* Chart */
+.roi-chart{background:rgba(255,255,255,.015);border:1px solid var(--bd);border-radius:16px;padding:clamp(18px,2.5vw,28px);position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.22,1,.36,1),border-color .4s,box-shadow .4s}
+.roi-chart>*{position:relative;z-index:2}
+.roi-chart::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:radial-gradient(600px circle at var(--mx,50%) var(--my,50%),rgba(124,255,178,.25),rgba(124,255,178,.06) 40%,transparent 70%);z-index:0;opacity:0;transition:opacity .4s}
+.roi-chart:hover::before{opacity:1}
+.roi-chart::after{content:'';position:absolute;inset:0;border-radius:16px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(124,255,178,.06),transparent 60%);z-index:1;opacity:0;transition:opacity .4s;pointer-events:none}
+.roi-chart:hover::after{opacity:1}
+.roi-chart:hover{box-shadow:0 4px 20px rgba(0,0,0,.3),0 0 60px rgba(124,255,178,.04)}
+.roi-chart .rc-glow{position:absolute;width:200px;height:200px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.07),rgba(124,255,178,.03) 40%,transparent 70%);transform:translate(-50%,-50%);opacity:0;transition:opacity .5s;z-index:3;filter:blur(2px);mix-blend-mode:screen}
+.roi-chart:hover .rc-glow{opacity:1}
+.rc-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.rc-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--sb);letter-spacing:.04em}
+.rc-badge{font-size:.6rem;font-weight:600;padding:4px 12px;border-radius:100px;background:rgba(124,255,178,.06);color:var(--ac);border:1px solid rgba(124,255,178,.1)}
+.rc-bars{display:flex;align-items:flex-end;gap:clamp(5px,.8vw,8px);height:160px}
+.rc-bar{flex:1;border-radius:3px 3px 0 0;position:relative;transition:height 1.2s cubic-bezier(.22,1,.36,1)}
+.rc-bar::after{content:attr(data-l);position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.58rem;color:var(--dm);white-space:nowrap}
+.rc-bar.gd{background:linear-gradient(180deg,var(--gold),rgba(201,168,76,.25))}.rc-bar.dm2{background:rgba(255,255,255,.03)}
+.rc-bar-v{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;color:var(--gold);white-space:nowrap}
+.rc-bars .rc-bar{height:0 !important}
+.rc-on .rc-bar{height:var(--h) !important}
+.rc-legend{display:flex;gap:16px;margin-top:28px;padding-top:12px;border-top:1px solid var(--bd)}
+.rc-leg{display:flex;align-items:center;gap:6px;font-size:.65rem;color:var(--dm)}
+.rc-leg i{width:7px;height:7px;border-radius:2px;display:block}.rc-leg .ig{background:var(--gold)}.rc-leg .id{background:rgba(255,255,255,.06)}
+
+/* ════════════════════════════════════
+   COMPARE
+   ════════════════════════════════════ */
+.compare{padding:clamp(80px,10vw,140px) clamp(24px,5vw,72px)}
+.cmp-grid{display:grid;grid-template-columns:.4fr .6fr;gap:clamp(40px,6vw,100px);max-width:1100px;margin:0 auto;align-items:center}
+.cmp-left h2{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.4rem,2.5vw,2rem);letter-spacing:-.03em;line-height:1.08;margin-bottom:.8rem}
+.cmp-left>p{color:var(--sb);font-size:.86rem;line-height:1.9;margin-bottom:1.5rem}
+.cmp-pts{display:flex;flex-direction:column;gap:10px}
+.cmp-pt{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--sb);line-height:1.5}
+.cmp-pt::before{content:'';width:16px;height:16px;border-radius:50%;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);flex-shrink:0;margin-top:2px;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23c9a84c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");background-size:9px;background-position:center;background-repeat:no-repeat}
+.tbl{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:var(--s1)}
+.tbl-h{display:grid;grid-template-columns:1.4fr 1fr 1fr;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--bd)}
+.tbl-h div{padding:14px 16px}.tbl-h div:first-child{color:var(--dm)}.tbl-h div:nth-child(2){text-align:center;color:var(--dm)}.tbl-h div:nth-child(3){text-align:center;color:var(--gold);background:rgba(124,255,178,.02)}
+.tbl-r{display:grid;grid-template-columns:1.4fr 1fr 1fr;font-size:.8rem;border-bottom:1px solid var(--bd);transition:all .3s cubic-bezier(.22,1,.36,1);position:relative}
+.tbl-r:last-child{border-bottom:none}
+.tbl-r:hover{background:rgba(124,255,178,.03)}
+.tbl-r:hover div:first-child{color:var(--tx)}
+.tbl-r:hover div:nth-child(3){color:#fff;text-shadow:0 0 12px rgba(124,255,178,.4)}
+.tbl-r div{padding:13px 16px;transition:all .3s}.tbl-r div:first-child{color:var(--sb)}.tbl-r div:nth-child(2){text-align:center;color:var(--dm)}.tbl-r div:nth-child(3){text-align:center;color:var(--gl);font-weight:500;background:rgba(124,255,178,.02)}
+
+/* ════════════════════════════════════
+   CLIENT STORIES — O&G narrative format
+   ════════════════════════════════════ */
+.stories{padding:clamp(80px,10vw,140px) clamp(24px,5vw,72px);background:var(--s1);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);max-width:1100px;margin:0 auto}
+.story{border:1px solid var(--bd);border-radius:14px;overflow:hidden;background:var(--bg);transition:border-color .4s,transform .4s cubic-bezier(.22,1,.36,1)}
+.story:hover{border-color:rgba(201,168,76,.1);transform:translateY(-4px)}
+.story-img{height:180px;overflow:hidden}.story-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.35);transition:transform .7s cubic-bezier(.22,1,.36,1)}.story:hover .story-img img{transform:scale(1.05)}
+.story-body{padding:clamp(18px,2vw,28px)}
+.story-tag{font-size:.5rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.story-h{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:-.02em;line-height:1.2;margin-bottom:8px}
+.story-p{font-size:.78rem;color:var(--dm);line-height:1.75;margin-bottom:14px}
+.story-result{font-size:.72rem;color:var(--ac);font-weight:500}
+.story-who{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)}
+.story-av{width:28px;height:28px;border-radius:50%;object-fit:cover;filter:saturate(.5);border:1px solid rgba(201,168,76,.1)}
+.story-nm{font-size:.72rem;font-weight:600}.story-rl{font-size:.58rem;color:var(--dm)}
+
+/* ════════════════════════════════════
+   CTA
+   ════════════════════════════════════ */
+.cta{padding:clamp(100px,14vw,220px) clamp(24px,5vw,72px);text-align:center;position:relative;overflow:hidden}
+.cta-matrix{position:absolute;inset:0;z-index:0;pointer-events:none}
+.cta-in{position:relative;z-index:2;max-width:520px;margin:0 auto}
+.cta h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3.8vw,2.8rem);letter-spacing:-.045em;line-height:1.02;margin-bottom:1.2rem}
+.cta h2 em{font-style:normal;color:var(--gold)}
+.cta p{color:var(--sb);font-size:.9rem;line-height:1.9;margin-bottom:2.2rem}
+.cta-b{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* Footer */
+footer{border-top:1px solid var(--bd);padding:36px clamp(24px,5vw,72px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fl{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:var(--tx)}.fl span{color:var(--gold)}
+.fk{display:flex;gap:1.5rem;list-style:none}.fk a{font-size:.7rem;color:var(--dm);text-decoration:none;transition:color .2s}.fk a:hover{color:var(--tx)}
+.fc{font-size:.62rem;color:var(--dm)}
+
+/* Modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);z-index:1000;display:none;align-items:center;justify-content:center}.mo.open{display:flex}
+.mb{background:var(--s1);border:1px solid rgba(201,168,76,.08);border-radius:16px;padding:clamp(20px,3vw,36px) clamp(18px,2.5vw,28px);max-width:440px;width:92%;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.mx{position:absolute;top:12px;right:12px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--s2);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:.9rem;color:var(--dm);line-height:1}.mx:hover{border-color:rgba(201,168,76,.2)}
+.mb h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:3px}.mb>p{font-size:.78rem;color:var(--dm);margin-bottom:18px;line-height:1.6}
+.fg{margin-bottom:10px}.fg label{display:block;font-size:.68rem;font-weight:500;color:var(--sb);margin-bottom:3px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:var(--tx);font-size:.82rem;font-family:inherit;outline:none;transition:border-color .2s}.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}.fg input::placeholder,.fg textarea::placeholder{color:var(--dm)}.fg select option{background:var(--bg);color:var(--tx)}.fg textarea{resize:vertical;min-height:56px}
+.fr{display:flex;gap:8px}.fr .fg{flex:1}
+.fs{width:100%;margin-top:4px;padding:11px;font-size:.82rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,var(--gl),var(--gold));color:#080808;box-shadow:0 1px 2px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1);transition:box-shadow .2s}.fs:hover{box-shadow:0 8px 24px rgba(201,168,76,.2)}
+
+@media(max-width:900px){
+  .nv{display:none}
+  .hero h1{font-size:clamp(2rem,7vw,3rem)}
+  .numbers-grid{grid-template-columns:repeat(2,1fr)}
+  .f-block{grid-template-columns:1fr;gap:32px}.f-block.reverse .f-text,.f-block.reverse .f-visual{order:unset}
+  .roi-inner,.cmp-grid{grid-template-columns:1fr;gap:36px}
+  .stories-grid{grid-template-columns:1fr}
+  .roi-smalls{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:520px){.numbers-grid{grid-template-columns:1fr}.fr{flex-direction:column}.tbl-h div,.tbl-r div{padding:8px 6px;font-size:.64rem}.roi-smalls{grid-template-columns:1fr;gap:12px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="logo">AI <span>未來學院</span></a>
+  <ul class="nv"><li><a href="ai-toolkit.html">AI工具庫</a></li><li><a href="ai-events.html">學院活動</a></li><li><a href="ai-achievements.html">學員成果</a></li><li><a href="enterprise.html" class="on">企業服務</a></li></ul>
+  <div class="lt"><button class="lb on" onclick="setLang('zh')">中文</button><button class="lb" onclick="setLang('en')">EN</button></div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-vid"><video autoplay muted loop playsinline><source src="https://assets.mixkit.co/videos/46443/46443-720.mp4" type="video/mp4"></video><canvas class="px-canvas" id="pxCanvas"></canvas></div>
+  <div class="hero-ambient"></div>
+  <div class="hero-inner">
+    <div class="hero-pre"><span data-lang="zh" class="active">Enterprise AI Deployment</span><span data-lang="en">Enterprise AI Deployment</span></div>
+    <div class="hero-num-wrap"><span class="hn-base hn-fixed">$</span><span id="heroSlot" class="hn-base"></span><span class="hn-base hn-fixed">0萬</span></div>
+    <div class="hero-context"><span data-lang="zh" class="active"><strong>每年，</strong>企業花在 AI 能解決的事務上。</span><span data-lang="en"><strong>Every year,</strong> your company spends this on work AI can handle.</span></div>
+    <p class="hero-sub"><span data-lang="zh" class="active">派駐 FDE 工程師進入現場，21 天內交付第一個可量化的成本節省工作流。<br>不交報告，交付成果。</span><span data-lang="en">We embed FDE engineers on-site. First cost-saving workflow live in 21 days. No reports — delivered savings.</span></p>
+    <div class="hero-cta">
+      <a class="pill pill-g" onclick="document.getElementById('entModal').classList.add('open');return false" href="#"><span data-lang="zh" class="active">預約企業診斷</span><span data-lang="en">Book Assessment</span><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <div class="hb-item"><div class="hb-n"><span class="ct" data-to="50">0</span>+</div><div class="hb-t">企業實績</div></div>
+    <div class="hb-item"><div class="hb-n"><span class="ct" data-to="4.7" data-dec="1">0</span>x</div><div class="hb-t">首年 ROI</div></div>
+    <div class="hb-item"><div class="hb-n"><span class="ct" data-to="21">0</span>天</div><div class="hb-t">首個流程上線</div></div>
+    <div class="hb-item"><div class="hb-n"><span class="ct" data-to="87">0</span>%</div><div class="hb-t">續約率</div></div>
+  </div>
+</section>
+
+<!-- ══ BY THE NUMBERS ══ -->
+<section class="numbers">
+  <div class="numbers-grid">
+    <div class="n-item rv"><span class="n-val"><span class="ct" data-to="50">0</span>+</span><div class="n-label">企業導入實績</div></div>
+    <div class="n-item rv" style="transition-delay:.08s"><span class="n-val"><span class="ct" data-to="4.7" data-dec="1">0</span>x</span><div class="n-label">首年投資報酬率</div></div>
+    <div class="n-item rv" style="transition-delay:.16s"><span class="n-val"><span class="ct" data-to="21">0</span>天</span><div class="n-label">首個工作流上線</div></div>
+    <div class="n-item rv" style="transition-delay:.24s"><span class="n-val">$<span class="ct" data-to="2.4" data-dec="1">0</span>B</span><div class="n-label">累計為客戶節省（NT$）</div></div>
+  </div>
+</section>
+
+<!-- ══ MANIFESTO ══ -->
+<section class="manifesto">
+  <canvas class="mani-wall" id="maniWall"></canvas>
+  <p class="manifesto-text" id="maniType"></p>
+  <cite class="manifesto-cite" id="maniCite" style="opacity:0">— 2024 台灣企業 AI 採用調查</cite>
+</section>
+
+<!-- ══ FEATURE BLOCKS ══ -->
+<section class="feature" id="sol">
+  <div class="w">
+    <!-- Block 1: Problem hook -->
+    <div class="f-block rv">
+      <div class="f-text">
+        <span class="lbl">The Cost of Waiting</span>
+        <h2><span data-lang="zh" class="active">延遲導入的代價<br>遠高於導入本身</span><span data-lang="en">The cost of delay<br>far exceeds the cost of action</span></h2>
+        <p><span data-lang="zh" class="active">報表彙整、數據處理、郵件回覆、文件歸檔——企業員工每日約三分之一的工時，消耗在可自動化的重複性任務上。而市場上 65% 的 AI 顧問專案，最終停留在簡報階段，未能落地。</span><span data-lang="en">Reports, data processing, email replies, filing — about a third of your team's daily hours are consumed by automatable tasks. And 65% of AI consulting projects never make it past the presentation stage.</span></p>
+        <div class="f-detail"><span data-lang="zh" class="active">根據調查，2027 年 70% 的求職者將優先選擇具備 AI 工作環境的企業。缺乏 AI 文化的組織，將面臨人才競爭的結構性劣勢。</span><span data-lang="en">By 2027, 70% of job seekers will prioritize AI-equipped workplaces. Organizations without AI culture face a structural disadvantage in talent acquisition.</span></div>
+      </div>
+      <div class="f-mock" id="dashMock">
+        <div class="f-mock-glow" id="dashGlow"></div>
+        <div class="mock-top"><div class="mock-dots"><span></span><span></span><span></span></div><div class="mock-title">AI 工作流儀表板</div><div class="mock-live">即時</div></div>
+        <div class="mock-row">
+          <div class="mock-card"><div class="mock-card-lbl">每月節省</div><div class="mock-card-val gold">$1.2M</div><div class="mock-card-sub">對比人工流程</div></div>
+          <div class="mock-card"><div class="mock-card-lbl">釋放工時</div><div class="mock-card-val green">847</div><div class="mock-card-sub">每月 / 6 個部門</div></div>
+        </div>
+        <div class="mock-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="mock-flow"><span class="fn fn-t">觸發條件</span><span class="fa">→</span><span class="fn fn-a">Claude AI</span><span class="fa">→</span><span class="fn fn-a">n8n</span><span class="fa">→</span><span class="fn fn-o">產出結果</span></div>
+      </div>
+    </div>
+
+    <!-- Block 2: Solution - Diagnosis -->
+    <div class="f-block reverse rv" style="transition-delay:.1s">
+      <div class="f-text">
+        <span class="lbl">Step 01 — 精準定位成本結構</span>
+        <h2><span data-lang="zh" class="active">首月即交付<br>可量化的營運改善</span><span data-lang="en">Measurable operational<br>improvement in month one</span></h2>
+        <p><span data-lang="zh" class="active">FDE 工程師深入各部門，盤點日常作業流程。兩週內提交完整診斷：可自動化項目、預估節省金額、導入路徑。21 天內完成第一個工作流的上線部署。</span><span data-lang="en">FDE engineers audit workflows across departments. Within two weeks: a complete diagnosis of automatable items, projected savings, and implementation roadmap. First workflow deployed in 21 days.</span></p>
+        <a class="pill pill-o" style="font-size:.78rem;padding:10px 22px" href="#" onclick="document.getElementById('entModal').classList.add('open');return false">預約免費診斷 <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="f-visual"><img src="https://images.pexels.com/photos/7652040/pexels-photo-7652040.jpeg?auto=compress&cs=tinysrgb&w=800" alt loading="lazy"></div>
+    </div>
+
+    <!-- Block 3: People layer -->
+    <div class="f-block rv" style="transition-delay:.15s">
+      <div class="f-text">
+        <span class="lbl">Step 02 — 將人力配置在高價值環節</span>
+        <h2><span data-lang="zh" class="active">不是取代人力<br>是重新定義人力價值</span><span data-lang="en">Not replacing people.<br>Redefining their value.</span></h2>
+        <p><span data-lang="zh" class="active">分層培訓體系確保各層級員工具備 AI 協作能力，將人力聚焦於策略判斷與客戶經營。企業知識透過 RAG 知識庫系統化留存，不因人員異動而流失。</span><span data-lang="en">Layered training ensures every level can collaborate with AI, refocusing human effort on strategic decisions and client relationships. Company knowledge is preserved through RAG — independent of personnel changes.</span></p>
+        <div class="f-detail"><span data-lang="zh" class="active">「導入 AI 工作流後，招募面談中主動提及此項目，明顯提升優秀人才的加入意願。」— 林營運長，零售集團</span><span data-lang="en">"After deploying AI workflows, mentioning it in recruitment interviews significantly increased top talent's willingness to join." — COO, Retail Group</span></div>
+      </div>
+      <div class="f-visual"><img src="https://images.pexels.com/photos/7652178/pexels-photo-7652178.jpeg?auto=compress&cs=tinysrgb&w=800" alt loading="lazy"></div>
+    </div>
+
+    <!-- Block 4: Ongoing -->
+    <div class="f-block reverse rv" style="transition-delay:.2s">
+      <div class="f-text">
+        <span class="lbl">Step 03 — 持續優化，成效透明</span>
+        <h2><span data-lang="zh" class="active">不只導入，<br>FDE 持續駐場迭代</span><span data-lang="en">Beyond deployment.<br>FDE stays and iterates.</span></h2>
+        <p><span data-lang="zh" class="active">即時儀表板追蹤每條工作流的時間與成本節省。月度報告直接對應企業 KPI。隨業務需求演進，FDE 工程師持續盤點下一個可優化的流程節點。</span><span data-lang="en">Real-time dashboard tracks time and cost savings per workflow. Monthly reports map directly to your KPIs. As your business evolves, FDE engineers continuously identify the next optimization opportunity.</span></p>
+      </div>
+      <div class="f-visual"><img src="https://images.pexels.com/photos/7988237/pexels-photo-7988237.jpeg?auto=compress&cs=tinysrgb&w=800" alt loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ROI ══ -->
+<section class="roi">
+  <div class="roi-inner">
+    <div class="roi-left rv">
+      <span class="lbl">Return on Investment</span>
+      <h2><span data-lang="zh" class="active">投資報酬率<br>經得起檢驗</span><span data-lang="en">ROI that stands<br>up to scrutiny</span></h2>
+      <p><span data-lang="zh" class="active">以行政團隊每月節省 200 工時估算，年度服務費 NT$500 萬，平均為客戶創造 NT$2,350 萬的可量化價值。</span><span data-lang="en">Based on 200 admin hours saved monthly, a NT$5M annual fee generates an average NT$23.5M in quantifiable client value.</span></p>
+      <div class="roi-big"><div class="roi-big-n">4.7x</div><div class="roi-big-t">首年回報倍數</div></div>
+      <div class="roi-smalls">
+        <div class="rv" style="transition-delay:.06s"><div class="roi-sn">68%</div><div class="roi-st">重複性作業時間縮減</div></div>
+        <div class="rv" style="transition-delay:.12s"><div class="roi-sn">21 天</div><div class="roi-st">簽約至首個流程上線</div></div>
+        <div class="rv" style="transition-delay:.18s"><div class="roi-sn">$2.4B</div><div class="roi-st">客戶累計節省總額</div></div>
+      </div>
+    </div>
+    <div class="roi-chart rv" id="roiChart">
+      <div class="rc-glow" id="roiGlow"></div>
+      <div class="rc-top"><span class="rc-title">累計節省金額</span><span class="rc-badge">年增 +340%</span></div>
+      <div class="rc-bars">
+        <div class="rc-bar dm2" style="--h:15%" data-l="第1季"></div>
+        <div class="rc-bar dm2" style="--h:28%" data-l="第2季"></div>
+        <div class="rc-bar gd" style="--h:42%" data-l="第3季"><span class="rc-bar-v">$4.2M</span></div>
+        <div class="rc-bar gd" style="--h:58%" data-l="第4季"><span class="rc-bar-v">$6.8M</span></div>
+        <div class="rc-bar gd" style="--h:72%" data-l="第2年Q1"><span class="rc-bar-v">$9.1M</span></div>
+        <div class="rc-bar gd" style="--h:88%" data-l="第2年Q2"><span class="rc-bar-v">$12.4M</span></div>
+        <div class="rc-bar gd" style="--h:100%" data-l="第2年Q3"><span class="rc-bar-v">$15.7M</span></div>
+      </div>
+      <div class="rc-legend"><div class="rc-leg"><i class="id"></i>導入前</div><div class="rc-leg"><i class="ig"></i>AI 工作流啟動後</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPARE ══ -->
+<section class="compare">
+  <div class="cmp-grid">
+    <div class="cmp-left rv">
+      <span class="lbl">Why Us</span>
+      <h2><span data-lang="zh" class="active">傳統顧問交付簡報<br>我們交付營運成果</span><span data-lang="en">Consultants deliver slides.<br>We deliver operational results.</span></h2>
+      <p><span data-lang="zh" class="active">工程師駐點現場開發，不在會議室做簡報。</span><span data-lang="en">Our engineers develop on-site at your office, not presenting in conference rooms.</span></p>
+      <div class="cmp-pts">
+        <div class="cmp-pt">工程師現場駐點，非遠端作業</div>
+        <div class="cmp-pt">21 天交付成果，非 6 個月交付報告</div>
+        <div class="cmp-pt">即時儀表板追蹤節省成效</div>
+        <div class="cmp-pt">完整技術移轉，不產生長期依賴</div>
+      </div>
+    </div>
+    <div class="tbl rv">
+      <div class="tbl-h"><div></div><div>傳統顧問 / SI</div><div>AI 未來學院</div></div>
+      <div class="tbl-r"><div>交付速度</div><div>6-12 個月</div><div>21 天起</div></div>
+      <div class="tbl-r"><div>現場工程師</div><div style="opacity:.3">✕</div><div>✓</div></div>
+      <div class="tbl-r"><div>成效量化</div><div style="opacity:.3">✕</div><div>✓</div></div>
+      <div class="tbl-r"><div>員工培訓</div><div>額外收費</div><div>包含</div></div>
+      <div class="tbl-r"><div>技術移轉</div><div style="opacity:.3">✕</div><div>✓</div></div>
+      <div class="tbl-r"><div>費用透明</div><div>持續追加</div><div>年費固定</div></div>
+      <div class="tbl-r"><div>首年 ROI</div><div>0.8-1.5x</div><div>4.7x</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CLIENT STORIES ══ -->
+<section class="stories">
+  <div class="w" style="text-align:center;margin-bottom:clamp(32px,4vw,56px)"><span class="lbl rv">Client Stories</span></div>
+  <div class="stories-grid">
+    <div class="story rv">
+      <div class="story-img"><img src="https://images.pexels.com/photos/7652040/pexels-photo-7652040.jpeg?auto=compress&cs=tinysrgb&w=600" alt loading="lazy"></div>
+      <div class="story-body">
+        <div class="story-tag">金融服務</div>
+        <div class="story-h">年度服務費 500 萬，首季即回收 800 萬</div>
+        <div class="story-p">向董事會報告時，數據本身即具說服力。目前其他事業單位已主動提出導入需求。</div>
+        <div class="story-result">行政效率提升 300%</div>
+        <div class="story-who"><img class="story-av" src="https://images.pexels.com/photos/17049766/pexels-photo-17049766.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop" alt loading="lazy"><div><div class="story-nm">王財務長</div><div class="story-rl">員工 1,200+</div></div></div>
+      </div>
+    </div>
+    <div class="story rv" style="transition-delay:.08s">
+      <div class="story-img"><img src="https://images.pexels.com/photos/7652178/pexels-photo-7652178.jpeg?auto=compress&cs=tinysrgb&w=600" alt loading="lazy"></div>
+      <div class="story-body">
+        <div class="story-tag">科技業</div>
+        <div class="story-h">報表產出週期從 3 天縮短至 15 分鐘</div>
+        <div class="story-p">更深層的變化在於，團隊開始主動盤點可 AI 化的流程。這是制度無法強制推動的文化轉型。</div>
+        <div class="story-result">報表產出時間 -99.6%</div>
+        <div class="story-who"><img class="story-av" src="https://images.pexels.com/photos/7578251/pexels-photo-7578251.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop" alt loading="lazy"><div><div class="story-nm">陳總經理</div><div class="story-rl">員工 800+</div></div></div>
+      </div>
+    </div>
+    <div class="story rv" style="transition-delay:.16s">
+      <div class="story-img"><img src="https://images.pexels.com/photos/7988237/pexels-photo-7988237.jpeg?auto=compress&cs=tinysrgb&w=600" alt loading="lazy"></div>
+      <div class="story-body">
+        <div class="story-tag">零售集團</div>
+        <div class="story-h">AI 工作環境成為人才招募的競爭優勢</div>
+        <div class="story-p">在招募面談中展示 AI 工作流，顯著提升優秀人才的到職意願。這是導入前未預期的附加效益。</div>
+        <div class="story-result">人才吸引力顯著提升</div>
+        <div class="story-who"><img class="story-av" src="https://images.pexels.com/photos/9208551/pexels-photo-9208551.jpeg?auto=compress&cs=tinysrgb&w=80&h=80&fit=crop" alt loading="lazy"><div><div class="story-nm">林營運長</div><div class="story-rl">年營收 NT$30 億</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta">
+  <canvas class="cta-matrix" id="ctaMatrix"></canvas>
+  <div class="cta-in">
+    <span class="lbl rv">Get Started</span>
+    <h2 class="rv"><span data-lang="zh" class="active">這筆投資<br>能節省<em>多少？</em></span><span data-lang="en">How much can this<br>investment <em>save you?</em></span></h2>
+    <p class="rv"><span data-lang="zh" class="active">首次企業診斷免費。兩週內完成評估：每月可自動化工時、預估節省金額、21 天內啟動的具體路徑。</span><span data-lang="en">First assessment is free. Within two weeks: how many monthly hours are automatable, projected savings, and a concrete 21-day launch roadmap.</span></p>
+    <div class="cta-b rv"><a class="pill pill-g" href="#" onclick="document.getElementById('entModal').classList.add('open');return false"><span data-lang="zh" class="active">預約免費企業診斷</span><span data-lang="en">Book Free Assessment</span><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+  </div>
+</section>
+
+<footer><div class="fl">AI <span>未來學院</span></div><ul class="fk"><li><a href="index.html">首頁</a></li><li><a href="#">隱私政策</a></li><li><a href="#">使用條款</a></li></ul><div class="fc">© 2025 AI 未來學院</div></footer>
+
+<div class="mo" id="entModal"><div class="mb"><button class="mx" onclick="this.closest('.mo').classList.remove('open')">×</button><h2>預約企業 AI 診斷</h2><p>專案顧問 48 小時內聯繫。</p><form id="entForm" onsubmit="return handleEntSubmit(event)"><div class="fr"><div class="fg"><label>聯絡人</label><input type="text" name="name" placeholder="姓名" required></div><div class="fg"><label>職稱</label><input type="text" name="title" placeholder="例：營運長"></div></div><div class="fg"><label>公司名稱</label><input type="text" name="company" placeholder="公司全名" required></div><div class="fr"><div class="fg"><label>Email</label><input type="email" name="email" placeholder="企業信箱" required></div><div class="fg"><label>手機</label><input type="tel" name="phone" placeholder="聯絡電話" required></div></div><div class="fr"><div class="fg"><label>公司規模</label><select name="company_size" required><option value="">請選擇</option><option>50人以下</option><option>50-200</option><option>200-500</option><option>500-1000</option><option>1000+</option></select></div><div class="fg"><label>產業別</label><select name="industry" required><option value="">請選擇</option><option>科技/軟體</option><option>金融/保險</option><option>製造業</option><option>零售/電商</option><option>醫療/生技</option><option>教育</option><option>媒體/行銷</option><option>其他</option></select></div></div><div class="fg"><label>最想解決的問題（選填）</label><textarea name="challenge" placeholder="例：客服效率低、報表耗時..."></textarea></div><button type="submit" class="fs">送出預約</button></form></div></div>
+
+<script>
+var sb=window.supabase.createClient('https://iffvrjfxlurwyueqgkho.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmZnZyamZ4bHVyd3l1ZXFna2hvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwMDQ5NzQsImV4cCI6MjA4OTU4MDk3NH0.htaYmhizREKA6IamvVreF6YFl8om8z7V8KeKEipLvUs');
+async function handleEntSubmit(e){e.preventDefault();var f=e.target,b=f.querySelector('button[type="submit"]');b.disabled=true;b.textContent='送出中...';var d=Object.fromEntries(new FormData(f));var r=await sb.from('enterprise_leads').insert([d]);if(r.error){b.disabled=false;b.textContent='送出預約';alert('送出失敗');return false}f.innerHTML='<div style="text-align:center;padding:1.5rem 0"><div style="width:40px;height:40px;margin:0 auto 10px;border-radius:50%;background:rgba(201,168,76,.05);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3 style="font-family:Syne,sans-serif;font-weight:700;font-size:.95rem">已收到</h3><p style="color:var(--dm);font-size:.75rem">48小時內聯繫</p></div>';setTimeout(function(){document.getElementById('entModal').classList.remove('open')},2200);return false}
+document.getElementById('entModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+function setLang(l){document.documentElement.lang=l==='zh'?'zh-TW':'en';document.querySelectorAll('[data-lang]').forEach(function(e){e.dataset.lang===l?(e.classList.add('active'),e.style.display=''):(e.classList.remove('active'),e.tagName!=='HTML'&&(e.style.display='none'))});document.querySelectorAll('.lb').forEach(function(b){b.classList.toggle('on',(b.textContent.trim()==='EN'?'en':'zh')===l)})}
+
+/* Counter */
+function runCount(el){if(el.dataset.done)return;el.dataset.done='1';var to=parseFloat(el.dataset.to),dec=parseInt(el.dataset.dec)||0,dur=1800,t0=performance.now();!function f(now){var p=Math.min((now-t0)/dur,1);p=1-Math.pow(1-p,4);el.textContent=(p*to).toFixed(dec);p<1&&requestAnimationFrame(f)}(t0)}
+
+/* Reveal + trigger charts */
+var io=new IntersectionObserver(function(ents){ents.forEach(function(e){if(!e.isIntersecting)return;e.target.classList.add('v');e.target.querySelectorAll('.ct').forEach(runCount);if(e.target.id==='dashMock')e.target.classList.add('bars-on');if(e.target.id==='roiChart')e.target.classList.add('rc-on')})},{threshold:.15});
+document.querySelectorAll('.rv,#dashMock,#roiChart').forEach(function(el){io.observe(el)});
+
+/* Scroll progress + nav */
+var prog=document.getElementById('prog'),navE=document.querySelector('nav'),tick=false;
+window.addEventListener('scroll',function(){if(!tick){requestAnimationFrame(function(){var h=document.documentElement.scrollHeight-innerHeight;prog.style.width=(h>0?scrollY/h*100:0)+'%';navE.classList.toggle('scrolled',scrollY>50);tick=false});tick=true}},{passive:true});
+
+/* ── Hero number slot-machine flip ── */
+!function(){
+var box=document.getElementById('heroSlot');if(!box)return;
+var vals=['18','26','34','45','54','63','72'];
+var cur=0;
+
+function build(str,state){
+  box.innerHTML='';
+  for(var i=0;i<str.length;i++){
+    var wrap=document.createElement('span');
+    wrap.className='hn-slot'+(state?' '+state:'');
+    var inner=document.createElement('span');
+    inner.className='hn-slot-inner';
+    inner.textContent=str[i];
+    wrap.appendChild(inner);
+    box.appendChild(wrap);
+  }
+}
+
+function flipTo(newVal){
+  var oldChars=box.querySelectorAll('.hn-slot');
+  var oldVal=Array.from(oldChars).map(function(c){return c.querySelector('.hn-slot-inner').textContent}).join('');
+  /* Phase 1: slide out changed chars, staggered */
+  var d=0;
+  oldChars.forEach(function(el,i){
+    if(i>=newVal.length||oldVal[i]!==newVal[i]){
+      (function(e,delay){setTimeout(function(){e.classList.add('out')},delay)})(el,d);
+      d+=40;
+    }
+  });
+  /* Phase 2: rebuild with new val, start from below, then slide to center */
+  setTimeout(function(){
+    build(newVal,'in');
+    /* Force reflow */
+    box.offsetHeight;
+    var chars=box.querySelectorAll('.hn-slot');
+    var d2=0;
+    chars.forEach(function(el,i){
+      if(i>=oldVal.length||oldVal[i]!==newVal[i]){
+        (function(e,delay){setTimeout(function(){e.classList.remove('in');e.classList.add('ready')},delay)})(el,d2);
+        d2+=50;
+      } else {
+        el.classList.remove('in');el.classList.add('ready');
+      }
+    });
+  },350);
+}
+
+build('18','ready');
+
+function cycle(){
+  cur=(cur+1)%vals.length;
+  flipTo(vals[cur]);
+  setTimeout(cycle,cur===0?2200:900);
+}
+setTimeout(cycle,1500);
+}();
+
+/* ── Hero bottom KPI counters ── */
+document.querySelectorAll('.hero-bottom .ct').forEach(function(el){setTimeout(function(){runCount(el)},1200)});
+
+/* ── Dashboard tilt + multi-layer glow ── */
+!function(){var d=document.getElementById('dashMock'),g=document.getElementById('dashGlow');if(!d)return;var p=d.closest('.f-block');if(!p)return;
+p.addEventListener('mousemove',function(e){
+  var r=d.getBoundingClientRect();
+  var lx=e.clientX-r.left,ly=e.clientY-r.top;
+  var nx=lx/r.width-.5,ny=ly/r.height-.5;
+  d.style.transform='perspective(600px) rotateY('+(nx*6)+'deg) rotateX('+(-ny*4)+'deg)';
+  d.style.setProperty('--mx',lx+'px');
+  d.style.setProperty('--my',ly+'px');
+  if(g){g.style.left=lx+'px';g.style.top=ly+'px'}
+});
+p.addEventListener('mouseleave',function(){d.style.transform='perspective(600px) rotateY(0) rotateX(0)'})}();
+
+/* ── ROI chart tilt + glow ── */
+!function(){var d=document.getElementById('roiChart'),g=document.getElementById('roiGlow');if(!d)return;
+d.addEventListener('mousemove',function(e){
+  var r=d.getBoundingClientRect();
+  var lx=e.clientX-r.left,ly=e.clientY-r.top;
+  var nx=lx/r.width-.5,ny=ly/r.height-.5;
+  d.style.transform='perspective(600px) rotateY('+(nx*5)+'deg) rotateX('+(-ny*3)+'deg)';
+  d.style.setProperty('--mx',lx+'px');
+  d.style.setProperty('--my',ly+'px');
+  if(g){g.style.left=lx+'px';g.style.top=ly+'px'}
+});
+d.addEventListener('mouseleave',function(){d.style.transform='perspective(600px) rotateY(0) rotateX(0)'})}();
+
+/* ── Manifesto typewriter ── */
+!function(){
+var el=document.getElementById('maniType'),cite=document.getElementById('maniCite');
+if(!el)return;
+var lines=[
+  {text:'同業已率先導入。',bold:true},
+  {text:'行政效率達三倍，人事成本僅二分之一。',bold:false},
+  {text:'每延遲一個月，差距再擴大一個月。',bold:false}
+];
+var cursor=document.createElement('span');
+cursor.className='mani-cursor';
+var started=false,lineIdx=0,charIdx=0,typing=false;
+
+function typeNext(){
+  if(lineIdx>=lines.length){
+    /* Done — remove cursor, show cite */
+    setTimeout(function(){cursor.remove();if(cite)cite.style.transition='opacity .8s';if(cite)cite.style.opacity='1'},600);
+    return;
+  }
+  var line=lines[lineIdx];
+  if(charIdx===0&&lineIdx>0){el.appendChild(document.createElement('br'))}
+  var wrap=el.querySelector('.mani-line-'+lineIdx);
+  if(!wrap){
+    wrap=document.createElement(line.bold?'strong':'span');
+    wrap.className='mani-line-'+lineIdx;
+    if(!line.bold)wrap.style.color='var(--sb)';
+    el.appendChild(wrap);
+  }
+  if(charIdx<line.text.length){
+    wrap.textContent=line.text.substring(0,charIdx+1);
+    /* Re-append cursor after text */
+    if(cursor.parentNode)cursor.remove();
+    el.appendChild(cursor);
+    charIdx++;
+    var delay=40+Math.random()*30;
+    /* Pause at punctuation */
+    var ch=line.text[charIdx-1];
+    if(ch==='。'||ch==='，'||ch==='、')delay+=200;
+    if(ch==='.'||ch===',')delay+=150;
+    setTimeout(typeNext,delay);
+  } else {
+    /* Line done, pause then next line */
+    lineIdx++;charIdx=0;
+    setTimeout(typeNext,400);
+  }
+}
+
+var io3=new IntersectionObserver(function(ents){
+  if(ents[0].isIntersecting&&!started){started=true;setTimeout(typeNext,300)}
+},{threshold:0.3});
+io3.observe(el);
+}();
+
+/* ── CTA data matrix ── */
+!function(){
+var cv=document.getElementById('ctaMatrix');if(!cv)return;
+var ctx=cv.getContext('2d'),sec=cv.closest('.cta');
+var w,h,cols,rows,mouse={x:-9999,y:-9999};
+var CELL=22,PAD=4;
+var chars='0123456789$%+-=.';
+var moneyChars='$¥€₩£NT';
+var grid=[];
+
+function resize(){
+  w=cv.width=sec.offsetWidth;h=cv.height=sec.offsetHeight;
+  cols=Math.floor(w/CELL);rows=Math.floor(h/CELL);
+  /* Preserve existing cells, fill new ones */
+  var ng=[];
+  for(var r=0;r<rows;r++){ng[r]=[];for(var c=0;c<cols;c++){
+    ng[r][c]=grid[r]&&grid[r][c]?grid[r][c]:{ch:chars[Math.floor(Math.random()*chars.length)],a:0.03+Math.random()*0.04,ta:0,flip:0,lit:0}
+  }}
+  grid=ng;
+}
+
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  var t=Date.now()*0.001;
+
+  /* Random flip: some cells change their digit */
+  for(var i=0;i<3;i++){
+    var rr=Math.floor(Math.random()*rows),rc=Math.floor(Math.random()*cols);
+    if(grid[rr]&&grid[rr][rc]){grid[rr][rc].ch=chars[Math.floor(Math.random()*chars.length)];grid[rr][rc].flip=1}
+  }
+
+  /* Mouse: light up nearby cells, convert to money symbols */
+  if(mouse.x>0&&mouse.y>0){
+    var mc=Math.floor(mouse.x/CELL),mr=Math.floor(mouse.y/CELL),radius=6;
+    for(var dy=-radius;dy<=radius;dy++){for(var dx=-radius;dx<=radius;dx++){
+      var r=mr+dy,c=mc+dx;
+      if(r>=0&&r<rows&&c>=0&&c<cols){
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<=radius){
+          var bright=(1-dist/radius);
+          grid[r][c].ta=Math.max(grid[r][c].ta,bright*0.6);
+          grid[r][c].lit=Math.max(grid[r][c].lit,bright);
+          if(bright>0.5&&Math.random()<0.15){grid[r][c].ch=moneyChars[Math.floor(Math.random()*moneyChars.length)]}
+        }
+      }
+    }}
+  }
+
+  /* Render */
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='500 11px "JetBrains Mono",monospace';
+
+  for(var r=0;r<rows;r++){for(var c=0;c<cols;c++){
+    var cell=grid[r][c];
+    /* Decay */
+    cell.ta*=0.96;
+    cell.lit*=0.94;
+    cell.flip*=0.9;
+    var baseA=cell.a;
+    var activeA=cell.ta;
+    var totalA=baseA+activeA;
+    if(totalA<0.01)continue;
+
+    var x=c*CELL+CELL/2,y=r*CELL+CELL/2;
+
+    if(cell.lit>0.15){
+      /* Lit by mouse: green/gold glow */
+      var g=Math.floor(200+55*cell.lit);
+      var rb=Math.floor(124*cell.lit);
+      ctx.fillStyle='rgba('+rb+','+g+','+Math.floor(178*cell.lit)+','+totalA+')';
+      if(cell.lit>0.4){
+        ctx.shadowColor='rgba(124,255,178,'+(cell.lit*0.3)+')';
+        ctx.shadowBlur=8;
+      }
+    } else {
+      ctx.fillStyle='rgba(255,255,255,'+totalA+')';
+      ctx.shadowBlur=0;
+    }
+    ctx.fillText(cell.ch,x,y);
+    ctx.shadowBlur=0;
+  }}
+
+  /* Center vignette: fade out around the text area */
+  var cx=w/2,cy=h/2;
+  var vg=ctx.createRadialGradient(cx,cy,Math.min(w,h)*0.12,cx,cy,Math.min(w,h)*0.5);
+  vg.addColorStop(0,'rgba(6,4,10,0.95)');
+  vg.addColorStop(0.4,'rgba(6,4,10,0.7)');
+  vg.addColorStop(1,'rgba(6,4,10,0)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,w,h);
+
+  requestAnimationFrame(draw);
+}
+
+resize();draw();
+window.addEventListener('resize',resize);
+sec.addEventListener('mousemove',function(e){var r=sec.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
+sec.addEventListener('mouseleave',function(){mouse.x=-9999;mouse.y=-9999});
+}();
+
+/* ── Manifesto: competitor photo wall ── */
+!function(){
+var cv=document.getElementById('maniWall');if(!cv)return;
+var ctx=cv.getContext('2d'),sec=cv.closest('.manifesto');
+var w,h,cols,rows;
+var CELL=72,GAP=4,BOX=CELL-GAP;
+var grid=[];
+var started=false,startTime=0;
+var photos=[],photosReady=false;
+var SRC=[
+  'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/5483077/pexels-photo-5483077.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/7652040/pexels-photo-7652040.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/5699475/pexels-photo-5699475.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/7688460/pexels-photo-7688460.jpeg?auto=compress&cs=tinysrgb&w=200',
+  'https://images.pexels.com/photos/5483071/pexels-photo-5483071.jpeg?auto=compress&cs=tinysrgb&w=200'
+];
+var loaded=0;
+SRC.forEach(function(s){var img=new Image();img.crossOrigin='anonymous';img.onload=function(){loaded++;if(loaded>=SRC.length)photosReady=true};img.onerror=function(){loaded++;if(loaded>=SRC.length)photosReady=true};img.src=s;photos.push(img)});
+
+var YOU_R=-1,YOU_C=-1;
+
+function resize(){
+  w=cv.width=sec.offsetWidth;h=cv.height=sec.offsetHeight;
+  cols=Math.ceil(w/CELL)+1;rows=Math.ceil(h/CELL)+1;
+  YOU_C=Math.floor(cols/2);YOU_R=Math.floor(rows/2);
+  var ng=[];
+  for(var r=0;r<rows;r++){ng[r]=[];for(var c=0;c<cols;c++){
+    var old=grid[r]&&grid[r][c];
+    ng[r][c]=old||{lit:0,target:0,delay:0,img:Math.floor(Math.random()*SRC.length),pulse:Math.random()*Math.PI*2,isYou:false}
+  }}
+  /* Mark center 1x1 as "you" */
+  for(var r2=0;r2<rows;r2++)for(var c2=0;c2<cols;c2++)ng[r2][c2].isYou=(r2===YOU_R&&c2===YOU_C);
+  grid=ng;
+}
+
+function scheduleWave(){
+  var total=cols*rows;
+  var count=Math.floor(total*0.08);
+  for(var i=0;i<count;i++){
+    var r,c,tries=0;
+    do{r=Math.floor(Math.random()*rows);c=Math.floor(Math.random()*cols);tries++}
+    while(tries<30&&(grid[r][c].target>0.3||grid[r][c].isYou));
+    if(tries>=30)continue;
+    grid[r][c].target=0.5+Math.random()*0.5;
+    grid[r][c].delay=Math.random()*1.5;
+  }
+}
+
+function draw(){
+  requestAnimationFrame(draw);
+  if(!started)return;
+  ctx.clearRect(0,0,w,h);
+
+  for(var r=0;r<rows;r++){for(var c=0;c<cols;c++){
+    var cell=grid[r][c];
+    var x=c*CELL+GAP/2,y=r*CELL+GAP/2;
+
+    if(cell.isYou){
+      cell.pulse+=0.025;
+      var blink=0.12+Math.sin(cell.pulse)*0.08;
+      ctx.strokeStyle='rgba(255,255,255,'+blink+')';
+      ctx.lineWidth=1;
+      ctx.setLineDash([4,4]);
+      ctx.strokeRect(x+0.5,y+0.5,BOX-1,BOX-1);
+      ctx.setLineDash([]);
+      continue;
+    }
+
+    /* Delay countdown */
+    if(cell.delay>0){cell.delay-=0.016;continue}
+    cell.lit+=(cell.target-cell.lit)*0.04;
+    cell.target*=0.997;
+    if(cell.lit<0.02)continue;
+
+    /* Draw photo tile */
+    var img=photos[cell.img];
+    if(photosReady&&img&&img.complete&&img.naturalWidth>0){
+      ctx.save();
+      ctx.globalAlpha=cell.lit*0.45;
+      ctx.beginPath();
+      ctx.roundRect(x,y,BOX,BOX,4);
+      ctx.clip();
+      /* Cover-fit the image into the cell */
+      var iw=img.naturalWidth,ih=img.naturalHeight;
+      var scale=Math.max(BOX/iw,BOX/ih);
+      var sw=iw*scale,sh=ih*scale;
+      var ox=x+(BOX-sw)/2,oy=y+(BOX-sh)/2;
+      ctx.filter='saturate(0.3) brightness(0.7)';
+      ctx.drawImage(img,ox,oy,sw,sh);
+      ctx.filter='none';
+      ctx.restore();
+    }
+
+    /* Green border glow */
+    if(cell.lit>0.15){
+      var ba=cell.lit*0.35;
+      ctx.strokeStyle='rgba(124,255,178,'+ba+')';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.roundRect(x,y,BOX,BOX,4);
+      ctx.stroke();
+    }
+    /* Corner indicator */
+    if(cell.lit>0.35){
+      var da=cell.lit*0.55;
+      ctx.beginPath();
+      ctx.arc(x+BOX-8,y+8,2.5,0,Math.PI*2);
+      ctx.fillStyle='rgba(124,255,178,'+da+')';
+      ctx.fill();
+      if(cell.lit>0.5){
+        ctx.shadowColor='rgba(124,255,178,'+(cell.lit*0.25)+')';
+        ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
+      }
+    }
+  }}
+
+  /* Center vignette */
+  var cx=w/2,cy=h/2,dim=Math.max(w,h);
+  var vg=ctx.createRadialGradient(cx,cy,dim*0.1,cx,cy,dim*0.55);
+  vg.addColorStop(0,'rgba(6,4,10,0.92)');
+  vg.addColorStop(0.45,'rgba(6,4,10,0.55)');
+  vg.addColorStop(1,'rgba(6,4,10,0)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,w,h);
+}
+
+var io2=new IntersectionObserver(function(ents){
+  if(ents[0].isIntersecting&&!started){started=true;startTime=Date.now();scheduleWave();setInterval(scheduleWave,3000)}
+},{threshold:0.15});
+io2.observe(sec);
+resize();draw();
+window.addEventListener('resize',resize);
+}();
+
+/* ── Parallax ── */
+!function(){var mani=document.querySelector('.manifesto-text');
+window.addEventListener('scroll',function(){if(mani){var r=mani.getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0){var p=(innerHeight-r.top)/(innerHeight+r.height);mani.style.transform='scale('+(0.94+p*.06)+')';mani.style.opacity=Math.min(1,p*2.5)}}},{passive:true})}();
+
+/* ── Pixel grid effect — video color sampling with afterimage ── */
+!function(){
+var cv=document.getElementById('pxCanvas'),hero=document.querySelector('.hero');
+if(!cv||!hero)return;
+var ctx=cv.getContext('2d'),vid=hero.querySelector('video');
+var w,h,cols,rows,mouse={x:-9999,y:-9999};
+var PX=10,GAP=1,CELL=PX+GAP;
+var grid=[];
+var spawnTimer=0,SPAWN_INTERVAL=150;
+/* Tiny offscreen canvas: 1 pixel per grid cell, samples video colors */
+var tiny=document.createElement('canvas'),tctx=tiny.getContext('2d');
+
+function resize(){
+  w=cv.width=hero.offsetWidth;h=cv.height=hero.offsetHeight;
+  cols=Math.ceil(w/CELL);rows=Math.ceil(h/CELL);
+  tiny.width=cols;tiny.height=rows;
+  grid=[];
+  for(var r=0;r<rows;r++){grid[r]=[];for(var c=0;c<cols;c++){grid[r][c]={a:0,ta:0,decay:0.012+Math.random()*0.008}}}
+}
+
+function spawnCluster(){
+  var cx=Math.floor(Math.random()*cols),cy=Math.floor(Math.random()*rows);
+  var size=2+Math.floor(Math.random()*4);
+  var shape=Math.random(),cells=[];
+  if(shape<0.3){for(var dy=0;dy<size;dy++)cells.push([0,dy]);for(var dx=1;dx<Math.ceil(size/2);dx++)cells.push([dx,size-1])}
+  else if(shape<0.6){for(var dx2=0;dx2<size;dx2++)cells.push([dx2,0]);cells.push([Math.floor(size/2),1]);cells.push([Math.floor(size/2),2])}
+  else{for(var i=0;i<size*2;i++)cells.push([Math.floor(Math.random()*size)-Math.floor(size/2),Math.floor(Math.random()*size)-Math.floor(size/2)])}
+  for(var j=0;j<cells.length;j++){var r=cy+cells[j][1],c=cx+cells[j][0];if(r>=0&&r<rows&&c>=0&&c<cols){grid[r][c].ta=0.3+Math.random()*0.5}}
+}
+
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  spawnTimer++;
+  if(spawnTimer>=SPAWN_INTERVAL){spawnCluster();spawnTimer=0}
+
+  /* Mouse interaction */
+  if(mouse.x>0&&mouse.y>0){
+    var mc=Math.floor(mouse.x/CELL),mr=Math.floor(mouse.y/CELL),radius=8;
+    for(var dy=-radius;dy<=radius;dy++){for(var dx=-radius;dx<=radius;dx++){
+      var r=mr+dy,c=mc+dx;
+      if(r>=0&&r<rows&&c>=0&&c<cols){var dist=Math.sqrt(dx*dx+dy*dy);if(dist<=radius){var bright=(1-dist/radius)*0.6;grid[r][c].ta=Math.max(grid[r][c].ta,bright)}}
+    }}
+  }
+
+  /* Sample video into tiny canvas (1px per cell) */
+  var vidReady=vid&&vid.readyState>=2;
+  if(vidReady){tctx.drawImage(vid,0,0,cols,rows)}
+
+  /* Update & render */
+  ctx.imageSmoothingEnabled=false;
+  for(var r=0;r<rows;r++){for(var c=0;c<cols;c++){
+    var cell=grid[r][c];
+    cell.a+=(cell.ta-cell.a)*0.07;
+    cell.ta*=(1-cell.decay);
+    if(cell.a<0.005)continue;
+    var x=c*CELL,y=r*CELL;
+    if(vidReady){
+      /* Draw 1px from tiny canvas → PX block on main canvas = pixelated video color */
+      ctx.globalAlpha=cell.a;
+      ctx.drawImage(tiny,c,r,1,1,x,y,PX,PX);
+    }
+  }}
+  ctx.globalAlpha=1;
+
+  /* Ambient twinkle */
+  if(Math.random()<0.12){var rc=Math.floor(Math.random()*cols),rr=Math.floor(Math.random()*rows);grid[rr][rc].ta=0.06+Math.random()*0.12}
+
+  requestAnimationFrame(draw);
+}
+
+resize();
+for(var i=0;i<6;i++)spawnCluster();
+draw();
+window.addEventListener('resize',resize);
+hero.addEventListener('mousemove',function(e){var r=hero.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
+hero.addEventListener('mouseleave',function(){mouse.x=-9999;mouse.y=-9999});
+}();
+
+/* Init */
+document.querySelector('nav').style.display='flex';
+setLang('zh');
+</script>
+</body>
+</html>
