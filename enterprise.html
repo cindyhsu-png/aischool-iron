@@ -257,11 +257,6 @@ footer{border-top:1px solid var(--bd);padding:36px clamp(24px,5vw,72px);display:
 </head>
 <body>
 <div id="prog"></div>
-<nav>
-  <a href="index.html" class="logo">AI <span>未來學院</span></a>
-  <ul class="nv"><li><a href="ai-toolkit.html">AI工具庫</a></li><li><a href="ai-events.html">學院活動</a></li><li><a href="ai-achievements.html">學員成果</a></li><li><a href="enterprise.html" class="on">企業服務</a></li></ul>
-  <div class="lt"><button class="lb on" onclick="setLang('zh')">中文</button><button class="lb" onclick="setLang('en')">EN</button></div>
-</nav>
 
 <!-- ══ HERO ══ -->
 <section class="hero">
@@ -464,7 +459,6 @@ footer{border-top:1px solid var(--bd);padding:36px clamp(24px,5vw,72px);display:
   </div>
 </section>
 
-<footer><div class="fl">AI <span>未來學院</span></div><ul class="fk"><li><a href="index.html">首頁</a></li><li><a href="#">隱私政策</a></li><li><a href="#">使用條款</a></li></ul><div class="fc">© 2025 AI 未來學院</div></footer>
 
 <div class="mo" id="entModal"><div class="mb"><button class="mx" onclick="this.closest('.mo').classList.remove('open')">×</button><h2>預約企業 AI 診斷</h2><p>專案顧問 48 小時內聯繫。</p><form id="entForm" onsubmit="return handleEntSubmit(event)"><div class="fr"><div class="fg"><label>聯絡人</label><input type="text" name="name" placeholder="姓名" required></div><div class="fg"><label>職稱</label><input type="text" name="title" placeholder="例：營運長"></div></div><div class="fg"><label>公司名稱</label><input type="text" name="company" placeholder="公司全名" required></div><div class="fr"><div class="fg"><label>Email</label><input type="email" name="email" placeholder="企業信箱" required></div><div class="fg"><label>手機</label><input type="tel" name="phone" placeholder="聯絡電話" required></div></div><div class="fr"><div class="fg"><label>公司規模</label><select name="company_size" required><option value="">請選擇</option><option>50人以下</option><option>50-200</option><option>200-500</option><option>500-1000</option><option>1000+</option></select></div><div class="fg"><label>產業別</label><select name="industry" required><option value="">請選擇</option><option>科技/軟體</option><option>金融/保險</option><option>製造業</option><option>零售/電商</option><option>醫療/生技</option><option>教育</option><option>媒體/行銷</option><option>其他</option></select></div></div><div class="fg"><label>最想解決的問題（選填）</label><textarea name="challenge" placeholder="例：客服效率低、報表耗時..."></textarea></div><button type="submit" class="fs">送出預約</button></form></div></div>
 
@@ -482,8 +476,8 @@ var io=new IntersectionObserver(function(ents){ents.forEach(function(e){if(!e.is
 document.querySelectorAll('.rv,#dashMock,#roiChart').forEach(function(el){io.observe(el)});
 
 /* Scroll progress + nav */
-var prog=document.getElementById('prog'),navE=document.querySelector('nav'),tick=false;
-window.addEventListener('scroll',function(){if(!tick){requestAnimationFrame(function(){var h=document.documentElement.scrollHeight-innerHeight;prog.style.width=(h>0?scrollY/h*100:0)+'%';navE.classList.toggle('scrolled',scrollY>50);tick=false});tick=true}},{passive:true});
+var prog=document.getElementById('prog'),tick=false;
+window.addEventListener('scroll',function(){if(!tick){requestAnimationFrame(function(){var h=document.documentElement.scrollHeight-innerHeight;prog.style.width=(h>0?scrollY/h*100:0)+'%';tick=false});tick=true}},{passive:true});
 
 /* ── Hero number slot-machine flip ── */
 !function(){
@@ -947,7 +941,6 @@ hero.addEventListener('mouseleave',function(){mouse.x=-9999;mouse.y=-9999});
 }();
 
 /* Init */
-document.querySelector('nav').style.display='flex';
 setLang('zh');
 </script>
 </body>
