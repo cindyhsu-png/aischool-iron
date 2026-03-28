@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 生態系營運提案</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09090f;
+  --surface: #111118;
+  --surface2: #16161f;
+  --border: rgba(255,255,255,0.07);
+  --accent: #7cffb2;
+  --accent2: #5b8fff;
+  --text: #f0f0f5;
+  --text-muted: rgba(240,240,245,0.45);
+  --text-sub: rgba(240,240,245,0.65);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow: hidden; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+  height: 100%;
+  line-height: 1.7;
+}
+
+/* ── Slide layout ── */
+.slide {
+  position: fixed;
+  inset: 0;
+  display: none;          /* hidden unless active or transitioning */
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 8%;
+  overflow-y: auto;
+  will-change: transform;
+}
+.slide.is-active,
+.slide.is-transitioning {
+  display: flex;
+}
+.slide.is-active {
+  transform: translateX(0);
+}
+.slide-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  box-shadow: 0 0 14px rgba(124,255,178,0.6);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Nav buttons ── */
+.nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  outline: none;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(124,255,178,0.35);
+  box-shadow: 0 0 24px rgba(124,255,178,0.12);
+  transform: translateY(-50%) scale(1.08);
+}
+.nav-btn:disabled {
+  opacity: 0.18;
+  cursor: default;
+  pointer-events: none;
+}
+.nav-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nav-prev { left: 20px; }
+.nav-next { right: 20px; }
+
+/* ── Bottom dot counter ── */
+#slide-counter {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+}
+.counter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.counter-dot:hover { background: rgba(255,255,255,0.4); }
+.counter-dot.active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(124,255,178,0.5);
+}
+
+/* ── Slide page label ── */
+#page-label {
+  position: fixed;
+  bottom: 28px;
+  right: 8%;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  z-index: 1000;
+}
+
+/* ── Typography ── */
+.slide-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.slide-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+.slide-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+.slide-title em {
+  font-style: normal;
+  color: var(--accent);
+}
+.slide-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-sub);
+  max-width: 640px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+.highlight { color: var(--accent); font-weight: 500; }
+
+/* ── Cover slide ── */
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%, rgba(124,255,178,0.08), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(91,143,255,0.07), transparent 50%);
+}
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 80%);
+}
+.cover-content { text-align: center; }
+.cover-content .slide-title {
+  font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+  margin-bottom: 1.5rem;
+}
+.cover-tagline {
+  font-size: 1.2rem;
+  color: var(--text-sub);
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.8;
+}
+.cover-meta {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.cover-meta-item {
+  text-align: center;
+}
+.cover-meta-item span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cover-meta-item strong {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ── Cards grid ── */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 2rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  border-color: rgba(124,255,178,0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+}
+.card-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,255,178,0.06);
+  border: 1px solid rgba(124,255,178,0.12);
+  border-radius: 12px;
+}
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+}
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.card-tag {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  padding: 4px 12px;
+  border: 1px solid rgba(124,255,178,0.2);
+  border-radius: 100px;
+  background: rgba(124,255,178,0.04);
+}
+
+/* ── Flywheel diagram ── */
+.flywheel-container {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  margin-top: 2rem;
+}
+.flywheel {
+  width: 420px;
+  height: 420px;
+  position: relative;
+  flex-shrink: 0;
+}
+.flywheel-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(124,255,178,0.15);
+  border-radius: 50%;
+  animation: spin 20s linear infinite;
+}
+.flywheel-ring::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.flywheel-ring-inner {
+  position: absolute;
+  inset: 40px;
+  border: 1px dashed rgba(91,143,255,0.2);
+  border-radius: 50%;
+  animation: spin 15s linear infinite reverse;
+}
+.flywheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 160px;
+}
+.flywheel-center-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.flywheel-center-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.fw-node {
+  position: absolute;
+  width: 130px;
+  text-align: center;
+  padding: 16px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: all 0.3s;
+}
+.fw-node:hover {
+  border-color: rgba(124,255,178,0.3);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+.fw-node-icon {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,255,178,0.06);
+  border: 1px solid rgba(124,255,178,0.12);
+  border-radius: 10px;
+}
+.fw-node-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fw-node-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.fw-node-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.fw-node:nth-child(3) { top: -20px; left: 50%; transform: translateX(-50%); }
+.fw-node:nth-child(4) { bottom: -20px; right: -30px; }
+.fw-node:nth-child(5) { bottom: -20px; left: -30px; }
+
+.flywheel-flows {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.25s;
+}
+.flow-item:hover {
+  border-color: rgba(124,255,178,0.2);
+  transform: translateX(6px);
+}
+.flow-arrow {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,255,178,0.06);
+  border-radius: 8px;
+}
+.flow-arrow svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flow-text strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.flow-text span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Revenue table ── */
+.revenue-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 2rem;
+}
+.revenue-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.revenue-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+}
+.revenue-block.academy::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.revenue-block.aigo::before { background: linear-gradient(90deg, var(--accent2), #a78bfa); }
+.revenue-block-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.revenue-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.revenue-table th {
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--border);
+}
+.revenue-table td {
+  padding: 12px 0;
+  font-size: 0.88rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.revenue-table tr:last-child td {
+  border-bottom: none;
+  font-weight: 600;
+  color: var(--accent);
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.revenue-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding: 28px 36px;
+  background: linear-gradient(135deg, rgba(124,255,178,0.08), rgba(91,143,255,0.08));
+  border: 1px solid rgba(124,255,178,0.15);
+  border-radius: 16px;
+}
+.revenue-total-label {
+  font-size: 1rem;
+  color: var(--text-sub);
+}
+.revenue-total-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+.revenue-total-range {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 3rem;
+}
+.stat-box {
+  text-align: center;
+  padding: 28px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: all 0.3s;
+}
+.stat-box:hover {
+  border-color: rgba(124,255,178,0.2);
+  transform: translateY(-4px);
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  display: block;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+/* ── Value chain ── */
+.value-chain {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 3rem;
+  position: relative;
+}
+.chain-step {
+  flex: 1;
+  padding: 28px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: all 0.3s;
+}
+.chain-step:first-child { border-radius: 14px 0 0 14px; }
+.chain-step:last-child { border-radius: 0 14px 14px 0; }
+.chain-step:hover { background: var(--surface2); z-index: 2; }
+.chain-step::after {
+  content: '→';
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--accent);
+  z-index: 3;
+}
+.chain-step:last-child::after { display: none; }
+.chain-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+.chain-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,255,178,0.06);
+  border: 1px solid rgba(124,255,178,0.12);
+  border-radius: 10px;
+}
+.chain-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.chain-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+.chain-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Differentiator ── */
+.diff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 2rem;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--border);
+}
+.diff-item {
+  background: var(--surface);
+  padding: 36px 32px;
+  transition: all 0.3s;
+}
+.diff-item:hover { background: var(--surface2); }
+.diff-old {
+  font-size: 0.82rem;
+  color: rgba(255,100,100,0.6);
+  text-decoration: line-through;
+  margin-bottom: 8px;
+}
+.diff-new {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.diff-detail {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── Roadmap ── */
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 2rem;
+}
+.roadmap-phase {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.3s;
+}
+.roadmap-phase:hover {
+  border-color: rgba(124,255,178,0.2);
+  transform: translateY(-4px);
+}
+.roadmap-phase::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 14px 14px 0 0;
+  opacity: 0.3;
+}
+.roadmap-phase:first-child::before { opacity: 1; }
+.roadmap-quarter {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.roadmap-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 16px;
+}
+.roadmap-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.roadmap-list li {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.roadmap-list li::before {
+  content: '▸';
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── CTA slide ── */
+.cta-center {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.cta-center .slide-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+  font-size: 0.9rem;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s;
+  font-weight: 600;
+}
+.btn-accent {
+  background: var(--accent);
+  color: #000;
+}
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(124,255,178,0.3);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: rgba(255,255,255,0.2);
+  background: var(--surface2);
+}
+
+/* ── Page number (hidden – replaced by global #page-label) ── */
+.page-num { display: none; }
+
+/* ── Separator ── */
+.slide-border-top {
+  border-top: 1px solid var(--border);
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.d1.visible { transition-delay: 0.1s; }
+.d2.visible { transition-delay: 0.2s; }
+.d3.visible { transition-delay: 0.3s; }
+.d4.visible { transition-delay: 0.4s; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .flywheel-container { flex-direction: column; gap: 48px; }
+  .flywheel { width: 340px; height: 340px; margin: 0 auto; }
+  .revenue-grid { grid-template-columns: 1fr; }
+  .roadmap { grid-template-columns: repeat(2, 1fr); }
+  .cards-row { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .slide { padding: 60px 6%; }
+  .cards-row { grid-template-columns: 1fr; }
+  .diff-grid { grid-template-columns: 1fr; }
+  .roadmap { grid-template-columns: 1fr; }
+  .value-chain { flex-direction: column; }
+  .chain-step { border-radius: 0 !important; }
+  .chain-step:first-child { border-radius: 14px 14px 0 0 !important; }
+  .chain-step:last-child { border-radius: 0 0 14px 14px !important; }
+  .chain-step::after { display: none; }
+  .stats-bar { grid-template-columns: 1fr; }
+  .nav-btn { width: 40px; height: 40px; }
+  .flywheel { width: 280px; height: 280px; }
+  .fw-node { width: 100px; padding: 10px 8px; }
+  .fw-node-label { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top progress bar ── -->
+<div id="progress-bar"></div>
+
+<!-- ── Prev / Next buttons ── -->
+<button class="nav-btn nav-prev" id="btnPrev" aria-label="上一頁">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-btn nav-next" id="btnNext" aria-label="下一頁">
+  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
+
+<!-- ── Bottom dot counter ── -->
+<div id="slide-counter"></div>
+
+<!-- ── Page label ── -->
+<div id="page-label">01 / 10</div>
+
+<!-- ═══════════════════════════════════════ SLIDE 1: COVER ═══════════════════════════════════════ -->
+<section class="slide is-active" id="cover">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="slide-inner cover-content">
+    <div class="slide-label animate">Ecosystem Proposal</div>
+    <h1 class="slide-title animate d1">
+      建構 AI 生態圈<br><em>矩陣計劃</em>
+    </h1>
+    <p class="cover-tagline animate d2">
+      從人才培育到企業落地，打造 AI 時代最完整的價值循環
+    </p>
+  </div>
+  <div class="page-num">01 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 2: VISION ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="vision">
+  <div class="slide-inner">
+    <div class="slide-label">The Problem We're Solving</div>
+    <h2 class="slide-title">AI 正在改變每一個產業，<br><em>但大多數人被遠遠拋在後面</em></h2>
+    <p class="slide-subtitle">
+      技術的門檻已不是問題，問題是沒有人幫企業和人才之間搭好橋。AI 工具每季更新，但企業不知道從哪裡找到真正能用的人；學習者不知道學完能去哪裡；社群辦著活動，卻沒有形成真正的產業連結。這個斷裂，是我們想修復的事情。
+    </p>
+    <div class="stats-bar">
+      <div class="stat-box animate">
+        <span class="stat-num">90%</span>
+        <span class="stat-label">有 AI 轉型意願的企業<br>卻找不到能落地的方法與人才</span>
+      </div>
+      <div class="stat-box animate d1">
+        <span class="stat-num">72%</span>
+        <span class="stat-label">AI 學習者完課後<br>仍找不到實戰應用場域</span>
+      </div>
+      <div class="stat-box animate d2">
+        <span class="stat-num">10×</span>
+        <span class="stat-label">AI 工具每季更新速度<br>傳統培訓模式遠遠跟不上</span>
+      </div>
+      <div class="stat-box animate d3">
+        <span class="stat-num" style="font-size:1.7rem;">NT$850億</span>
+        <span class="stat-label">台灣企業 AI 市場 2027 年規模<br>供給端的解決方案嚴重不足</span>
+      </div>
+    </div>
+    <div style="margin-top:2rem;padding:20px 28px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:16px;" class="animate d4">
+      <span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(124,255,178,0.06);border:1px solid rgba(124,255,178,0.12);border-radius:10px;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+      <div style="font-size:0.88rem;color:var(--text-sub);line-height:1.7;"><strong style="color:var(--text);display:block;margin-bottom:2px;">我們相信</strong>人才、企業、知識三者一旦形成有機的連結，這個連結本身就會自己生長。我們做的不是填補市場缺口，而是建立一個讓 AI 時代的人可以互相支撐的系統。</div>
+    </div>
+  </div>
+  <div class="page-num">02 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 3: ECOSYSTEM ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="ecosystem">
+  <div class="slide-inner">
+    <div class="slide-label">Platform Architecture</div>
+    <h2 class="slide-title">三位一體平台，<br><em>每一層都是護城河</em></h2>
+    <p class="slide-subtitle">
+      這不是三個獨立業務——而是一個共生平台。每個角色的數據與用戶，都在強化其他兩個角色的競爭壁壘，形成競爭者難以複製的結構性優勢。
+    </p>
+    <div class="cards-row">
+      <div class="card animate">
+        <span class="card-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg></span>
+        <h3 class="card-title">AI 未來學院</h3>
+        <p class="card-desc">
+          一年期 AI 學程，三個方案按需選擇。每位學員的技能圖譜、專案成果與就業軌跡，持續累積為業界最完整的 <strong style="color:var(--text);">AI 人才資料庫</strong>——這是企業端精準配對的核心資產，也是隨時間增值的數據護城河。
+        </p>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="card-tag">人才供應鏈</span>
+          <span class="card-tag" style="border-color:rgba(91,143,255,0.2);color:var(--accent2);">數據資產</span>
+        </div>
+      </div>
+      <div class="card animate d1" style="border-color:rgba(124,255,178,0.15);">
+        <span class="card-icon"><svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span>
+        <h3 class="card-title">適才科技｜AI GO</h3>
+        <p class="card-desc">
+          月訂閱制企業 AI 陪跑服務（NT$49,800/月）。每個落地案例的 SOP、成效數據與產業洞察，形成私有知識庫。<strong style="color:var(--text);">競爭者需要投入相同的時間才能複製，而我們永遠領先一個身位。</strong>
+        </p>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="card-tag">企業落地引擎</span>
+          <span class="card-tag" style="border-color:rgba(91,143,255,0.2);color:var(--accent2);">知識壁壘</span>
+        </div>
+      </div>
+      <div class="card animate d2">
+        <span class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <h3 class="card-title">AI 社群</h3>
+        <p class="card-desc">
+          2萬+ 目標會員的行為數據與需求洞察，是精準定向最低成本的獲客引擎。讀書會、講座、Demo Day 構成的信任資產，讓轉換率遠高於任何廣告投放——<strong style="color:var(--text);">社群即護城河</strong>。
+        </p>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="card-tag">流量與信任引擎</span>
+          <span class="card-tag" style="border-color:rgba(91,143,255,0.2);color:var(--accent2);">網絡效應</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">03 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 4: FLYWHEEL ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="flywheel">
+  <div class="slide-inner">
+    <div class="slide-label">The Flywheel</div>
+    <h2 class="slide-title">飛輪效應：<em>越轉越快</em></h2>
+    <div class="flywheel-container">
+      <div class="flywheel">
+        <div class="flywheel-ring"></div>
+        <div class="flywheel-ring-inner"></div>
+        <div class="flywheel-center">
+          <div class="flywheel-center-title">AI 生態飛輪</div>
+          <div class="flywheel-center-sub">自我強化循環</div>
+        </div>
+        <div class="fw-node">
+          <div class="fw-node-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="fw-node-label">AI 社群</div>
+          <div class="fw-node-sub">流量入口</div>
+        </div>
+        <div class="fw-node">
+          <div class="fw-node-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg></div>
+          <div class="fw-node-label">AI 未來學院</div>
+          <div class="fw-node-sub">轉換引擎</div>
+        </div>
+        <div class="fw-node">
+          <div class="fw-node-icon"><svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div>
+          <div class="fw-node-label">AI GO</div>
+          <div class="fw-node-sub">價值兌現</div>
+        </div>
+      </div>
+      <div class="flywheel-flows">
+        <div class="flow-item animate">
+          <span class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg></span>
+          <div class="flow-text">
+            <strong>社群 → 學院</strong>
+            <span>活動建立信任，將受眾轉化為付費學員。免費體驗營篩選高意向用戶。</span>
+          </div>
+        </div>
+        <div class="flow-item animate d1">
+          <span class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg></span>
+          <div class="flow-text">
+            <strong>學院 → AI GO</strong>
+            <span>培育完成的學員直接進入企業專案實習，成為 AI GO 的人力資源。</span>
+          </div>
+        </div>
+        <div class="flow-item animate d2">
+          <span class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg></span>
+          <div class="flow-text">
+            <strong>AI GO → 社群</strong>
+            <span>企業成功案例回饋為社群內容，形成口碑與續約，降低整體獲客成本。</span>
+          </div>
+        </div>
+        <div class="flow-item animate d3">
+          <span class="flow-arrow"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg></span>
+          <div class="flow-text">
+            <strong>企業內訓 → 學院</strong>
+            <span>AI GO 客戶的員工培訓需求反饋為學院課程方向，確保內容貼合市場。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">04 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 5a: ACADEMY CORE ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="academy" style="padding-top:44px;padding-bottom:44px;">
+  <div class="slide-inner">
+    <div class="slide-label">AI Future Academy</div>
+    <h2 class="slide-title">不只學 AI，<em>而是讓 AI 成為你每天的工作方式</em></h2>
+    <p class="slide-subtitle" style="margin-bottom:1rem;">
+      AI 未來學院是一年期的持續學習系統。AI 工具每季迭代，傳統課程學完就過期——我們用三層機制確保學員永遠跟得上，而且學完就能用。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:1rem;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 20px;position:relative;overflow:hidden;" class="animate">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0.6;border-radius:16px 16px 0 0;"></div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">每日</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:10px;">AI 知識內容</div>
+        <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">每天一則精準更新的 AI 動態、工具介紹或應用技巧。在碎片時間裡持續累積，知識不斷線。</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(124,255,178,0.2);border-radius:16px;padding:22px 20px;position:relative;overflow:hidden;" class="animate d1">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);border-radius:16px 16px 0 0;"></div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">每週</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:10px;">AI 實戰課</div>
+        <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">不只看，要做。每週一堂動手課，帶你用 AI 做出真實可用的產品或工作流程，學完當週就能上線。</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 20px;position:relative;overflow:hidden;" class="animate d2">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0.6;border-radius:16px 16px 0 0;"></div>
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">每月</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:10px;">AI 大師講堂</div>
+        <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">邀請產業實踐者分享第一線的 AI 應用場景。不是理論，是真實發生在企業裡的故事與方法。</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="animate d3">
+      <div style="padding:16px 20px;background:rgba(124,255,178,0.04);border:1px solid rgba(124,255,178,0.12);border-radius:12px;display:flex;align-items:center;gap:14px;">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <div style="font-size:0.85rem;color:var(--text-sub);">所有方案皆含 <strong style="color:var(--text);">AI 社群會員資格</strong>，進入真實的 AI 從業者網絡</div>
+      </div>
+      <div style="padding:16px 20px;background:rgba(91,143,255,0.04);border:1px solid rgba(91,143,255,0.12);border-radius:12px;display:flex;align-items:center;gap:14px;">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--accent2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+        <div style="font-size:0.85rem;color:var(--text-sub);">完訓後可銜接 <strong style="color:var(--text);">AI GO 企業實習機會</strong>，學習直接連結職涯</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">05 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 5b: ACADEMY PLANS ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="academy-plans">
+  <div class="slide-inner">
+    <div class="slide-label">AI Future Academy · 學習方案</div>
+    <h2 class="slide-title" style="margin-bottom:0.8rem;">三種方案，<em>按預算與目標選擇</em></h2>
+    <p class="slide-subtitle" style="margin-bottom:1.4rem;font-size:1rem;">一年期學程，從入門到深度賦能，所有方案皆含 AI 社群會員資格與每日知識更新。</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+
+      <!-- 入門計劃 -->
+      <div class="card animate" style="display:flex;flex-direction:column;padding:24px 22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span class="card-tag" style="margin:0;">入門計劃</span>
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);margin-bottom:4px;">58,000</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">NT$ · 年費</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>每日 AI 知識更新
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>每週 AI 實戰課（做出真實產品）
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>每月 AI 大師講堂
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>AI 社群會員資格
+          </div>
+        </div>
+      </div>
+
+      <!-- 進階計劃 -->
+      <div class="card animate d1" style="display:flex;flex-direction:column;border-color:rgba(124,255,178,0.25);padding:24px 22px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span class="card-tag" style="margin:0;background:rgba(124,255,178,0.08);">進階計劃</span>
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);margin-bottom:4px;">108,000</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">NT$ · 年費</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>入門計劃全部內容
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>專家級可變現 AI 資料庫（提示詞、工作流、Skills 工具庫）
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>業師一對一諮詢 × 3 次
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>接案媒合機會 × 1 次
+          </div>
+        </div>
+      </div>
+
+      <!-- 未來計劃 -->
+      <div class="card animate d2" style="display:flex;flex-direction:column;padding:24px 22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span class="card-tag" style="margin:0;">未來計劃</span>
+          <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);margin-bottom:4px;">158,000</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">NT$ · 年費</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>進階計劃全部內容
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>業師一對一諮詢 PLUS+ × 6 次
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>接案媒合機會 × 3 次
+          </div>
+          <div style="display:flex;gap:8px;font-size:0.82rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:1px;">▸</span>AI 社群高階會員・專屬活動
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">05 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 6a: AI GO CORE ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="aigo">
+  <div class="slide-inner">
+    <div class="slide-label">適才科技 · AI GO</div>
+    <h2 class="slide-title">工程師進你的辦公室，<em>不是在會議室做簡報</em></h2>
+    <p class="slide-subtitle" style="margin-bottom:1.6rem;">多數 AI 顧問給你報告和建議。AI GO 給你一套真正在跑的系統——21 天內第一個流程上線，成效可量化，有效才收費。</p>
+
+    <!-- 4 stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;" class="animate">
+      <div style="text-align:center;padding:18px 12px;background:var(--surface);border:1px solid rgba(124,255,178,0.2);border-radius:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);">21天</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">首個流程上線</div>
+      </div>
+      <div style="text-align:center;padding:18px 12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);">4.7x</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">首年平均 ROI</div>
+      </div>
+      <div style="text-align:center;padding:18px 12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);">88%</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">客戶續約率</div>
+      </div>
+      <div style="text-align:center;padding:18px 12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--accent);">50+</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">企業導入實績</div>
+      </div>
+    </div>
+
+    <!-- 3 pillars -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;" class="animate d1">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">FDE 現場駐點</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">工程師坐進你的辦公室</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.7;">直接訪談各部門主管，盤點可自動化的流程。兩週內產出診斷報告，清楚告訴你哪裡能省、能省多少。</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">地端部署 · ISO 27001</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">資料不離開你的伺服器</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.7;">適用金融、醫療等高合規產業。專案結束完整技術移轉，系統歸你所有，無供應商綁定。</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">員工真的在用</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">設計給人用，不是給 IT 看</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.7;">以使用者介面為核心設計，搭配主管、同仁、IT 三層分級教育訓練，確保導入不是曇花一現。</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 6b: AI GO PLANS ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="aigo-plans" style="padding-top:36px;padding-bottom:36px;">
+  <div class="slide-inner">
+    <div class="slide-label">適才科技 · AI GO · 服務方案</div>
+    <h2 class="slide-title" style="margin-bottom:0.8rem;">兩種起點，<em>找到最適合你的切入方式</em></h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+
+      <!-- Plan A -->
+      <div style="background:var(--surface);border:1px solid rgba(124,255,178,0.25);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;" class="animate">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div>
+            <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">Plan A · 成效型顧問方案</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;color:var(--text);">NT$49,800<span style="font-size:1rem;font-weight:400;color:var(--text-muted);"> / 月</span></div>
+          </div>
+          <span class="card-tag" style="margin:0;font-size:0.68rem;">推薦方案</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px;">
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;">▸</span>FDE 工程師進場診斷，產出評估報告
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;">▸</span>建置期駐點，將 AI 導入組織日常運作
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;">▸</span>第一個月落地可執行方案
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent);flex-shrink:0;">▸</span>即時成效儀表板追蹤，月費制不綁長約
+          </div>
+        </div>
+        <div style="padding:10px 14px;background:rgba(124,255,178,0.06);border-radius:8px;font-size:0.78rem;color:var(--accent);font-weight:500;">成效承諾：導入後有成效才開始收費</div>
+      </div>
+
+      <!-- Plan B -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;" class="animate d1">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),#a78bfa);"></div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:4px;">Plan B · 客製化高效方案</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;color:var(--text);">專案報價<span style="font-size:0.85rem;font-weight:400;color:var(--text-muted);"> · 依規模客製</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px;">
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent2);flex-shrink:0;">▸</span>360° 全方位組織體質評估
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent2);flex-shrink:0;">▸</span>以年成效 50% 效益提升為目標
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent2);flex-shrink:0;">▸</span>涵蓋訪談、報告、落地交付、教育訓練
+          </div>
+          <div style="display:flex;gap:10px;font-size:0.83rem;color:var(--text-sub);align-items:flex-start;">
+            <span style="color:var(--accent2);flex-shrink:0;">▸</span>顧問團隊全程陪跑至成效達標
+          </div>
+        </div>
+        <div style="padding:10px 14px;background:rgba(91,143,255,0.06);border-radius:8px;font-size:0.78rem;color:var(--accent2);font-weight:500;">適合需要深度轉型的中大型企業</div>
+      </div>
+    </div>
+
+    <!-- Zero risk bar -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 20px;" class="animate d2">
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">無風險合作流程</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;">
+        <div style="text-align:center;padding:0 12px;">
+          <div style="width:28px;height:28px;background:rgba(124,255,178,0.1);border:1px solid rgba(124,255,178,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--accent);">01</div>
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:3px;">免費診斷</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);">FDE 進場兩週盤點</div>
+        </div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="width:28px;height:28px;background:rgba(124,255,178,0.1);border:1px solid rgba(124,255,178,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--accent);">02</div>
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:3px;">開發上線</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);">21 天首個流程交付</div>
+        </div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="width:28px;height:28px;background:rgba(124,255,178,0.1);border:1px solid rgba(124,255,178,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--accent);">03</div>
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:3px;">確認成效</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);">儀表板追蹤，驗收有效</div>
+        </div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="width:28px;height:28px;background:rgba(124,255,178,0.1);border:1px solid rgba(124,255,178,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--accent);">04</div>
+          <div style="font-size:0.78rem;font-weight:600;margin-bottom:3px;">才開始收費</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);">月費制，可提前終止</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 6c: CYCLE SUMMARY ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="cycle" style="padding-top:44px;padding-bottom:44px;">
+  <div class="slide-inner">
+    <div class="slide-label">The Virtuous Cycle</div>
+    <h2 class="slide-title">學院與 AI GO 的<em>相互強化</em></h2>
+    <p class="slide-subtitle" style="margin-bottom:1.2rem;">兩個系統不是各自獨立運作——學院培育的人才直接進入 AI GO 的服務場域，AI GO 的真實案例又反哺成學院最新的課程素材。越轉越快，形成正向循環。</p>
+
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;">
+
+      <!-- Academy block -->
+      <div style="background:var(--surface);border:1px solid rgba(124,255,178,0.2);border-radius:16px;padding:20px 20px;position:relative;overflow:hidden;" class="animate">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);"></div>
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">AI 未來學院</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">每日知識 × 每週實戰 × 每月講堂，持續輸出有能力的 AI 人才</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">學員帶著真實作品和能力，準備進入企業場域</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">AI GO 的成功案例反哺成最新課程素材，課程永遠貼近實戰</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrows -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:24px;padding:0 28px;" class="animate d1">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="font-size:0.68rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;white-space:nowrap;">人才進駐</div>
+          <div style="font-size:1.4rem;color:var(--accent);">→</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="font-size:1.4rem;color:var(--accent2);">←</div>
+          <div style="font-size:0.68rem;color:var(--accent2);font-weight:600;letter-spacing:0.08em;white-space:nowrap;">案例回饋</div>
+        </div>
+      </div>
+
+      <!-- AI GO block -->
+      <div style="background:var(--surface);border:1px solid rgba(91,143,255,0.2);border-radius:16px;padding:20px 20px;position:relative;overflow:hidden;" class="animate d2">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent2);"></div>
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">適才科技 AI GO</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent2);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">學院人才進駐企業，作為 FDE 顧問的執行夥伴</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent2);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">降低服務成本，提高交付品質，讓企業留存率維持 88%</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.83rem;">
+            <span style="color:var(--accent2);flex-shrink:0;margin-top:2px;font-size:0.7rem;">●</span>
+            <span style="color:var(--text-sub);">企業成功案例成為業界口碑，吸引更多企業與學員加入</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Community -->
+    <div style="margin-top:14px;padding:12px 20px;background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.15);border-radius:12px;text-align:center;" class="animate d3">
+      <span style="font-size:0.85rem;color:var(--text-sub);">
+        <strong style="color:#a78bfa;">AI 社群</strong> 是整個生態的流量入口——社群的信任讓人願意進學院，學院的人才讓企業願意找 AI GO，企業的成果讓社群更有內容。
+        <strong style="color:var(--text);">三者相互供給，獲客成本隨時間遞減。</strong>
+      </span>
+    </div>
+  </div>
+  <div class="page-num">06 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 7: REVENUE ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="revenue" data-skip="true" style="display:none!important;">
+  <div class="slide-inner">
+    <div class="slide-label">Revenue Model</div>
+    <h2 class="slide-title" style="margin-bottom:1.2rem;">營收預估：<em>雙引擎驅動</em></h2>
+
+    <!-- Top: Two engine cards + total -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 0.7fr;gap:16px;margin-bottom:20px;">
+
+      <!-- 學院 -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;position:relative;overflow:hidden;" class="animate">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));"></div>
+        <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">AI 未來學院</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--text);margin-bottom:14px;">NT$ 4,680萬</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <span>入門計劃 × 120人</span><span style="color:var(--text);">696萬</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <span>進階計劃 × 120人</span><span style="color:var(--text);">1,296萬</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <span>未來計劃 × 60人</span><span style="color:var(--text);">948萬</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <span>人才培育 × 80人</span><span style="color:var(--text);">240萬</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);">
+            <span>企業內訓 / 訂閱</span><span style="color:var(--text);">1,500萬</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI GO -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px 20px;position:relative;overflow:hidden;" class="animate d1">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),#a78bfa);"></div>
+        <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px;">適才科技 AI GO</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--text);margin-bottom:14px;">NT$ 9,976萬</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);padding-bottom:6px;border-bottom:1px solid var(--border);">
+            <span>成效陪跑訂閱 × 150家</span><span style="color:var(--text);">5,976萬</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-sub);">
+            <span>客製化專案 × 50案</span><span style="color:var(--text);">4,000萬</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);line-height:1.6;">NT$49,800/月 訂閱制<br>平均留存 8 個月</div>
+      </div>
+
+      <!-- Total + 3yr -->
+      <div style="display:flex;flex-direction:column;gap:14px;" class="animate d2">
+        <!-- Y1 total -->
+        <div style="background:linear-gradient(135deg,rgba(124,255,178,0.08),rgba(91,143,255,0.06));border:1px solid rgba(124,255,178,0.2);border-radius:14px;padding:18px 16px;flex:1;">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;letter-spacing:0.08em;">YEAR 1 合計</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--accent);line-height:1;">1.5億</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">毛利率 68%</div>
+        </div>
+        <!-- Y2 -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:2px;letter-spacing:0.08em;">YEAR 2 目標</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--text);">3.5億</div>
+          <div style="font-size:0.7rem;color:var(--accent);margin-top:2px;">YoY +133%</div>
+        </div>
+        <!-- Y3 -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:2px;letter-spacing:0.08em;">YEAR 3 目標</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--text);">7億</div>
+          <div style="font-size:0.7rem;color:#a78bfa;margin-top:2px;">亞洲擴張期</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: 4 key metrics -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;" class="animate d3">
+      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);">8.2：1</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">LTV : CAC 比率</div>
+      </div>
+      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);">&lt; 6個月</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">CAC 回收周期</div>
+      </div>
+      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);">130%+</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">淨收入留存率 NRR</div>
+      </div>
+      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent);">68%</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Year 1 毛利率</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">07 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 8: DIFFERENTIATOR ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="diff">
+  <div class="slide-inner">
+    <div class="slide-label">Why This Works</div>
+    <h2 class="slide-title">我們做的事情<em>不容易被複製</em>，<br>因為它需要時間累積</h2>
+    <p class="slide-subtitle">
+      這個生態系的價值不來自任何單一產品，而是來自三個角色持續運轉所沉澱的信任、數據與連結。這些東西，是砸錢買不到的。
+    </p>
+    <div class="diff-grid">
+      <div class="diff-item animate">
+        <div class="diff-old">傳統培訓：上完課，彼此陌生人</div>
+        <div class="diff-new">人才的學習不只是上課，而是進入一個圈子</div>
+        <div class="diff-detail">每位學員的成長路徑、專案作品與實戰經驗，在平台上持續累積成可信賴的能力憑證。企業端可以看到真實的人，不是只有履歷。這種信任是慢慢建立的，也因此難以被快速複製。</div>
+      </div>
+      <div class="diff-item animate d1">
+        <div class="diff-old">傳統顧問：案例藏在顧問的腦子裡</div>
+        <div class="diff-new">每個企業案例，都讓下一個服務更精準</div>
+        <div class="diff-detail">AI GO 在每個企業落地過程中積累的 SOP、成效數據與產業洞察，讓我們的服務隨著時間變得更好。這不是規模經濟，而是學習曲線——我們做得越久，對企業的理解就越深。</div>
+      </div>
+      <div class="diff-item animate d2">
+        <div class="diff-old">傳統社群：活動結束，人就散了</div>
+        <div class="diff-new">社群是生態系的根，不是行銷工具</div>
+        <div class="diff-detail">我們的社群不以流量為目的，而是在建立一個人們真正願意互相幫助的場域。當企業、學員、講師都把這裡當成重要的連結節點，這個網絡的價值就會自然增長，不需要靠廣告維持。</div>
+      </div>
+      <div class="diff-item animate d3">
+        <div class="diff-old">傳統機構：被動等政策，被動應對市場</div>
+        <div class="diff-new">我們在建立產業標準，而不只是順著標準走</div>
+        <div class="diff-detail">政府正積極推動企業 AI 人才培育政策，我們已主動布局認證申請。但更重要的是，我們希望我們對人才培育的標準與方法，能成為業界共同參考的依據——不是因為我們說了算，而是因為我們做得最扎實。</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">08 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 9: ROADMAP ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="roadmap">
+  <div class="slide-inner">
+    <div class="slide-label">Execution Plan</div>
+    <h2 class="slide-title">我們怎麼走：<em>扎實建，穩步長</em></h2>
+    <p class="slide-subtitle">
+      不追求快速燒錢擴張，而是讓每個階段都真正站穩。台灣是我們最重要的根據地，也是驗證模式的地方。做到讓台灣的企業和人才都說「這個東西真的有用」，才是向外擴展的時機。
+    </p>
+    <div class="roadmap" style="grid-template-columns:repeat(3,1fr);margin-top:1.2rem;">
+
+      <!-- Year 1 -->
+      <div class="roadmap-phase animate" style="padding:22px 20px;">
+        <div class="roadmap-quarter" style="color:var(--accent);">Year 1 — 把根紮穩</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">驗證與建基</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">三角資源同步啟動，驗證飛輪能轉</div>
+        <ul class="roadmap-list">
+          <li><strong style="color:var(--accent);font-style:normal;">社群</strong>　讀書會、講座固定化，累積 2,000 人信任基底</li>
+          <li><strong style="color:var(--accent);font-style:normal;">學院</strong>　三學程同步開班，首批 300 名學員完訓</li>
+          <li><strong style="color:var(--accent);font-style:normal;">AI GO</strong>　服務 50 家企業，產出真實落地案例</li>
+          <li>學員進駐企業媒合機制啟動</li>
+          <li>申請政府人才培育計畫認可資格</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--accent);">NT$1.5 億</div>
+      </div>
+
+      <!-- Year 2 -->
+      <div class="roadmap-phase animate d1" style="padding:22px 20px;border-color:rgba(124,255,178,0.2);">
+        <div class="roadmap-quarter" style="color:var(--accent);">Year 2 — 讓它自己跑</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">規模化與深化</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">口碑成為主引擎，飛輪轉為自驅</div>
+        <ul class="roadmap-list">
+          <li><strong style="color:var(--accent);font-style:normal;">社群</strong>　5,000 人，Demo Day 成為產業品牌活動</li>
+          <li><strong style="color:var(--accent);font-style:normal;">學院</strong>　累計 800 名學員，30%+ 來自口碑轉介</li>
+          <li><strong style="color:var(--accent);font-style:normal;">AI GO</strong>　客戶 150 家，留存率 80%+</li>
+          <li>企業與學員雙向媒合平台上線</li>
+          <li>與學術機構、政府建立正式合作框架</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--accent);">NT$3.5 億</div>
+      </div>
+
+      <!-- Year 3 -->
+      <div class="roadmap-phase animate d2" style="padding:22px 20px;">
+        <div class="roadmap-quarter" style="color:var(--accent2);">Year 3 — 成為台灣標準</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">生態圈成熟期</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">三角閉環穩定，成為產業共同依賴的基礎</div>
+        <ul class="roadmap-list">
+          <li><strong style="color:var(--accent2);font-style:normal;">社群</strong>　台灣 AI 從業者最重要的連結節點</li>
+          <li><strong style="color:var(--accent2);font-style:normal;">學院</strong>　2,000 名學員，AI 人才認證跨企業通用</li>
+          <li><strong style="color:var(--accent2);font-style:normal;">AI GO</strong>　200+ 家企業，成效數據成為業界參考</li>
+          <li>飛輪獲客成本持續降低，三角互強加速</li>
+          <li>台灣站穩後，評估模式下一步的節奏</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--accent2);">NT$7 億</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="page-num">09 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════ SLIDE 10: CTA ═══════════════════════════════════════ -->
+<section class="slide slide-border-top" id="cta">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="slide-inner cover-content">
+
+    <div class="slide-label animate">Let's Build Together</div>
+
+    <h2 class="slide-title animate d1" style="font-size:clamp(2.2rem,5vw,3.8rem);margin-bottom:1.8rem;">
+      人才、企業、知識<br><em>一旦連結，就會自己生長</em>
+    </h2>
+
+    <p class="cover-tagline animate d2" style="max-width:640px;">
+      我們不是在填補一個市場缺口，<br>
+      我們是在建立一個讓 AI 時代的人可以互相支撐的系統。<br>
+      這件事，值得被認真對待。
+    </p>
+
+    <!-- 三個角色 -->
+    <div class="animate d3" style="display:flex;justify-content:center;gap:16px;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <div style="padding:12px 24px;background:rgba(124,255,178,0.06);border:1px solid rgba(124,255,178,0.2);border-radius:100px;font-size:0.9rem;font-weight:500;">
+        AI 未來學院
+      </div>
+      <div style="display:flex;align-items:center;color:var(--text-muted);font-size:1.2rem;">╳</div>
+      <div style="padding:12px 24px;background:rgba(91,143,255,0.06);border:1px solid rgba(91,143,255,0.2);border-radius:100px;font-size:0.9rem;font-weight:500;">
+        適才科技 AI GO
+      </div>
+      <div style="display:flex;align-items:center;color:var(--text-muted);font-size:1.2rem;">╳</div>
+      <div style="padding:12px 24px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);border-radius:100px;font-size:0.9rem;font-weight:500;">
+        AI 社群
+      </div>
+    </div>
+
+    <div class="cta-actions animate d4">
+      <a href="#" class="btn btn-accent">預約深入交流 →</a>
+      <a href="#" class="btn btn-outline">索取完整計畫書</a>
+    </div>
+
+    <div style="margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);">
+      本提案為機密文件，未經授權不得轉載或分享。&nbsp;&nbsp;AI 未來學院 ╳ 適才科技 AI GO ╳ AI 社群 © 2026
+    </div>
+
+  </div>
+  <div class="page-num">10 / 10</div>
+</section>
+
+<script>
+// ── Horizontal slide deck ──
+const slides = [...document.querySelectorAll('.slide:not([data-skip])')];
+const total = slides.length;
+let current = 0;
+let isAnimating = false;
+
+const progressBar = document.getElementById('progress-bar');
+const btnPrev    = document.getElementById('btnPrev');
+const btnNext    = document.getElementById('btnNext');
+const counter    = document.getElementById('slide-counter');
+const pageLabel  = document.getElementById('page-label');
+
+// Build bottom dots
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'counter-dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', `第 ${i + 1} 頁`);
+  dot.addEventListener('click', () => goTo(i));
+  counter.appendChild(dot);
+});
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateUI() {
+  progressBar.style.width = ((current + 1) / total * 100) + '%';
+  counter.querySelectorAll('.counter-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === current);
+  });
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === total - 1;
+  pageLabel.textContent = `${pad(current + 1)} / ${pad(total)}`;
+}
+
+function triggerAnims(slide) {
+  slide.querySelectorAll('.animate:not(.visible)').forEach(el => {
+    el.classList.add('visible');
+  });
+}
+
+const SLIDE_DURATION = 580;
+const EASE = 'transform 0.58s cubic-bezier(0.77, 0, 0.175, 1)';
+
+function goTo(index) {
+  if (isAnimating || index === current || index < 0 || index >= total) return;
+  isAnimating = true;
+
+  const fromSlide = slides[current];
+  const toSlide   = slides[index];
+  const dir = index > current ? 1 : -1;  // 1 = forward, -1 = backward
+
+  // ① Position incoming slide off-screen with NO transition
+  toSlide.style.transition = 'none';
+  toSlide.style.transform  = `translateX(${dir * 100}%)`;
+  toSlide.classList.add('is-transitioning');
+  toSlide.scrollTop = 0;
+
+  // ② Wait for paint, then enable transitions and animate both slides
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toSlide.style.transition   = EASE;
+      fromSlide.style.transition = EASE;
+
+      toSlide.style.transform   = 'translateX(0)';
+      fromSlide.style.transform = `translateX(${-dir * 100}%)`;
+
+      setTimeout(() => {
+        // ③ Cleanup: only toSlide stays visible as is-active
+        toSlide.classList.remove('is-transitioning');
+        toSlide.classList.add('is-active');
+        toSlide.style.transform  = '';
+        toSlide.style.transition = '';
+
+        fromSlide.classList.remove('is-active');
+        fromSlide.style.transform  = '';
+        fromSlide.style.transition = '';
+
+        isAnimating = false;
+        triggerAnims(toSlide);
+      }, SLIDE_DURATION + 40);
+    });
+  });
+
+  current = index;
+  updateUI();
+}
+
+function goNext() { goTo(current + 1); }
+function goPrev() { goTo(current - 1); }
+
+btnNext.addEventListener('click', goNext);
+btnPrev.addEventListener('click', goPrev);
+
+// ── Keyboard navigation ──
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) { e.preventDefault(); goNext(); }
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key))  { e.preventDefault(); goPrev(); }
+});
+
+// ── Touch / swipe support ──
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) { dx < 0 ? goNext() : goPrev(); }
+}, { passive: true });
+
+// ── Init ──
+updateUI();
+setTimeout(() => triggerAnims(slides[0]), 150);
+</script>
+</body>
+</html>
