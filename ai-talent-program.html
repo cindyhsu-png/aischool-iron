@@ -12,7 +12,7 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans','Noto Sans TC',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}
 
 /* ── Nav ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:72px;background:rgba(9,9,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+nav{display:none}
 .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);text-decoration:none}.logo span{color:var(--accent)}
 .nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
 .nav-links a{font-size:0.85rem;color:var(--text-sub);text-decoration:none;transition:color 0.2s}.nav-links a:hover{color:var(--text)}
@@ -21,7 +21,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:cen
 .lang-btn{font-size:0.75rem;font-weight:500;letter-spacing:0.06em;padding:4px 12px;border-radius:100px;border:none;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--text-muted)}.lang-btn.active{background:var(--accent);color:#000}
 
 /* ── Hero ── */
-.tp-hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:100px 5% 80px}
+.tp-hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:60px 5% 80px}
 .tp-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(124,255,178,0.07),transparent 60%),radial-gradient(ellipse 40% 40% at 80% 70%,rgba(91,143,255,0.05),transparent 50%)}
 .tp-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 80%)}
 .tp-hero-content{position:relative;z-index:2;max-width:820px;margin:0 auto}
@@ -121,7 +121,7 @@ section{padding:100px 5%}.container{max-width:1100px;margin:0 auto}
 .tp-input:focus{border-color:rgba(124,255,178,0.4)}
 .tp-input::placeholder{color:var(--text-muted)}
 .tp-form .btn-primary{width:100%;justify-content:center;padding:16px;font-size:1rem}
-.tp-form-note{font-size:0.75rem;color:var(--text-muted);position:relative;z-index:2}
+.tp-form-note{font-size:0.75rem;color:var(--text-muted);position:relative;z-index:2;margin-top:1.5rem}
 
 /* ── Footer ── */
 footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-muted)}
@@ -154,20 +154,7 @@ footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-bet
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="logo">AI <span>未來學院</span></a>
-  <ul class="nav-links">
-    <li><a href="ai-toolkit.html" data-i18n="nav_toolkit">AI工具庫</a></li>
-    <li><a href="ai-events.html" data-i18n="nav_events">學院活動</a></li>
-    <li><a href="ai-achievements.html" data-i18n="nav_achievements">學員成果</a></li>
-    <li><a href="ai-talent-program.html" class="active-page" data-i18n="nav_talent">人才培訓</a></li>
-    <li><a href="enterprise.html" data-i18n="nav_enterprise">企業服務</a></li>
-  </ul>
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('zh')">中文</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-  </div>
-</nav>
+<!-- nav removed per request -->
 
 <!-- ══════════════════════════ HERO ══════════════════════════ -->
 <section class="tp-hero">
@@ -177,20 +164,20 @@ footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-bet
     <div class="tp-eyebrow"><span class="tp-eyebrow-dot"></span>AI TALENT PROGRAM</div>
     <h1>從學員到教練<br><em>學用合一的蛻變之路</em></h1>
     <p class="tp-hero-sub">
-      以 AI 未來學院課程為基礎，透過每週 Claude 研習會實戰練功、每月能力考核驗證成果。通過認證後，你將成為企業 AI 導入的教練——不只學會 AI，而是帶著企業一起用好 AI。
+      以 AI 未來學院課程為基礎，透過每週 AI 技術研習實戰練功、每月能力考核驗證成果。通過認證後，你將成為企業 AI 導入的教練——不只學會 AI，而是帶著企業一起用好 AI。
     </p>
     <div class="tp-hero-stats">
       <div class="tp-stat">
         <span class="tp-stat-num">一年<span>期</span></span>
-        <span class="tp-stat-label">完整培訓週期</span>
+        <span class="tp-stat-label">AI 學習方案</span>
       </div>
       <div class="tp-stat">
         <span class="tp-stat-num">每週<span>練</span></span>
-        <span class="tp-stat-label">Claude 研習會</span>
+        <span class="tp-stat-label">AI 技術研習</span>
       </div>
       <div class="tp-stat">
         <span class="tp-stat-num">企業<span>戰</span></span>
-        <span class="tp-stat-label">落地實戰機會</span>
+        <span class="tp-stat-label">考核後即服務</span>
       </div>
     </div>
     <div class="tp-hero-cta">
@@ -274,9 +261,9 @@ footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-bet
         <div class="tp-mech-icon" style="background:rgba(91,143,255,0.08);border:1px solid rgba(91,143,255,0.15)">
           <svg viewBox="0 0 24 24" style="stroke:var(--blue)"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
-        <div class="tp-mech-title">每週 Claude 研習會</div>
+        <div class="tp-mech-title">每週 AI 技術研習</div>
         <p class="tp-mech-desc">
-          每週固定時段，由資深教練帶領深度操作 Claude。從 prompt 設計、工作流自動化到企業場景模擬，在做中學、在學中做。
+          每週固定時段，由資深教練帶領深度操作 AI 工具。從 prompt 設計、工作流自動化到企業場景模擬，在做中學、在學中做。
         </p>
         <span class="tp-mech-tag" style="background:rgba(91,143,255,0.08);color:var(--blue);border-color:rgba(91,143,255,0.15)">實戰練功</span>
       </div>
@@ -316,7 +303,7 @@ footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-bet
         <div class="tp-step-circle">2</div>
         <div>
           <div class="tp-step-title">練功期</div>
-          <p class="tp-step-desc">每週 Claude 研習會，跟著教練做中學。從指令設計到自動化流程，實戰出真功夫。</p>
+          <p class="tp-step-desc">每週 AI 技術研習，跟著教練做中學。從指令設計到自動化流程，實戰出真功夫。</p>
           <span class="tp-step-badge" style="background:rgba(91,143,255,0.08);color:var(--blue);border:1px solid rgba(91,143,255,0.15)">週研習會</span>
         </div>
       </div>
