@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>墨宇股份有限公司 — AI 人才生態系投資提案</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f8fafd;
+  --surface2: #f0f4f9;
+  --border: rgba(15,40,80,0.07);
+  --accent: #2563eb;
+  --accent2: #1d4ed8;
+  --accent-light: #eff6ff;
+  --accent-glow: rgba(37,99,235,0.10);
+  --gradient: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8);
+  --gradient-soft: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(29,78,216,0.03));
+  --text: #0f172a;
+  --text-muted: rgba(15,23,42,0.40);
+  --text-sub: rgba(15,23,42,0.58);
+  --green: #059669;
+  --purple: #7c3aed;
+  --orange: #ea580c;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.03);
+  --shadow-md: 0 4px 6px rgba(15,23,42,0.04), 0 10px 15px rgba(15,23,42,0.03);
+  --shadow-lg: 0 10px 25px rgba(15,23,42,0.06), 0 20px 48px rgba(15,23,42,0.04);
+  --radius: 14px;
+  --radius-lg: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow: hidden; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  overflow: hidden;
+  height: 100%;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Slide layout ── */
+.slide {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 8%;
+  overflow-y: auto;
+  will-change: transform;
+}
+.slide.is-active,
+.slide.is-transitioning {
+  display: flex;
+}
+.slide.is-active {
+  transform: translateX(0);
+}
+.slide-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Progress bar ── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--gradient);
+  box-shadow: 0 0 14px rgba(26,111,255,0.4);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2000;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Nav buttons ── */
+.nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  color: var(--text);
+  outline: none;
+  box-shadow: var(--shadow-md);
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.95);
+  border-color: rgba(37,99,235,0.2);
+  box-shadow: var(--shadow-lg), 0 0 0 4px rgba(37,99,235,0.06);
+  transform: translateY(-50%) scale(1.05);
+}
+.nav-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+  pointer-events: none;
+}
+.nav-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nav-prev { left: 20px; }
+.nav-next { right: 20px; }
+
+/* ── Bottom dot counter ── */
+#slide-counter {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+}
+.counter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(26,111,255,0.15);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.counter-dot:hover { background: rgba(26,111,255,0.35); }
+.counter-dot.active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--gradient);
+  box-shadow: 0 0 10px rgba(37,99,235,0.3);
+}
+
+/* ── Page label ── */
+#page-label {
+  position: fixed;
+  bottom: 28px;
+  right: 8%;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  z-index: 1000;
+}
+
+/* ── Typography ── */
+.slide-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.slide-label::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: var(--gradient);
+  border-radius: 2px;
+}
+.slide-title {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+.slide-title em {
+  font-style: normal;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.slide-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-sub);
+  max-width: 680px;
+  line-height: 1.85;
+  margin-bottom: 3rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.highlight { color: var(--accent); font-weight: 600; }
+
+/* ── Background Decorations ── */
+.deco-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  opacity: 0.5;
+  will-change: transform;
+}
+.deco-orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+  top: -15%; right: -10%;
+  animation: orb-float-1 18s ease-in-out infinite;
+}
+.deco-orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+  bottom: -10%; left: -8%;
+  animation: orb-float-2 22s ease-in-out infinite;
+}
+.deco-orb-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(5,150,105,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orb-float-3 20s ease-in-out infinite;
+}
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 20px) scale(1.05); }
+  66% { transform: translate(15px, -15px) scale(0.97); }
+}
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -25px) scale(1.03); }
+  66% { transform: translate(-15px, 10px) scale(0.98); }
+}
+@keyframes orb-float-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+.deco-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, rgba(0,0,0,0.6) 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, rgba(0,0,0,0.6) 20%, transparent 75%);
+}
+.deco-dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(37,99,235,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.5) 10%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.5) 10%, transparent 70%);
+}
+.deco-beam {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.deco-beam-1 {
+  width: 200%; height: 1px; top: 30%; left: -50%;
+  background: linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.06) 20%, rgba(59,130,246,0.12) 50%, rgba(37,99,235,0.06) 80%, transparent 100%);
+  transform: rotate(-12deg);
+  filter: blur(0.5px);
+}
+.deco-beam-2 {
+  width: 200%; height: 1px; top: 65%; left: -50%;
+  background: linear-gradient(90deg, transparent 0%, rgba(124,58,237,0.04) 20%, rgba(124,58,237,0.08) 50%, rgba(124,58,237,0.04) 80%, transparent 100%);
+  transform: rotate(-8deg);
+  filter: blur(0.5px);
+}
+.deco-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.deco-ring-1 {
+  width: 480px; height: 480px;
+  border: 1px solid rgba(37,99,235,0.06);
+  top: -120px; right: -120px;
+  animation: ring-rotate 40s linear infinite;
+}
+.deco-ring-2 {
+  width: 320px; height: 320px;
+  border: 1px dashed rgba(37,99,235,0.04);
+  bottom: -80px; left: -60px;
+  animation: ring-rotate 30s linear infinite reverse;
+}
+@keyframes ring-rotate { to { transform: rotate(360deg); } }
+.deco-corner-tl, .deco-corner-br {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.deco-corner-tl {
+  top: 40px; left: 5%;
+  width: 80px; height: 80px;
+  border-left: 1px solid rgba(37,99,235,0.08);
+  border-top: 1px solid rgba(37,99,235,0.08);
+  opacity: 0.6;
+}
+.deco-corner-br {
+  bottom: 60px; right: 5%;
+  width: 60px; height: 60px;
+  border-right: 1px solid rgba(37,99,235,0.06);
+  border-bottom: 1px solid rgba(37,99,235,0.06);
+  opacity: 0.5;
+}
+.deco-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+.deco-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+}
+.deco-particle-1 {
+  width: 4px; height: 4px;
+  background: rgba(37,99,235,0.25);
+  box-shadow: 0 0 12px rgba(37,99,235,0.2);
+  top: 20%; right: 12%;
+  animation: particle-drift 8s ease-in-out infinite;
+}
+.deco-particle-2 {
+  width: 3px; height: 3px;
+  background: rgba(124,58,237,0.2);
+  box-shadow: 0 0 10px rgba(124,58,237,0.15);
+  top: 65%; left: 8%;
+  animation: particle-drift 10s ease-in-out infinite 2s;
+}
+.deco-particle-3 {
+  width: 5px; height: 5px;
+  background: rgba(5,150,105,0.18);
+  box-shadow: 0 0 14px rgba(5,150,105,0.12);
+  bottom: 25%; right: 20%;
+  animation: particle-drift 12s ease-in-out infinite 4s;
+}
+.deco-particle-4 {
+  width: 3px; height: 3px;
+  background: rgba(37,99,235,0.2);
+  box-shadow: 0 0 8px rgba(37,99,235,0.15);
+  top: 40%; left: 25%;
+  animation: particle-drift 9s ease-in-out infinite 1s;
+}
+@keyframes particle-drift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+  25% { transform: translate(8px, -12px); opacity: 1; }
+  50% { transform: translate(-4px, 6px); opacity: 0.4; }
+  75% { transform: translate(10px, 8px); opacity: 0.8; }
+}
+.deco-hex {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='52' viewBox='0 0 60 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%232563eb' stroke-width='0.3' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 60px 52px;
+  mask-image: radial-gradient(ellipse 60% 50% at 75% 40%, rgba(0,0,0,0.5) 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 75% 40%, rgba(0,0,0,0.5) 0%, transparent 70%);
+}
+.deco-separator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  left: 5%; right: 5%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37,99,235,0.08), rgba(37,99,235,0.12), rgba(37,99,235,0.08), transparent);
+}
+
+/* Cover */
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 65% 25%, rgba(37,99,235,0.07), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 25% 75%, rgba(29,78,216,0.05), transparent 50%),
+    radial-gradient(ellipse 30% 30% at 80% 80%, rgba(124,58,237,0.03), transparent 50%);
+}
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 75%);
+}
+.cover-content { text-align: center; }
+.cover-content .slide-title {
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  margin-bottom: 1.5rem;
+}
+.cover-tagline {
+  font-size: 1.15rem;
+  color: var(--text-sub);
+  max-width: 640px;
+  margin: 0 auto 3rem;
+  line-height: 1.85;
+  font-weight: 300;
+}
+.cover-meta {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.cover-meta-item { text-align: center; }
+.cover-meta-item span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.cover-meta-item strong {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* ── Cards grid ── */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 2rem;
+}
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.card:hover {
+  border-color: rgba(37,99,235,0.15);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+.card-icon {
+  width: 44px; height: 44px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-light);
+  border: 1px solid rgba(37,99,235,0.08);
+  border-radius: 12px;
+}
+.card-icon svg {
+  width: 22px; height: 22px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.card-title {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  line-height: 1.7;
+}
+.card-tag {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 4px 12px;
+  border: 1px solid rgba(26,111,255,0.15);
+  border-radius: 100px;
+  background: var(--accent-light);
+}
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 2.5rem;
+}
+.stat-box {
+  text-align: center;
+  padding: 28px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+.stat-box:hover {
+  border-color: rgba(37,99,235,0.15);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+.stat-num {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Flywheel diagram ── */
+.flywheel-container {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  margin-top: 2rem;
+}
+.flywheel {
+  width: 400px; height: 400px;
+  position: relative;
+  flex-shrink: 0;
+}
+.flywheel-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(26,111,255,0.15);
+  border-radius: 50%;
+  animation: spin 20s linear infinite;
+}
+.flywheel-ring::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 50%;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.flywheel-ring-inner {
+  position: absolute;
+  inset: 40px;
+  border: 1px dashed rgba(26,111,255,0.12);
+  border-radius: 50%;
+  animation: spin 15s linear infinite reverse;
+}
+.flywheel-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 160px;
+}
+.flywheel-center-title {
+  font-weight: 800;
+  font-size: 1rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.flywheel-center-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.fw-node {
+  position: absolute;
+  width: 130px;
+  text-align: center;
+  padding: 16px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+}
+.fw-node:hover {
+  border-color: rgba(37,99,235,0.18);
+  box-shadow: var(--shadow-lg);
+}
+.fw-node-icon {
+  width: 36px; height: 36px;
+  margin: 0 auto 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-light);
+  border: 1px solid rgba(26,111,255,0.12);
+  border-radius: 10px;
+}
+.fw-node-icon svg {
+  width: 18px; height: 18px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fw-node-label {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.fw-node-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.fw-node:nth-child(3) { top: -20px; left: 50%; transform: translateX(-50%); }
+.fw-node:nth-child(4) { bottom: -20px; right: -30px; }
+.fw-node:nth-child(5) { bottom: -20px; left: -30px; }
+.fw-node:nth-child(6) { top: 50%; right: -50px; transform: translateY(-50%); }
+.fw-node:nth-child(7) { top: 50%; left: -50px; transform: translateY(-50%); }
+
+.flywheel-flows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+.flow-item:hover {
+  border-color: rgba(37,99,235,0.15);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+.flow-arrow {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-light);
+  border-radius: 8px;
+}
+.flow-arrow svg {
+  width: 16px; height: 16px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flow-text strong {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+}
+.flow-text span {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+
+/* ── Roadmap ── */
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 2rem;
+}
+.roadmap-phase {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+.roadmap-phase:hover {
+  border-color: rgba(37,99,235,0.15);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+.roadmap-phase::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient);
+  border-radius: 14px 14px 0 0;
+  opacity: 0.3;
+}
+.roadmap-phase:first-child::before { opacity: 1; }
+.roadmap-quarter {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.roadmap-title {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 14px;
+}
+.roadmap-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.roadmap-list li {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.roadmap-list li::before {
+  content: '▸';
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── CTA ── */
+.cta-center {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.cta-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-size: 0.9rem;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn-accent {
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+}
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37,99,235,0.35);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: rgba(37,99,235,0.2);
+  background: var(--accent-light);
+}
+
+/* ── Animations ── */
+.animate {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.d1.visible { transition-delay: 0.08s; }
+.d2.visible { transition-delay: 0.16s; }
+.d3.visible { transition-delay: 0.24s; }
+.d4.visible { transition-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate { opacity: 1; transform: none; }
+  .animate.visible { transition: none; }
+  .flywheel-ring, .flywheel-ring-inner { animation: none; }
+  .deco-orb, .deco-ring-1, .deco-ring-2, .deco-particle { animation: none; }
+  .deco-orb { opacity: 0.3; }
+}
+
+.slide-border-top { border-top: 1px solid var(--border); }
+.logo-img { height: 36px; width: auto; display: block; margin: 0 auto 2rem; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .flywheel-container { flex-direction: column; gap: 48px; }
+  .flywheel { width: 320px; height: 320px; margin: 0 auto; }
+  .cards-row { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .roadmap { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .slide {
+    justify-content: flex-start;
+    padding: 52px 5% 72px;
+  }
+  .slide-title { font-size: clamp(1.35rem, 5.5vw, 1.9rem); line-height: 1.25; }
+  .slide-subtitle { font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem !important; }
+  .nav-btn { width: 40px; height: 40px; }
+  .stats-bar { grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 1.2rem; }
+  .stat-num { font-size: 1.6rem; }
+  .cards-row { grid-template-columns: 1fr; gap: 12px; }
+  .card { padding: 20px; }
+  .card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .flywheel-container { flex-direction: column; gap: 32px; }
+  .flywheel { width: 240px; height: 240px; margin: 0 auto; }
+  .fw-node { width: 88px; padding: 8px 6px; }
+  .fw-node-label { font-size: 0.68rem; }
+  .roadmap { grid-template-columns: 1fr !important; gap: 12px; }
+  .roadmap-phase { padding: 16px !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top progress bar ── -->
+<div id="progress-bar"></div>
+
+<!-- ── Prev / Next buttons ── -->
+<button class="nav-btn nav-prev" id="btnPrev" aria-label="上一頁">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-btn nav-next" id="btnNext" aria-label="下一頁">
+  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
+
+<!-- ── Bottom dot counter ── -->
+<div id="slide-counter"></div>
+<div id="page-label">01 / 12</div>
+
+<!-- ═══════════════════ SLIDE 1: COVER ═══════════════════ -->
+<section class="slide is-active" id="cover">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="deco-orb deco-orb-1"></div>
+  <div class="deco-orb deco-orb-2"></div>
+  <div class="deco-ring deco-ring-1"></div>
+  <div class="deco-ring deco-ring-2"></div>
+  <div class="deco-particle deco-particle-1"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="deco-particle deco-particle-3"></div>
+  <div class="deco-particle deco-particle-4"></div>
+  <div class="deco-noise"></div>
+  <div class="slide-inner cover-content">
+    <img src="img/xplatform.png" alt="墨宇 Xplatform" class="logo-img animate" style="height:48px;margin-bottom:2.5rem;">
+    <div class="slide-label animate">Investor Pitch</div>
+    <h1 class="slide-title animate d1">
+      培養 AI 時代的<br><em>下一代人才</em>
+    </h1>
+    <p class="cover-tagline animate d2">
+      墨宇以知識研發與培訓為核心，透過學院矩陣培養 AI FDE 人才，<br>
+      串聯企業端需求，打造從培訓到落地的 AI 人才生態圈
+    </p>
+    <div class="cover-meta animate d3">
+      <div class="cover-meta-item">
+        <span>提案主體</span>
+        <strong>墨宇股份有限公司</strong>
+      </div>
+      <div class="cover-meta-item">
+        <span>募資規模</span>
+        <strong>NT$ 4 億</strong>
+      </div>
+      <div class="cover-meta-item">
+        <span>月營收</span>
+        <strong>NT$ 3,500 萬</strong>
+      </div>
+      <div class="cover-meta-item">
+        <span>機密等級</span>
+        <strong>Confidential</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 2: PROBLEM ═══════════════════ -->
+<section class="slide slide-border-top" id="problem">
+  <div class="deco-orb deco-orb-1" style="opacity:0.35;"></div>
+  <div class="deco-dots"></div>
+  <div class="deco-beam deco-beam-1"></div>
+  <div class="deco-corner-tl"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">The Problem</div>
+    <h2 class="slide-title animate d1">AI 正在打散職場結構，<br><em>但人才供給完全跟不上</em></h2>
+    <p class="slide-subtitle animate d2">
+      企業急需 AI 落地人才，但傳統教育和培訓體系培養的是「舊世界」的人。<br>
+      學習者想轉型，卻缺乏實戰場域與企業接口。這個斷層正在加速擴大。
+    </p>
+    <div class="stats-bar">
+      <div class="stat-box animate">
+        <span class="stat-num">87%</span>
+        <span class="stat-label">企業表示 AI 人才<br>是數位轉型最大瓶頸</span>
+      </div>
+      <div class="stat-box animate d1">
+        <span class="stat-num">72%</span>
+        <span class="stat-label">AI 學習者完課後<br>仍找不到實戰應用場域</span>
+      </div>
+      <div class="stat-box animate d2">
+        <span class="stat-num">3x</span>
+        <span class="stat-label">AI 職缺增速<br>是人才供給速度的 3 倍</span>
+      </div>
+      <div class="stat-box animate d3">
+        <span class="stat-num">$620B</span>
+        <span class="stat-label">2030 全球企業<br>AI 培訓市場規模</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 3: SOLUTION ═══════════════════ -->
+<section class="slide slide-border-top" id="solution">
+  <div class="deco-orb deco-orb-2" style="opacity:0.3;"></div>
+  <div class="deco-grid"></div>
+  <div class="deco-beam deco-beam-2"></div>
+  <div class="deco-corner-br"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Our Solution</div>
+    <h2 class="slide-title animate d1">不只培訓，<em>建立人才到企業的完整通路</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:2rem;">
+      墨宇的核心不是開一門課，而是建構一個系統：從知識研發、人才養成到企業媒合，讓 AI 人才的培訓真正落地到市場。
+    </p>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;">
+      <!-- Left: Training -->
+      <div class="animate">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="width:40px;height:40px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div style="font-weight:700;font-size:1.1rem;">知識研發 + 培訓</div>
+          </div>
+          <div style="font-size:0.88rem;color:var(--text-sub);line-height:1.8;">
+            課程模組化研發<br>
+            多學院矩陣覆蓋不同受眾<br>
+            AI FDE 認證培訓體系<br>
+            持續更新追上 AI 進化速度
+          </div>
+        </div>
+      </div>
+      <!-- Middle: Arrow -->
+      <div class="animate d1" style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="23" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
+          <path d="M18 24h12M26 20l4 4-4 4" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div style="font-size:0.72rem;color:var(--accent);font-weight:600;letter-spacing:0.08em;">AI FDE<br>人才輸出</div>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="23" stroke="var(--green)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
+          <path d="M30 24H18M22 20l-4 4 4 4" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div style="font-size:0.72rem;color:var(--green);font-weight:600;letter-spacing:0.08em;">需求<br>回饋</div>
+      </div>
+      <!-- Right: Enterprise -->
+      <div class="animate d2">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-sm);">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="width:40px;height:40px;background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <div style="font-weight:700;font-size:1.1rem;">企業端落地</div>
+          </div>
+          <div style="font-size:0.88rem;color:var(--text-sub);line-height:1.8;">
+            企業 AI 導入諮詢<br>
+            FDE 人才進駐企業<br>
+            產業場域實戰驗證<br>
+            企業付費意願明確
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 4: PRODUCT — ACADEMY MATRIX ═══════════════════ -->
+<section class="slide slide-border-top" id="product">
+  <div class="deco-hex"></div>
+  <div class="deco-orb deco-orb-3" style="opacity:0.25;"></div>
+  <div class="deco-particle deco-particle-1"></div>
+  <div class="deco-particle deco-particle-3"></div>
+  <div class="deco-noise"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Product</div>
+    <h2 class="slide-title animate d1">六大學院矩陣，<em>覆蓋不同受眾需求</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      每個學院針對不同人群的痛點設計，形成從入門到專業的完整學習路徑。AI 未來學院是今年新增的旗艦學程，其 AI 能力也會賦能到各培訓品牌。
+    </p>
+    <!-- Top row: 5 training academies -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:all 0.25s;">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px;">無限學院</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">專案式學習<br>累積實戰作品</div>
+      </div>
+      <div class="animate d1" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:all 0.25s;">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px;">學米</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">私塾式<br>客製化課程</div>
+      </div>
+      <div class="animate d2" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:all 0.25s;">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px;">nSchool 職能</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">職場技能<br>專業培訓</div>
+      </div>
+      <div class="animate d2" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:all 0.25s;">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:rgba(234,88,12,0.06);border:1px solid rgba(234,88,12,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px;">nSchool 財經</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">財商觀念<br>資產配置規劃</div>
+      </div>
+      <div class="animate d3" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;box-shadow:var(--shadow-sm);transition:all 0.25s;">
+        <div style="width:48px;height:48px;margin:0 auto 12px;background:rgba(234,88,12,0.06);border:1px solid rgba(234,88,12,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:0.92rem;margin-bottom:4px;">Xlab</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">訓練營模式<br>實體教學</div>
+      </div>
+    </div>
+    <!-- AI 未來學院 — full width highlight -->
+    <div class="animate d4" style="margin-top:14px;background:var(--bg);border:2px solid rgba(37,99,235,0.2);border-radius:16px;padding:20px 28px;box-shadow:0 4px 12px rgba(37,99,235,0.08);position:relative;display:flex;align-items:center;gap:24px;">
+      <div style="position:absolute;top:-8px;left:24px;background:var(--gradient);color:#fff;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:0.05em;">2025 NEW</div>
+      <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent-light);border:1px solid rgba(37,99,235,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px;">AI 未來學院 — 核心旗艦學程</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.6;">專注培養 AI FDE 人才，同時將 AI 能力賦能到上方所有培訓品牌，讓每個學院的學員都能具備 AI 協作力</div>
+      </div>
+      <!-- Arrows pointing up -->
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </div>
+    </div>
+    <div class="animate d4" style="margin-top:12px;padding:14px 24px;background:var(--surface);border-radius:12px;">
+      <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">
+        <strong style="color:var(--text);">學院矩陣策略：</strong>不同學院滿足不同人群的學習入口，AI 未來學院的課程能力向上賦能所有品牌。最終將學員升級為 AI FDE，銜接到企業端的真實需求。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 5: WHY NOW — AI FDE ═══════════════════ -->
+<section class="slide slide-border-top" id="why-now">
+  <div class="deco-orb deco-orb-1" style="opacity:0.3;"></div>
+  <div class="deco-orb deco-orb-2" style="opacity:0.2;"></div>
+  <div class="deco-beam deco-beam-1"></div>
+  <div class="deco-beam deco-beam-2"></div>
+  <div class="deco-corner-tl"></div>
+  <div class="deco-corner-br"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Why Now</div>
+    <h2 class="slide-title animate d1">職場結構已被打散，<br><em>AI FDE（前端部署工程師）是新時代的剛需人才</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:2rem;">
+      AI 不是取代所有人，而是重新定義「有用的人」。能理解 AI、部署 AI、讓 AI 在企業裡落地的人，就是 FDE — <strong style="color:var(--accent);">Field Deployment Engineer（前端部署工程師）</strong>，是現在市場最缺的角色。
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <!-- Before -->
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 24px;box-shadow:var(--shadow-sm);">
+        <div style="font-size:0.72rem;font-weight:700;color:rgba(185,55,55,0.6);letter-spacing:0.12em;margin-bottom:16px;text-transform:uppercase;">舊的職場結構</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="padding:12px 16px;background:rgba(185,55,55,0.03);border:1px solid rgba(185,55,55,0.08);border-radius:10px;">
+            <div style="font-size:0.88rem;color:rgba(185,55,55,0.5);text-decoration:line-through;">固定技能 → 固定崗位</div>
+          </div>
+          <div style="padding:12px 16px;background:rgba(185,55,55,0.03);border:1px solid rgba(185,55,55,0.08);border-radius:10px;">
+            <div style="font-size:0.88rem;color:rgba(185,55,55,0.5);text-decoration:line-through;">學一次，用十年</div>
+          </div>
+          <div style="padding:12px 16px;background:rgba(185,55,55,0.03);border:1px solid rgba(185,55,55,0.08);border-radius:10px;">
+            <div style="font-size:0.88rem;color:rgba(185,55,55,0.5);text-decoration:line-through;">企業自己內部慢慢培養</div>
+          </div>
+        </div>
+      </div>
+      <!-- After -->
+      <div class="animate d1" style="background:var(--bg);border:1px solid rgba(37,99,235,0.12);border-radius:16px;padding:28px 24px;box-shadow:var(--shadow-sm);">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--accent);letter-spacing:0.12em;margin-bottom:16px;text-transform:uppercase;">AI 時代的職場結構</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="padding:12px 16px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:10px;">
+            <div style="font-size:0.88rem;font-weight:600;">AI 協作力 = 核心競爭力</div>
+          </div>
+          <div style="padding:12px 16px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:10px;">
+            <div style="font-size:0.88rem;font-weight:600;">持續學習，隨 AI 進化升級</div>
+          </div>
+          <div style="padding:12px 16px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:10px;">
+            <div style="font-size:0.88rem;font-weight:600;">外部 FDE 快速導入 = 企業首選</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="animate d2" style="margin-top:20px;padding:18px 24px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:12px;text-align:center;">
+      <div style="font-size:0.95rem;font-weight:600;color:var(--accent);">
+        墨宇的定位：不是教 AI 工具，而是培養能在企業裡「讓 AI 落地」的人
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 6: BUSINESS MODEL ═══════════════════ -->
+<section class="slide slide-border-top" id="business-model">
+  <div class="deco-dots"></div>
+  <div class="deco-orb deco-orb-3" style="opacity:0.2;"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="deco-particle deco-particle-4"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Business Model</div>
+    <h2 class="slide-title animate d1">三層營收結構，<em>越往後價值越高</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      學費是基礎，企業媒合是放大器，企業顧問是利潤引擎。三層結構讓每位學員的 LTV 不斷提升。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <!-- Layer 1 -->
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);border-radius:16px 16px 0 0;"></div>
+        <div style="font-weight:800;font-size:1.8rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;">L1</div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:12px;">學院培訓收入</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;margin-bottom:14px;">
+          五大學院學費收入<br>
+          課程授權與經銷收入<br>
+          企業內訓包班
+        </div>
+        <div style="padding:10px 14px;background:var(--surface);border-radius:8px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);">佔比</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--accent);">~60% 營收</div>
+        </div>
+      </div>
+      <!-- Layer 2 -->
+      <div class="animate d1" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);border-radius:16px 16px 0 0;"></div>
+        <div style="font-weight:800;font-size:1.8rem;color:var(--green);margin-bottom:4px;">L2</div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:12px;">企業人才媒合</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;margin-bottom:14px;">
+          FDE 人才派駐費用<br>
+          企業媒合成功抽成<br>
+          長期駐點合約
+        </div>
+        <div style="padding:10px 14px;background:var(--surface);border-radius:8px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);">佔比</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--green);">~25% 營收</div>
+        </div>
+      </div>
+      <!-- Layer 3 -->
+      <div class="animate d2" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);position:relative;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--purple);border-radius:16px 16px 0 0;"></div>
+        <div style="font-weight:800;font-size:1.8rem;color:var(--purple);margin-bottom:4px;">L3</div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:12px;">企業 AI 顧問</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;margin-bottom:14px;">
+          AI 導入策略顧問<br>
+          企業專屬 AI 工作流設計<br>
+          高階 AI 轉型諮詢
+        </div>
+        <div style="padding:10px 14px;background:var(--surface);border-radius:8px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);">佔比</div>
+          <div style="font-weight:700;font-size:1rem;color:var(--purple);">~15% 營收</div>
+        </div>
+      </div>
+    </div>
+    <div class="animate d3" style="margin-top:16px;display:flex;align-items:center;justify-content:center;gap:24px;padding:14px 24px;background:var(--surface);border-radius:12px;">
+      <div style="font-size:0.82rem;color:var(--text-sub);">
+        <strong style="color:var(--text);">飛輪效應：</strong>學員 → FDE → 進駐企業 → 企業滿意追加合約 → 口碑帶來更多學員
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 7: TRACTION ═══════════════════ -->
+<section class="slide slide-border-top" id="traction">
+  <div class="deco-orb deco-orb-1" style="opacity:0.3;"></div>
+  <div class="deco-grid"></div>
+  <div class="deco-particle deco-particle-1"></div>
+  <div class="deco-particle deco-particle-3"></div>
+  <div class="deco-corner-tl"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Traction</div>
+    <h2 class="slide-title animate d1">已經在跑的數字，<em>不是計劃書上的假設</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:2rem;">
+      墨宇不是從零開始。我們已經有穩定營收、持續增長的學員數、以及政府和產業合作的驗證。
+    </p>
+    <div class="stats-bar" style="margin-top:0;margin-bottom:24px;">
+      <div class="stat-box animate">
+        <span class="stat-num">$3,500萬</span>
+        <span class="stat-label">月營收<br>Monthly Revenue</span>
+      </div>
+      <div class="stat-box animate d1">
+        <span class="stat-num">250+</span>
+        <span class="stat-label">每月新增學員<br>Monthly New Students</span>
+      </div>
+      <div class="stat-box animate d2">
+        <span class="stat-num">$4.2億</span>
+        <span class="stat-label">年化營收<br>Annualized Revenue</span>
+      </div>
+      <div class="stat-box animate d3">
+        <span class="stat-num">6</span>
+        <span class="stat-label">學院品牌<br>Academy Brands</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.95rem;margin-bottom:12px;">合作夥伴驗證</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;"></div>
+            <span><strong style="color:var(--text);">數位遊牧協會</strong> — 長期深度合作夥伴</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
+            <span><strong style="color:var(--text);">國家發展委員會</strong> — 政府合作計畫</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--purple);border-radius:50%;flex-shrink:0;"></div>
+            <span><strong style="color:var(--text);">多家企業</strong> — AI 導入與培訓合作</span>
+          </div>
+        </div>
+      </div>
+      <div class="animate d1" style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.95rem;margin-bottom:12px;">成長指標</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;"></div>
+            <span>學員每月穩定增長 <strong style="color:var(--accent);">250 人</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
+            <span>AI 未來學院 2025 開學即額滿</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--text-sub);">
+            <div style="width:6px;height:6px;background:var(--purple);border-radius:50%;flex-shrink:0;"></div>
+            <span>企業端需求持續增加中</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 8a: SERVICE RISK CONTROL — SOP & PROCESS ═══════════════════ -->
+<section class="slide slide-border-top" id="risk-control-1">
+  <div class="deco-orb deco-orb-3" style="opacity:0.2;"></div>
+  <div class="deco-dots"></div>
+  <div class="deco-beam deco-beam-2"></div>
+  <div class="deco-corner-br"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Service & Risk Control</div>
+    <h2 class="slide-title animate d1">有爭議就退費，<em>年退費率僅 0.3%</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      培訓業最大的營運風險是消費爭議。我們以「學員為核心」建立完整的風控體系 — 透明契約、五步驟 SOP、三級案件分類、系統化歸檔追蹤，確保每一個爭議都有邏輯、有流程、有結果。
+    </p>
+
+    <!-- Hero stats -->
+    <div class="animate d2" style="display:flex;gap:16px;margin-bottom:20px;">
+      <div style="flex:1;background:var(--accent-light);border:2px solid rgba(37,99,235,0.12);border-radius:16px;padding:22px 16px;text-align:center;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">0.3%</div>
+        <div style="font-size:0.82rem;font-weight:600;margin-top:4px;">年度退費率</div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">層層風控結構下的實際數據</div>
+      </div>
+      <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;color:var(--green);">&lt;30天</div>
+        <div style="font-size:0.82rem;font-weight:600;margin-top:4px;">平均處理週期</div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">從收案到結案歸檔</div>
+      </div>
+      <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;color:var(--purple);">80%</div>
+        <div style="font-size:0.82rem;font-weight:600;margin-top:4px;">案件解決率</div>
+      </div>
+      <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px 16px;text-align:center;">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;color:var(--orange);">100%</div>
+        <div style="font-size:0.82rem;font-weight:600;margin-top:4px;">退費承諾</div>
+        <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">合理爭議即退費，服務落地優先</div>
+      </div>
+    </div>
+
+    <!-- 5-step SOP detailed -->
+    <div class="animate d3" style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow-sm);margin-bottom:14px;">
+      <div style="font-weight:700;font-size:0.92rem;margin-bottom:16px;">消費爭議處理 SOP — 五步驟標準作業流程</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+        <div style="text-align:center;padding:12px 8px;background:var(--surface);border-radius:10px;">
+          <div style="width:32px;height:32px;margin:0 auto 8px;background:var(--gradient);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;">1</div>
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:4px;">收文登錄</div>
+          <div style="font-size:0.65rem;color:var(--text-sub);line-height:1.5;">建立案件編號<br>登錄當事人資料<br>開啟雲端歸檔夾</div>
+        </div>
+        <div style="text-align:center;padding:12px 8px;background:var(--surface);border-radius:10px;">
+          <div style="width:32px;height:32px;margin:0 auto 8px;background:var(--gradient);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;">2</div>
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:4px;">事實整理</div>
+          <div style="font-size:0.65rem;color:var(--text-sub);line-height:1.5;">確認使用紀錄<br>列出爭議點<br>評估疏失有無</div>
+        </div>
+        <div style="text-align:center;padding:12px 8px;background:var(--surface);border-radius:10px;">
+          <div style="width:32px;height:32px;margin:0 auto 8px;background:var(--gradient);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;">3</div>
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:4px;">法律分析</div>
+          <div style="font-size:0.65rem;color:var(--text-sub);line-height:1.5;">援引定型化契約<br>確認退費合法性<br>比對法院見解</div>
+        </div>
+        <div style="text-align:center;padding:12px 8px;background:var(--surface);border-radius:10px;">
+          <div style="width:32px;height:32px;margin:0 auto 8px;background:var(--gradient);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;">4</div>
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:4px;">回應處理</div>
+          <div style="font-size:0.65rem;color:var(--text-sub);line-height:1.5;">函復 / 答辯<br>提出替代方案<br>電話+書面雙軌</div>
+        </div>
+        <div style="text-align:center;padding:12px 8px;background:var(--surface);border-radius:10px;">
+          <div style="width:32px;height:32px;margin:0 auto 8px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;">5</div>
+          <div style="font-size:0.78rem;font-weight:700;margin-bottom:4px;">結案歸檔</div>
+          <div style="font-size:0.65rem;color:var(--text-sub);line-height:1.5;">更新案件狀態<br>保存判決/函文<br>追蹤退款執行</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service pillars -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;" class="animate d4">
+      <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          透明契約
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.6;">所有契約依《網際網路教學服務定型化契約》訂定，條款清晰易讀，學員簽約前具備完整審閱期並完成二次確認</div>
+      </div>
+      <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          積極溝通
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.6;">設有專責法務窗口，學員提出爭議後在規定時限內正式回應，提供電話及書面雙軌溝通管道</div>
+      </div>
+      <div style="padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.85rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12l-4-4-4 4"/><path d="M12 16V8"/></svg>
+          多元處理
+        </div>
+        <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.6;">依爭議性質提供協商、行政調解、司法訴訟等多元解決途徑，並提供延長使用期間等替代補救方案</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 8b: CASE CLASSIFICATION & LEGAL COMPLIANCE ═══════════════════ -->
+<section class="slide slide-border-top" id="risk-control-2">
+  <div class="deco-orb deco-orb-1" style="opacity:0.2;"></div>
+  <div class="deco-grid"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="deco-corner-tl"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Case Classification & Compliance</div>
+    <h2 class="slide-title animate d1">三級案件分類，<em>差異化配置法務資源</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.2rem;">
+      依學員申訴管道與談判意願，將案件分為三大類型，採取差異化應對策略。每個案件從收案到結案都有系統化的歸檔追蹤，確保合規且可回溯。
+    </p>
+
+    <!-- 3 Case Types -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;" class="animate d2">
+      <!-- Type A -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;font-size:0.82rem;">類型 A</span>
+          <span style="font-size:0.65rem;padding:2px 8px;background:rgba(255,255,255,0.15);border-radius:100px;">法院訴訟</span>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:8px;">訴訟型</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px;">學員已聘律師或自行提告，要求確認契約無效或請求退款</div>
+          <div style="font-size:0.68rem;font-weight:600;color:var(--accent);margin-bottom:4px;">應對策略</div>
+          <div style="font-size:0.7rem;color:var(--text-sub);line-height:1.6;">準備完整使用紀錄與簽約過程佐證，援引法院慣用法律見解，委任律師進行答辯</div>
+        </div>
+      </div>
+      <!-- Type B -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;font-size:0.82rem;">類型 B</span>
+          <span style="font-size:0.65rem;padding:2px 8px;background:rgba(255,255,255,0.15);border-radius:100px;">行政調解</span>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:8px;">行政申訴型</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px;">透過消保官 / 法務局 / 商業處提出申訴，接受書面溝通結果</div>
+          <div style="font-size:0.68rem;font-weight:600;color:var(--green);margin-bottom:4px;">應對策略</div>
+          <div style="font-size:0.7rem;color:var(--text-sub);line-height:1.6;">函復引用法條，提供替代補救方案（請假、延長使用期間），評估是否出席調解</div>
+        </div>
+      </div>
+      <!-- Type C -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm);">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:700;font-size:0.82rem;">類型 C</span>
+          <span style="font-size:0.65rem;padding:2px 8px;background:rgba(255,255,255,0.15);border-radius:100px;">協商和解</span>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:8px;">談判型</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px;">同時向多個機關申訴，有具體訴求但保有協商空間</div>
+          <div style="font-size:0.68rem;font-weight:600;color:var(--purple);margin-bottom:4px;">應對策略</div>
+          <div style="font-size:0.7rem;color:var(--text-sub);line-height:1.6;">出席調解，提出附條件和解方案（退款換取撤銷所有申訴管道），一次性解決</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Compliance + Continuous Improvement -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="animate d3">
+      <!-- Legal basis -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          法律依據與契約合規
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.72rem;color:var(--text-sub);line-height:1.5;">
+            <span style="flex-shrink:0;font-weight:700;color:var(--accent);font-size:0.65rem;padding:1px 6px;background:var(--accent-light);border-radius:4px;">§18</span>
+            <span>《網際網路教學服務定型化契約》— 退費條款依此規定訂定，學員使用逾 15 日或 10% 服務後授權費不予退還</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.72rem;color:var(--text-sub);line-height:1.5;">
+            <span style="flex-shrink:0;font-weight:700;color:var(--green);font-size:0.65rem;padding:1px 6px;background:rgba(5,150,105,0.06);border-radius:4px;">§12</span>
+            <span>《消費者保護法》— 契約條款符合誠信原則及公平互惠原則，確保締約自由</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.72rem;color:var(--text-sub);line-height:1.5;">
+            <span style="flex-shrink:0;font-weight:700;color:var(--purple);font-size:0.65rem;padding:1px 6px;background:rgba(124,58,237,0.06);border-radius:4px;">§148</span>
+            <span>《民法誠信原則》— 締約前完整說明，學員完成二次確認程序後方生效</span>
+          </div>
+        </div>
+      </div>
+      <!-- Continuous improvement -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          持續改善機制
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.5;display:flex;align-items:flex-start;gap:8px;">
+            <div style="width:5px;height:5px;background:var(--accent);border-radius:50%;flex-shrink:0;margin-top:5px;"></div>
+            <span><strong style="color:var(--text);">每季案件檢討</strong> — 彙整爭議類型與頻率，修訂說明話術及契約措辭，降低申訴發生率</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.5;display:flex;align-items:flex-start;gap:8px;">
+            <div style="width:5px;height:5px;background:var(--green);border-radius:50%;flex-shrink:0;margin-top:5px;"></div>
+            <span><strong style="color:var(--text);">SOP 滾動更新</strong> — 每次判決或行政函復後評估是否需調整流程，與最新司法實務接軌</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--text-sub);line-height:1.5;display:flex;align-items:flex-start;gap:8px;">
+            <div style="width:5px;height:5px;background:var(--purple);border-radius:50%;flex-shrink:0;margin-top:5px;"></div>
+            <span><strong style="color:var(--text);">簽約環節強化</strong> — 新增影片說明審閱期與退費機制，業師於開課前再次確認學員理解契約</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 9: MARKET SIZE ═══════════════════ -->
+<section class="slide slide-border-top" id="market">
+  <div class="deco-orb deco-orb-2" style="opacity:0.25;"></div>
+  <div class="deco-dots"></div>
+  <div class="deco-beam deco-beam-1"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Market Size</div>
+    <h2 class="slide-title animate d1">一個正在爆發的<em>結構性市場機會</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:2rem;">
+      AI 人才培訓不是一個「課程」市場，而是一個企業剛需驅動的人力資本市場。從培訓到人才媒合，每一環都有獨立的市場空間。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:12px;text-transform:uppercase;">TAM</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">$620B</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">全球企業 AI 培訓市場</div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">包含 AI 人才培訓、企業 AI 導入顧問、AI 人才派遣（2030 預估）</div>
+      </div>
+      <div class="animate d1" style="background:var(--bg);border:1px solid rgba(37,99,235,0.12);border-radius:16px;padding:28px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:var(--accent);margin-bottom:12px;text-transform:uppercase;">SAM</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;color:var(--accent);margin-bottom:8px;">$1.5B</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">台灣 AI 培訓與人才服務</div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">台灣企業 AI 職業培訓、FDE 人才派遣、企業 AI 導入顧問</div>
+      </div>
+      <div class="animate d2" style="background:var(--bg);border:1px solid rgba(5,150,105,0.12);border-radius:16px;padding:28px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;color:var(--green);margin-bottom:12px;text-transform:uppercase;">SOM</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.4rem;color:var(--green);margin-bottom:8px;">$300M</div>
+        <div style="font-weight:600;font-size:0.95rem;margin-bottom:8px;">台灣 AI 人才生態</div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">台灣中小企業 AI 培訓 + FDE 人才輸出 + 企業 AI 顧問</div>
+      </div>
+    </div>
+    <div class="animate d3" style="margin-top:16px;padding:14px 24px;background:var(--surface);border-radius:12px;text-align:center;font-size:0.82rem;color:var(--text-sub);">
+      <strong style="color:var(--text);">關鍵洞察：</strong>台灣 90% 企業是中小企業，缺乏自建 AI 團隊的能力 — 外部 AI FDE 是最現實的解法
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 9: FLYWHEEL / ECOSYSTEM ═══════════════════ -->
+<section class="slide slide-border-top" id="flywheel">
+  <div class="deco-orb deco-orb-1" style="opacity:0.25;"></div>
+  <div class="deco-orb deco-orb-3" style="opacity:0.2;"></div>
+  <div class="deco-grid"></div>
+  <div class="deco-particle deco-particle-1"></div>
+  <div class="deco-particle deco-particle-4"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Ecosystem Flywheel</div>
+    <h2 class="slide-title animate d1">培訓 → 人才 → 企業，<em>飛輪自轉的生態圈</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      三個環節互相強化：學院培養人才，人才進駐企業，企業成效帶回口碑與需求，推動飛輪加速。
+    </p>
+
+    <!-- Cycle diagram: 3 nodes in a row with arrows -->
+    <div class="animate d3" style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:center;margin-bottom:24px;">
+      <!-- Node 1: 學院培訓 -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="width:52px;height:52px;margin:0 auto 14px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;">學院培訓</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">六大學院持續輸出<br>具備 AI 實戰能力的人才</div>
+      </div>
+      <!-- Arrow 1→2 -->
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 12px;">
+        <svg width="40" height="24" viewBox="0 0 40 24" fill="none"><path d="M4 12h28M28 6l6 6-6 6" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="font-size:0.65rem;color:var(--accent);font-weight:600;margin-top:4px;letter-spacing:0.05em;">FDE 輸出</div>
+      </div>
+      <!-- Node 2: AI FDE 人才 -->
+      <div style="background:var(--bg);border:2px solid rgba(124,58,237,0.15);border-radius:16px;padding:28px 20px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="width:52px;height:52px;margin:0 auto 14px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;color:var(--purple);">AI FDE 人才</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">認證 + 媒合<br>走進企業做 AI 落地</div>
+      </div>
+      <!-- Arrow 2→3 -->
+      <div style="display:flex;flex-direction:column;align-items:center;padding:0 12px;">
+        <svg width="40" height="24" viewBox="0 0 40 24" fill="none"><path d="M4 12h28M28 6l6 6-6 6" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="font-size:0.65rem;color:var(--green);font-weight:600;margin-top:4px;letter-spacing:0.05em;">人才進駐</div>
+      </div>
+      <!-- Node 3: 企業落地 -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;box-shadow:var(--shadow-sm);">
+        <div style="width:52px;height:52px;margin:0 auto 14px;background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;">企業落地</div>
+        <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;">AI 導入 + 顧問<br>產出真實成效與案例</div>
+      </div>
+    </div>
+
+    <!-- Feedback loop arrow -->
+    <div class="animate d3" style="text-align:center;margin-bottom:20px;">
+      <div style="display:inline-flex;align-items:center;gap:12px;padding:10px 28px;background:var(--surface);border:1px solid var(--border);border-radius:100px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        <span style="font-size:0.85rem;font-weight:600;color:var(--accent);">企業成效回饋 → 課程更新 → 口碑帶來更多學員與企業</span>
+      </div>
+    </div>
+
+    <!-- 3 flow details -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;" class="animate d4">
+      <div style="padding:16px 18px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:600;font-size:0.88rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;background:var(--accent);border-radius:50%;"></div>
+          培訓 → 人才
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">六大學院持續輸出 AI 實戰人才，AI 未來學院專攻 FDE 認證</div>
+      </div>
+      <div style="padding:16px 18px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:600;font-size:0.88rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;background:var(--purple);border-radius:50%;"></div>
+          人才 → 企業
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">媒合機制將認證 FDE 送入企業，協助 AI 工作流落地</div>
+      </div>
+      <div style="padding:16px 18px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm);">
+        <div style="font-weight:600;font-size:0.88rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;background:var(--green);border-radius:50%;"></div>
+          企業 → 培訓
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-sub);line-height:1.6;">企業真實需求回饋課程研發，口碑帶來更多學員與客戶</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 10: TEAM ═══════════════════ -->
+<section class="slide slide-border-top" id="team">
+  <div class="deco-orb deco-orb-2" style="opacity:0.25;"></div>
+  <div class="deco-dots"></div>
+  <div class="deco-beam deco-beam-2"></div>
+  <div class="deco-corner-br"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Team</div>
+    <h2 class="slide-title animate d1">深耕教育培訓的<em>實戰團隊</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:2rem;">
+      墨宇核心團隊結合教育產業深度經驗與 AI 技術應用能力，具備從課程研發到企業服務的完整執行力。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <div class="animate" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="width:72px;height:72px;background:var(--accent-light);border:1px solid rgba(37,99,235,0.1);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;">[創辦人/CEO]</div>
+        <div style="font-size:0.78rem;color:var(--accent);font-weight:600;margin-bottom:10px;">Chief Executive Officer</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">教育培訓產業資深經歷<br>主導學院矩陣策略佈局<br>企業合作與品牌拓展</div>
+      </div>
+      <div class="animate d1" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="width:72px;height:72px;background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.1);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;">[課程研發負責人]</div>
+        <div style="font-size:0.78rem;color:var(--green);font-weight:600;margin-bottom:10px;">Head of Curriculum</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">AI 技術與教學設計背景<br>負責課程模組化研發<br>AI FDE 認證體系設計</div>
+      </div>
+      <div class="animate d2" style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 22px;box-shadow:var(--shadow-sm);text-align:center;">
+        <div style="width:72px;height:72px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.1);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div style="font-weight:700;font-size:1.05rem;margin-bottom:4px;">[企業服務負責人]</div>
+        <div style="font-size:0.78rem;color:var(--purple);font-weight:600;margin-bottom:10px;">Head of Enterprise</div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">企業 AI 導入實戰經驗<br>FDE 人才媒合機制建立<br>企業客戶開發與留存</div>
+      </div>
+    </div>
+    <div class="animate d3" style="margin-top:16px;padding:14px 24px;background:var(--surface);border-radius:12px;text-align:center;font-size:0.82rem;color:var(--text-sub);">
+      <strong style="color:var(--text);">團隊特質：</strong>不是純學術背景，而是「做過培訓、做過落地、理解市場」的實戰型團隊
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 11: USE OF FUNDS ═══════════════════ -->
+<section class="slide slide-border-top" id="funds">
+  <div class="deco-hex"></div>
+  <div class="deco-orb deco-orb-1" style="opacity:0.25;"></div>
+  <div class="deco-particle deco-particle-3"></div>
+  <div class="deco-particle deco-particle-4"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Use of Funds</div>
+    <h2 class="slide-title animate d1">NT$ 4 億募資用途：<em>精準投入成長飛輪</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      每一筆資金都對應明確的成長槓桿。我們不追求燒錢擴張，而是讓資金投入飛輪最需要加速的環節。
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:1.5rem;">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px 22px;box-shadow:var(--shadow-sm);" class="animate">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:1.05rem;">課程研發與 IP 建構</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.2rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">35%</div>
+        </div>
+        <div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:14px;overflow:hidden;">
+          <div style="height:100%;width:35%;background:var(--gradient);border-radius:3px;"></div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">AI 課程模組研發、教學 IP 體系化、AI FDE 認證課程開發、師資團隊擴編</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px 22px;box-shadow:var(--shadow-sm);" class="animate d1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:1.05rem;">AI 人才生態建設</div>
+          <div style="font-weight:800;font-size:1.2rem;color:var(--green);">30%</div>
+        </div>
+        <div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:14px;overflow:hidden;">
+          <div style="height:100%;width:30%;background:var(--green);border-radius:3px;"></div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">FDE 培訓體系擴大、企業媒合平台開發、學員招募與營運、產業合作拓展</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px 22px;box-shadow:var(--shadow-sm);" class="animate d2">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:1.05rem;">市場拓展與品牌</div>
+          <div style="font-weight:800;font-size:1.2rem;color:var(--purple);">20%</div>
+        </div>
+        <div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:14px;overflow:hidden;">
+          <div style="height:100%;width:20%;background:var(--purple);border-radius:3px;"></div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">企業客戶開發、品牌行銷、經銷網絡拓展、政府計畫合作申請</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px 22px;box-shadow:var(--shadow-sm);" class="animate d3">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:1.05rem;">營運與策略儲備</div>
+          <div style="font-weight:800;font-size:1.2rem;color:var(--orange);">15%</div>
+        </div>
+        <div style="height:6px;background:var(--surface2);border-radius:3px;margin-bottom:14px;overflow:hidden;">
+          <div style="height:100%;width:15%;background:var(--orange);border-radius:3px;"></div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">核心團隊招募、法務合規、18 個月營運資金預留</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 12: ROADMAP ═══════════════════ -->
+<section class="slide slide-border-top" id="roadmap">
+  <div class="deco-orb deco-orb-3" style="opacity:0.2;"></div>
+  <div class="deco-beam deco-beam-1"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="deco-corner-tl"></div>
+  <div class="slide-inner">
+    <div class="slide-label animate">Roadmap</div>
+    <h2 class="slide-title animate d1">三年路徑：<em>先站穩，再放大</em></h2>
+    <p class="slide-subtitle animate d2" style="margin-bottom:1.5rem;">
+      台灣是驗證模式的根據地。先讓生態圈跑起來，做到企業和人才都說「真的有用」，才是擴展的時機。
+    </p>
+    <div class="roadmap" style="margin-top:1rem;">
+      <div class="roadmap-phase animate" style="padding:22px 20px;">
+        <div class="roadmap-quarter">YEAR 1 — 飛輪啟動</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">驗證模式・建立口碑</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">讓生態圈轉起來，用數據證明模式可行</div>
+        <ul class="roadmap-list">
+          <li>AI FDE 認證體系正式上線</li>
+          <li>累計培訓 3,000+ 學員</li>
+          <li>首批 FDE 進駐 30+ 家企業</li>
+          <li>月營收達 NT$ 5,000 萬</li>
+          <li>深化國發會與產業合作</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;font-size:1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">目標營收 NT$ 6 億</div>
+      </div>
+      <div class="roadmap-phase animate d1" style="padding:22px 20px;border-color:rgba(26,111,255,0.15);">
+        <div class="roadmap-quarter">YEAR 2 — 口碑放大</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">飛輪自轉・規模擴張</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">口碑驅動獲客，企業端形成穩定付費</div>
+        <ul class="roadmap-list">
+          <li>學員累計 8,000+，30%+ 口碑轉介</li>
+          <li>FDE 進駐企業 100+ 家</li>
+          <li>企業 AI 顧問服務啟動</li>
+          <li>經銷網絡 50+ 合作夥伴</li>
+          <li>拓展更多產業垂直領域合作</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;font-size:1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">目標營收 NT$ 12 億</div>
+      </div>
+      <div class="roadmap-phase animate d2" style="padding:22px 20px;">
+        <div class="roadmap-quarter" style="color:var(--purple);">YEAR 3 — 生態成熟</div>
+        <div class="roadmap-title" style="margin-bottom:8px;">產業標準・深化生態</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);">FDE 認證成為產業參考標準</div>
+        <ul class="roadmap-list">
+          <li>學員累計 20,000+</li>
+          <li>FDE 認證跨企業通用</li>
+          <li>課程 IP 授權輸出至更多產業</li>
+          <li>企業客戶 200+ 家，留存率 80%+</li>
+          <li>評估 IPO 或下一輪策略融資</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;font-size:1rem;color:var(--purple);">目標營收 NT$ 25 億</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SLIDE 13: CTA ═══════════════════ -->
+<section class="slide slide-border-top" id="cta">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="deco-orb deco-orb-1"></div>
+  <div class="deco-orb deco-orb-2"></div>
+  <div class="deco-orb deco-orb-3" style="opacity:0.3;"></div>
+  <div class="deco-ring deco-ring-1"></div>
+  <div class="deco-particle deco-particle-1"></div>
+  <div class="deco-particle deco-particle-2"></div>
+  <div class="deco-particle deco-particle-3"></div>
+  <div class="deco-particle deco-particle-4"></div>
+  <div class="deco-noise"></div>
+  <div class="slide-inner cover-content">
+    <img src="img/xplatform.png" alt="墨宇 Xplatform" class="logo-img animate" style="height:40px;margin-bottom:2rem;">
+    <div class="slide-label animate">The Ask</div>
+    <h2 class="slide-title animate d1" style="font-size:clamp(2.2rem,5vw,3.6rem);margin-bottom:1.8rem;">
+      AI 時代最稀缺的不是工具，<br><em>是讓工具落地的人</em>
+    </h2>
+    <p class="cover-tagline animate d2" style="max-width:640px;">
+      我們正在建構一個系統：<br>
+      讓學習者成為 AI 人才，讓 AI 人才走進企業，<br>
+      讓企業的成功再帶回更多的學習者。<br>
+      <strong style="color:var(--text);">這個飛輪，值得被加速。</strong>
+    </p>
+
+    <div class="animate d3" style="display:flex;justify-content:center;gap:32px;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-size:0.72rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">募資規模</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.6rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">NT$ 4 億</div>
+      </div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div style="font-size:0.72rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">現有營收</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green);">月 $3,500 萬</div>
+      </div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div style="font-size:0.72rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">用途</div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.6rem;color:var(--purple);">加速飛輪</div>
+      </div>
+    </div>
+
+    <div class="cta-actions animate d4">
+      <a href="#" class="btn btn-accent">預約深入交流 →</a>
+      <a href="#" class="btn btn-outline">索取完整計畫書</a>
+    </div>
+
+    <div style="margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);">
+      本提案為機密文件，未經授權不得轉載或分享。&nbsp;&nbsp;墨宇股份有限公司 © 2026
+    </div>
+  </div>
+</section>
+
+<script>
+const slides = [...document.querySelectorAll('.slide:not([data-skip])')];
+const total = slides.length;
+let current = 0;
+let isAnimating = false;
+
+const progressBar = document.getElementById('progress-bar');
+const btnPrev    = document.getElementById('btnPrev');
+const btnNext    = document.getElementById('btnNext');
+const counter    = document.getElementById('slide-counter');
+const pageLabel  = document.getElementById('page-label');
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'counter-dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', `第 ${i + 1} 頁`);
+  dot.addEventListener('click', () => goTo(i));
+  counter.appendChild(dot);
+});
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateUI() {
+  progressBar.style.width = ((current + 1) / total * 100) + '%';
+  counter.querySelectorAll('.counter-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === current);
+  });
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === total - 1;
+  pageLabel.textContent = `${pad(current + 1)} / ${pad(total)}`;
+}
+
+function triggerAnims(slide) {
+  slide.querySelectorAll('.animate:not(.visible)').forEach(el => {
+    el.classList.add('visible');
+  });
+}
+
+const SLIDE_DURATION = 580;
+const EASE = 'transform 0.58s cubic-bezier(0.77, 0, 0.175, 1)';
+
+function goTo(index) {
+  if (isAnimating || index === current || index < 0 || index >= total) return;
+  isAnimating = true;
+
+  const fromSlide = slides[current];
+  const toSlide   = slides[index];
+  const dir = index > current ? 1 : -1;
+
+  toSlide.style.transition = 'none';
+  toSlide.style.transform  = `translateX(${dir * 100}%)`;
+  toSlide.classList.add('is-transitioning');
+  toSlide.scrollTop = 0;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toSlide.style.transition   = EASE;
+      fromSlide.style.transition = EASE;
+
+      toSlide.style.transform   = 'translateX(0)';
+      fromSlide.style.transform = `translateX(${-dir * 100}%)`;
+
+      setTimeout(() => {
+        toSlide.classList.remove('is-transitioning');
+        toSlide.classList.add('is-active');
+        toSlide.style.transform  = '';
+        toSlide.style.transition = '';
+
+        fromSlide.classList.remove('is-active');
+        fromSlide.style.transform  = '';
+        fromSlide.style.transition = '';
+
+        isAnimating = false;
+        triggerAnims(toSlide);
+      }, SLIDE_DURATION + 40);
+    });
+  });
+
+  current = index;
+  updateUI();
+}
+
+function goNext() { goTo(current + 1); }
+function goPrev() { goTo(current - 1); }
+
+btnNext.addEventListener('click', goNext);
+btnPrev.addEventListener('click', goPrev);
+
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) { e.preventDefault(); goNext(); }
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key))  { e.preventDefault(); goPrev(); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) { dx < 0 ? goNext() : goPrev(); }
+}, { passive: true });
+
+updateUI();
+setTimeout(() => triggerAnims(slides[0]), 150);
+</script>
+</body>
+</html>
