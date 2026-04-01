@@ -1,5 +1,4 @@
 .DS_Store
-serve.py
 requirements.txt
 .claude/
 *.pptx
