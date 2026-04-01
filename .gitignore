@@ -1,4 +1,5 @@
 .DS_Store
 serve.py
 requirements.txt
-zbpack.json
+.claude/
+*.pptx
