@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>續購方案 — AI 未來學院</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090f;--surface:#111118;--surface2:#16161f;--border:rgba(255,255,255,0.07);--accent:#7cffb2;--accent-dim:rgba(124,255,178,0.08);--blue:#5b8fff;--purple:#a855f7;--orange:#ff9f43;--text:#f0f0f5;--text-muted:rgba(240,240,245,0.45);--text-sub:rgba(240,240,245,0.65)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans','Noto Sans TC',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}
+
+/* ── Shared ── */
+section{padding:100px 5%}
+.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:-0.03em;line-height:1.15;margin-bottom:1rem}
+.section-title em{font-style:normal;color:var(--accent)}
+.section-desc{color:var(--text-sub);font-size:1rem;max-width:560px;line-height:1.75;margin-bottom:2rem}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#000;font-weight:600;font-size:0.9rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;transition:all 0.25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(124,255,178,0.3)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);font-weight:500;font-size:0.9rem;padding:14px 28px;border-radius:8px;border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all 0.25s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.2);background:var(--surface2);transform:translateY(-2px)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+
+/* ════════════════════════════════════
+   HERO
+   ════════════════════════════════════ */
+.rn-hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:60px 5% 80px}
+.rn-hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 70% 50% at 50% 30%,rgba(124,255,178,0.07),transparent 60%),
+  radial-gradient(ellipse 40% 40% at 80% 70%,rgba(91,143,255,0.05),transparent 50%)}
+.rn-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 80%)}
+/* Animated particles */
+.rn-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.rn-particle{position:absolute;border-radius:50%;opacity:0}
+.rn-particle.dot{background:var(--accent);box-shadow:0 0 8px rgba(124,255,178,0.6),0 0 20px rgba(124,255,178,0.3);animation:particleFloat linear infinite}
+.rn-particle.glow{background:radial-gradient(circle,rgba(124,255,178,0.4),transparent 70%);animation:particleFloatSlow linear infinite}
+.rn-particle.streak{border-radius:0;width:2px !important;background:linear-gradient(180deg,var(--accent),transparent);animation:particleStreak linear infinite}
+@keyframes particleFloat{
+  0%{opacity:0;transform:translateY(100vh) scale(0)}
+  8%{opacity:0.9}
+  50%{opacity:1}
+  85%{opacity:0.7}
+  100%{opacity:0;transform:translateY(-20vh) scale(1.2)}
+}
+@keyframes particleFloatSlow{
+  0%{opacity:0;transform:translateY(80vh) scale(0.5)}
+  15%{opacity:0.5}
+  85%{opacity:0.4}
+  100%{opacity:0;transform:translateY(-30vh) scale(1.5)}
+}
+@keyframes particleStreak{
+  0%{opacity:0;transform:translateY(100vh) scaleY(0.5)}
+  5%{opacity:0.8}
+  40%{opacity:0.6}
+  100%{opacity:0;transform:translateY(-30vh) scaleY(1)}
+}
+.rn-hero-content{position:relative;z-index:2;max-width:820px;margin:0 auto}
+.rn-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;padding:6px 16px;border:1px solid rgba(124,255,178,0.2);border-radius:100px;background:rgba(124,255,178,0.04);animation:fadeInUp 0.6s ease both}
+.rn-eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s ease infinite}
+.rn-hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3.6rem);line-height:1.1;letter-spacing:-0.03em;margin-bottom:1.5rem;animation:fadeInUp 0.6s 0.1s ease both}
+.rn-hero h1 em{font-style:normal;color:var(--accent)}
+.rn-hero-sub{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--text-sub);max-width:620px;margin:0 auto 2.5rem;line-height:1.75;animation:fadeInUp 0.6s 0.2s ease both}
+.rn-hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:fadeInUp 0.6s 0.3s ease both}
+
+/* ── Ticker ── */
+.rn-ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;background:var(--surface);position:relative;z-index:2;animation:fadeInUp 0.6s 0.4s ease both}
+.rn-ticker{display:flex;gap:3rem;animation:tickerScroll 30s linear infinite;width:max-content}
+.rn-ticker span{font-size:0.78rem;color:var(--text-muted);white-space:nowrap;letter-spacing:0.04em;display:flex;align-items:center;gap:8px}
+.rn-ticker span::before{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%;flex-shrink:0}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ════════════════════════════════════
+   WHY — Pain / Urgency
+   ════════════════════════════════════ */
+.rn-why{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rn-why-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.rn-why-visual{position:relative}
+.rn-timeline{display:flex;flex-direction:column;gap:0;position:relative;padding-left:28px}
+.rn-timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--accent),rgba(124,255,178,0.1))}
+.rn-tl-item{position:relative;padding:18px 0 18px 24px}
+.rn-tl-dot{position:absolute;left:-24px;top:22px;width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);display:flex;align-items:center;justify-content:center}
+.rn-tl-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.rn-tl-date{font-size:0.7rem;font-weight:500;color:var(--accent);letter-spacing:0.1em;margin-bottom:4px}
+.rn-tl-text{font-size:0.88rem;color:var(--text-sub);line-height:1.6}
+.rn-tl-text strong{color:var(--text);font-weight:500}
+
+/* ════════════════════════════════════
+   LEARNING MODEL — 3 pillars
+   ════════════════════════════════════ */
+.rn-model-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:3rem}
+.rn-model-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 28px;transition:all 0.3s;position:relative;overflow:hidden}
+.rn-model-card:hover{border-color:rgba(124,255,178,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.rn-model-freq{font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.rn-model-freq::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
+.rn-model-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;background:var(--accent-dim)}
+.rn-model-icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.rn-model-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:10px;letter-spacing:-0.02em}
+.rn-model-desc{font-size:0.85rem;color:var(--text-sub);line-height:1.7;margin-bottom:16px}
+.rn-model-examples{display:flex;flex-direction:column;gap:6px}
+.rn-model-ex{font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+.rn-model-ex::before{content:'';width:4px;height:4px;background:rgba(124,255,178,0.4);border-radius:1px;flex-shrink:0}
+
+/* ════════════════════════════════════
+   PRICING — Two plans
+   ════════════════════════════════════ */
+.rn-pricing{text-align:center;position:relative;overflow:hidden}
+.rn-pricing-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(124,255,178,0.04),transparent 70%);pointer-events:none}
+.rn-plans{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:3rem auto 0;position:relative;z-index:2}
+.rn-plan{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px 32px;text-align:left;transition:all 0.4s;position:relative;overflow:hidden}
+.rn-plan:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.4)}
+.rn-plan.featured{border-color:rgba(124,255,178,0.3);box-shadow:0 0 60px rgba(124,255,178,0.06)}
+.rn-plan.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),rgba(91,143,255,0.6))}
+.rn-plan-badge{display:inline-block;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 14px;border-radius:100px;margin-bottom:20px}
+.rn-plan:not(.featured) .rn-plan-badge{background:rgba(255,255,255,0.06);color:var(--text-sub)}
+.rn-plan.featured .rn-plan-badge{background:var(--accent);color:#000}
+.rn-plan-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-0.03em;margin-bottom:8px}
+.rn-plan-tagline{font-size:0.88rem;color:var(--text-sub);line-height:1.6;margin-bottom:24px;min-height:48px}
+.rn-plan-price-wrap{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.rn-plan-price{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.rn-plan-price .currency{font-size:1.2rem;font-weight:600;vertical-align:super;margin-right:2px}
+.rn-plan.featured .rn-plan-price{background:linear-gradient(135deg,var(--accent),#b4ffd8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rn-plan-period{font-size:0.82rem;color:var(--text-muted)}
+.rn-plan-installment{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:0.78rem;color:var(--accent);padding:4px 12px;border-radius:100px;background:rgba(124,255,178,0.06);border:1px solid rgba(124,255,178,0.12)}
+.rn-plan-installment svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round}
+.rn-plan-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.rn-plan-features li{font-size:0.88rem;color:var(--text-sub);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.rn-plan-features li::before{content:'';display:flex;align-items:center;justify-content:center;width:20px;height:20px;min-width:20px;margin-top:1px;background:rgba(124,255,178,0.1);border-radius:50%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237cffb2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");background-position:center;background-repeat:no-repeat;background-size:10px}
+.rn-plan-features li.disabled{color:var(--text-muted)}
+.rn-plan-features li.disabled::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(240,240,245,0.25)' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");background-color:rgba(255,255,255,0.04)}
+.rn-plan .btn-primary{width:100%;justify-content:center;padding:16px;font-size:0.95rem}
+.rn-plan:not(.featured) .btn-primary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.rn-plan:not(.featured) .btn-primary:hover{border-color:var(--accent);color:var(--accent);box-shadow:none}
+
+/* ════════════════════════════════════
+   COMPARISON TABLE
+   ════════════════════════════════════ */
+.rn-compare{margin-top:4rem;max-width:900px;margin-left:auto;margin-right:auto}
+.rn-compare-table{width:100%;border-collapse:collapse;position:relative;z-index:2}
+.rn-compare-table th,.rn-compare-table td{padding:14px 20px;text-align:left;border-bottom:1px solid var(--border);font-size:0.88rem}
+.rn-compare-table thead th{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.06em;color:var(--text-muted);background:var(--surface);position:sticky;top:0}
+.rn-compare-table thead th:first-child{border-radius:12px 0 0 0}
+.rn-compare-table thead th:last-child{border-radius:0 12px 0 0}
+.rn-compare-table tbody td:first-child{color:var(--text-sub);font-weight:400}
+.rn-compare-table tbody td:not(:first-child){text-align:center;font-weight:500}
+.rn-compare-table .check{color:var(--accent)}
+.rn-compare-table .dash{color:var(--text-muted)}
+
+/* ════════════════════════════════════
+   INSTALLMENT HIGHLIGHT
+   ════════════════════════════════════ */
+.rn-installment{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rn-installment-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.rn-inst-calc{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative;overflow:hidden}
+.rn-inst-calc::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(124,255,178,0.06),transparent 70%);pointer-events:none}
+.rn-inst-header{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:24px;display:flex;align-items:center;gap:10px;color:var(--text-sub)}
+.rn-inst-header svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round}
+.rn-inst-rows{display:flex;flex-direction:column;gap:16px}
+.rn-inst-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--surface);border-radius:10px;border:1px solid var(--border)}
+.rn-inst-row-label{font-size:0.85rem;color:var(--text-sub)}
+.rn-inst-row-label small{display:block;font-size:0.72rem;color:var(--text-muted);margin-top:2px}
+.rn-inst-row-value{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--accent);font-variant-numeric:tabular-nums}
+
+/* ════════════════════════════════════
+   TARGET AUDIENCE
+   ════════════════════════════════════ */
+.rn-audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:3rem}
+.rn-audience-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px 28px;transition:all 0.3s;text-align:center}
+.rn-audience-card:hover{border-color:rgba(124,255,178,0.2);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.rn-audience-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:var(--accent-dim)}
+.rn-audience-icon svg{width:28px;height:28px;stroke:var(--accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.rn-audience-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px;letter-spacing:-0.02em}
+.rn-audience-desc{font-size:0.85rem;color:var(--text-sub);line-height:1.65}
+
+/* ════════════════════════════════════
+   TESTIMONIALS
+   ════════════════════════════════════ */
+.rn-testimonials{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rn-testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:3rem}
+.rn-testi-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s}
+.rn-testi-card:hover{border-color:rgba(124,255,178,0.15);transform:translateY(-4px)}
+.rn-testi-quote{font-size:0.88rem;color:var(--text-sub);line-height:1.7;margin-bottom:20px;font-style:italic;position:relative;padding-left:16px;border-left:2px solid rgba(124,255,178,0.2)}
+.rn-testi-author{display:flex;align-items:center;gap:12px}
+.rn-testi-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(124,255,178,0.15),rgba(91,143,255,0.15));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:var(--accent)}
+.rn-testi-name{font-weight:500;font-size:0.88rem}
+.rn-testi-role{font-size:0.75rem;color:var(--text-muted)}
+
+/* ════════════════════════════════════
+   FAQ
+   ════════════════════════════════════ */
+.rn-faq-list{max-width:700px;margin:3rem auto 0;display:flex;flex-direction:column;gap:1px;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--border)}
+.rn-faq-item{background:var(--surface)}
+.rn-faq-q{width:100%;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;background:none;border:none;color:var(--text);font-size:0.95rem;font-weight:500;font-family:inherit;cursor:pointer;text-align:left;transition:background 0.2s}
+.rn-faq-q:hover{background:var(--surface2)}
+.rn-faq-q svg{width:18px;height:18px;stroke:var(--text-muted);fill:none;stroke-width:2;stroke-linecap:round;transition:transform 0.3s;flex-shrink:0}
+.rn-faq-item.open .rn-faq-q svg{transform:rotate(180deg)}
+.rn-faq-a{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
+.rn-faq-item.open .rn-faq-a{max-height:300px}
+.rn-faq-a-inner{padding:0 24px 20px;font-size:0.88rem;color:var(--text-sub);line-height:1.7}
+
+/* ════════════════════════════════════
+   CTA
+   ════════════════════════════════════ */
+.rn-cta{text-align:center;position:relative;overflow:hidden;padding:120px 5%}
+.rn-cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(124,255,178,0.06),transparent 70%);pointer-events:none}
+.rn-cta h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.03em;margin-bottom:1rem;position:relative;z-index:2}
+.rn-cta h2 em{font-style:normal;color:var(--accent)}
+.rn-cta>p{color:var(--text-sub);font-size:1.05rem;max-width:520px;margin:0 auto 2.5rem;line-height:1.75;position:relative;z-index:2}
+.rn-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+
+/* ── Footer ── */
+footer{padding:40px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-muted)}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text)}.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;gap:1.5rem;list-style:none}.footer-links a{color:var(--text-muted);text-decoration:none;transition:color 0.2s}.footer-links a:hover{color:var(--text)}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .rn-why-grid,.rn-installment-inner{grid-template-columns:1fr;gap:40px}
+  .rn-plans{grid-template-columns:1fr;max-width:480px}
+  .rn-model-grid,.rn-audience-grid,.rn-testi-grid{grid-template-columns:1fr}
+  .rn-compare-table{font-size:0.8rem}
+  .rn-compare-table th,.rn-compare-table td{padding:10px 12px}
+  .rn-hero{padding:100px 5% 60px;min-height:auto}
+}
+@media(max-width:600px){
+  .rn-plan{padding:28px 22px}
+  .rn-plan-price{font-size:2.4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="rn-hero">
+  <div class="rn-hero-bg"></div>
+  <div class="rn-hero-grid"></div>
+  <div class="rn-particles" id="particles"></div>
+
+  <div class="rn-hero-content">
+    <div class="rn-eyebrow"><span class="rn-eyebrow-dot"></span>AI CONTINUOUS LEARNING</div>
+    <h1>學完技術只是起點<br><em>持續進化才是 AI 時代的答案</em></h1>
+    <p class="rn-hero-sub">
+      AI 工具每月都在迭代，昨天學的 Prompt 今天就過時。<br>
+      唯有高頻率吸收最新知識 + 實戰累積，才能把 AI 真正變成你的競爭力。
+    </p>
+    <div class="rn-hero-cta">
+      <a href="#plans" class="btn-primary">查看續購方案 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+      <a href="#why" class="btn-secondary">為什麼要持續學習</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Ticker ── -->
+<div class="rn-ticker-wrap">
+  <div class="rn-ticker" id="ticker">
+    <span>GPT-4o 影像能力再升級</span>
+    <span>Claude 4 突破百萬 Token 上下文</span>
+    <span>Sora 正式開放商業使用</span>
+    <span>Midjourney V7 多模態生成</span>
+    <span>Gemini 深度研究模式上線</span>
+    <span>Cursor 成為開發者標配</span>
+    <span>AI Agent 工作流大爆發</span>
+    <span>Runway Gen-4 影片革命</span>
+    <span>NotebookLM 語音摘要走紅</span>
+    <span>Devin AI 全自動寫程式</span>
+    <!-- duplicate for seamless loop -->
+    <span>GPT-4o 影像能力再升級</span>
+    <span>Claude 4 突破百萬 Token 上下文</span>
+    <span>Sora 正式開放商業使用</span>
+    <span>Midjourney V7 多模態生成</span>
+    <span>Gemini 深度研究模式上線</span>
+    <span>Cursor 成為開發者標配</span>
+    <span>AI Agent 工作流大爆發</span>
+    <span>Runway Gen-4 影片革命</span>
+    <span>NotebookLM 語音摘要走紅</span>
+    <span>Devin AI 全自動寫程式</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════ WHY ══════════════════════════ -->
+<section class="rn-why" id="why">
+  <div class="container">
+    <div class="rn-why-grid">
+      <div>
+        <div class="section-label">WHY CONTINUOUS LEARNING</div>
+        <h2 class="section-title reveal">AI 變化太快<br><em>停下來就是退步</em></h2>
+        <p class="section-desc reveal">
+          你學過的 AI 工具和技巧，半年後可能已經被全新的模型和工作流取代。唯有持續跟進，才能讓你的專業不斷升級。
+        </p>
+        <div class="rn-timeline reveal">
+          <div class="rn-tl-item">
+            <div class="rn-tl-dot"></div>
+            <div class="rn-tl-date">3 個月前</div>
+            <div class="rn-tl-text">你學會用 <strong>ChatGPT 寫文案</strong>，覺得已經很厲害了</div>
+          </div>
+          <div class="rn-tl-item">
+            <div class="rn-tl-dot"></div>
+            <div class="rn-tl-date">上個月</div>
+            <div class="rn-tl-text">新同事用 <strong>AI Agent 自動化整個流程</strong>，效率是你的 5 倍</div>
+          </div>
+          <div class="rn-tl-item">
+            <div class="rn-tl-dot"></div>
+            <div class="rn-tl-date">今天</div>
+            <div class="rn-tl-text"><strong>多模態 AI 組合技</strong>成為標配，你開始焦慮跟不上了</div>
+          </div>
+          <div class="rn-tl-item">
+            <div class="rn-tl-dot"></div>
+            <div class="rn-tl-date">未來</div>
+            <div class="rn-tl-text">持續學習者 <strong>累積複利</strong>，停滯者被市場淘汰</div>
+          </div>
+        </div>
+      </div>
+      <div class="rn-why-visual reveal">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center">
+          <div style="font-family:'Syne',sans-serif;font-size:5rem;font-weight:800;line-height:1;letter-spacing:-0.05em;background:linear-gradient(135deg,var(--accent),#5b8fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px">365</div>
+          <div style="font-size:1rem;color:var(--text-sub);margin-bottom:24px">天不間斷的 AI 知識更新</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">52</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">週實戰課程</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">12</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">場大師講座</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">100+</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">AI 工具教學</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">24/7</div>
+              <div style="font-size:0.75rem;color:var(--text-muted)">隨時回看學習</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ LEARNING MODEL ══════════════════════════ -->
+<section id="model">
+  <div class="container">
+    <div class="section-label">LEARNING MODEL</div>
+    <h2 class="section-title reveal">三頻率學習架構<br><em>日知識 × 週實戰 × 月大師</em></h2>
+    <p class="section-desc reveal">
+      不是填鴨式上課，而是用最符合 AI 時代節奏的方式，讓你自然而然地持續進化。
+    </p>
+    <div class="rn-model-grid">
+      <div class="rn-model-card reveal">
+        <div class="rn-model-freq">每日更新</div>
+        <div class="rn-model-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="rn-model-title">AI 知識速遞</div>
+        <div class="rn-model-desc">每天精選最重要的 AI 新知，5-10 分鐘吸收業界最新動態、工具更新和應用案例。</div>
+        <div class="rn-model-examples">
+          <div class="rn-model-ex">最新 AI 工具評測與教學</div>
+          <div class="rn-model-ex">業界趨勢快報與深度解讀</div>
+          <div class="rn-model-ex">實用 Prompt 技巧與模板</div>
+          <div class="rn-model-ex">AI 工作流最佳實踐</div>
+        </div>
+      </div>
+      <div class="rn-model-card reveal" style="transition-delay:0.1s">
+        <div class="rn-model-freq">每週實戰</div>
+        <div class="rn-model-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="rn-model-title">實戰演練課程</div>
+        <div class="rn-model-desc">每週一堂深度實戰課，跟著業師動手做，把知識轉化為真正的工作能力。</div>
+        <div class="rn-model-examples">
+          <div class="rn-model-ex">AI 設計實作工作坊</div>
+          <div class="rn-model-ex">自動化流程建構實戰</div>
+          <div class="rn-model-ex">AI 內容創作挑戰賽</div>
+          <div class="rn-model-ex">跨工具整合演練</div>
+        </div>
+      </div>
+      <div class="rn-model-card reveal" style="transition-delay:0.2s">
+        <div class="rn-model-freq">每月大師</div>
+        <div class="rn-model-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="rn-model-title">大師線上講座</div>
+        <div class="rn-model-desc">每月邀請業界頂尖專家，分享前沿觀點與實戰經驗，拓展你的 AI 視野高度。</div>
+        <div class="rn-model-examples">
+          <div class="rn-model-ex">產業 AI 應用趨勢分析</div>
+          <div class="rn-model-ex">頂尖 AI 創業者經驗談</div>
+          <div class="rn-model-ex">AI 職涯發展路徑規劃</div>
+          <div class="rn-model-ex">互動 Q&A 深度交流</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ PRICING ══════════════════════════ -->
+<section class="rn-pricing" id="plans">
+  <div class="container">
+    <div class="section-label">PRICING PLANS</div>
+    <h2 class="section-title reveal">選擇適合你的<em>進化節奏</em></h2>
+    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      依照預算和學習需求，我們提供兩種方案。<br>兩者都支援最多 36 期分期，無痛入手。
+    </p>
+
+    <div class="rn-plans">
+      <!-- Plan A -->
+      <div class="rn-plan reveal">
+        <div class="rn-plan-badge">知識基礎版</div>
+        <div class="rn-plan-name">每日 AI 知識</div>
+        <div class="rn-plan-tagline">每天跟上 AI 最新動態，用碎片時間持續累積 AI 素養</div>
+        <div class="rn-plan-price-wrap">
+          <div class="rn-plan-price"><span class="currency">NT$</span>9,000</div>
+          <div class="rn-plan-period">一年期方案</div>
+          <div class="rn-plan-installment">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            分期最低 NT$250/月
+          </div>
+        </div>
+        <ul class="rn-plan-features">
+          <li>每日 AI 知識內容推送</li>
+          <li>最新工具評測與教學</li>
+          <li>AI 趨勢快報與深度解讀</li>
+          <li>歷史內容完整回看</li>
+          <li class="disabled">每週實戰演練課程</li>
+          <li class="disabled">每月大師線上講座</li>
+        </ul>
+      </div>
+
+      <!-- Plan B -->
+      <div class="rn-plan featured reveal" style="transition-delay:0.1s">
+        <div class="rn-plan-badge">完整進化版</div>
+        <div class="rn-plan-name">AI 進化包</div>
+        <div class="rn-plan-tagline">知識 + 實戰 + 大師指導，三位一體的完整 AI 進化體驗</div>
+        <div class="rn-plan-price-wrap">
+          <div class="rn-plan-price"><span class="currency">NT$</span>36,000</div>
+          <div class="rn-plan-period">一年期方案</div>
+          <div class="rn-plan-installment">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            分期最低 NT$1,000/月
+          </div>
+        </div>
+        <ul class="rn-plan-features">
+          <li>每日 AI 知識內容推送</li>
+          <li>最新工具評測與教學</li>
+          <li>AI 趨勢快報與深度解讀</li>
+          <li>歷史內容完整回看</li>
+          <li>每週實戰演練課程（52 堂/年）</li>
+          <li>每月大師線上講座（12 場/年）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="rn-compare reveal">
+      <table class="rn-compare-table">
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th>每日 AI 知識</th>
+            <th>AI 進化包</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>每日 AI 知識內容</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+          <tr><td>工具評測 & 教學</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+          <tr><td>歷史內容回看</td><td class="check">&#10003;</td><td class="check">&#10003;</td></tr>
+          <tr><td>每週實戰課程</td><td class="dash">&#8212;</td><td class="check">&#10003; 52 堂/年</td></tr>
+          <tr><td>每月大師講座</td><td class="dash">&#8212;</td><td class="check">&#10003; 12 場/年</td></tr>
+          <tr><td>專屬學習社群</td><td class="dash">&#8212;</td><td class="check">&#10003;</td></tr>
+          <tr><td>業師一對一諮詢</td><td class="dash">&#8212;</td><td class="check">&#10003;</td></tr>
+          <tr><td>年度費用</td><td>NT$9,000</td><td><strong style="color:var(--accent)">NT$36,000</strong></td></tr>
+          <tr><td>分期（36 期）</td><td>NT$250/月</td><td><strong style="color:var(--accent)">NT$1,000/月</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ INSTALLMENT ══════════════════════════ -->
+<section class="rn-installment">
+  <div class="container">
+    <div class="rn-installment-inner">
+      <div>
+        <div class="section-label">FLEXIBLE PAYMENT</div>
+        <h2 class="section-title reveal">最多 36 期分期<br><em>每天不到一杯咖啡</em></h2>
+        <p class="section-desc reveal">
+          我們理解每個人的預算不同。兩個方案都支援分期付款，最多可分 36 期，讓你用最小的壓力，獲得最大的成長。
+        </p>
+      </div>
+      <div class="rn-inst-calc reveal">
+        <div class="rn-inst-header">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          分期試算
+        </div>
+        <div class="rn-inst-rows">
+          <div class="rn-inst-row">
+            <div class="rn-inst-row-label">
+              每日 AI 知識
+              <small>NT$9,000 / 36 期</small>
+            </div>
+            <div class="rn-inst-row-value">NT$250/月</div>
+          </div>
+          <div class="rn-inst-row">
+            <div class="rn-inst-row-label">
+              每日 AI 知識
+              <small>NT$9,000 / 12 期</small>
+            </div>
+            <div class="rn-inst-row-value">NT$750/月</div>
+          </div>
+          <div class="rn-inst-row" style="border-color:rgba(124,255,178,0.2);background:rgba(124,255,178,0.03)">
+            <div class="rn-inst-row-label">
+              AI 進化包
+              <small>NT$36,000 / 36 期</small>
+            </div>
+            <div class="rn-inst-row-value">NT$1,000/月</div>
+          </div>
+          <div class="rn-inst-row" style="border-color:rgba(124,255,178,0.2);background:rgba(124,255,178,0.03)">
+            <div class="rn-inst-row-label">
+              AI 進化包
+              <small>NT$36,000 / 12 期</small>
+            </div>
+            <div class="rn-inst-row-value">NT$3,000/月</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ TARGET AUDIENCE ══════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label" style="text-align:center">WHO IS THIS FOR</div>
+    <h2 class="section-title reveal" style="text-align:center">你已經學過職能知識<br><em>現在該用 AI 加速了</em></h2>
+    <p class="section-desc reveal" style="text-align:center;margin-left:auto;margin-right:auto">
+      不管你過去學的是設計、工程還是自媒體，AI 都能讓你的專業能力翻倍。這不是從零開始，而是在你既有的基礎上，疊加 AI 超能力。
+    </p>
+    <div class="rn-audience-grid">
+      <div class="rn-audience-card reveal">
+        <div class="rn-audience-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        </div>
+        <div class="rn-audience-title">設計領域學員</div>
+        <div class="rn-audience-desc">用 AI 加速視覺設計、UI/UX 流程，從 Midjourney 到 AI 協作設計工具，讓創意產出效率翻倍。</div>
+      </div>
+      <div class="rn-audience-card reveal" style="transition-delay:0.1s">
+        <div class="rn-audience-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="rn-audience-title">工程領域學員</div>
+        <div class="rn-audience-desc">用 AI 輔助開發、自動化測試、智慧除錯，從 Copilot 到 AI Agent，讓技術能力持續升級。</div>
+      </div>
+      <div class="rn-audience-card reveal" style="transition-delay:0.2s">
+        <div class="rn-audience-icon">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <div class="rn-audience-title">自媒體經營者</div>
+        <div class="rn-audience-desc">用 AI 批量生產內容、智慧剪輯、數據分析，從腳本到後製全面 AI 化，讓頻道高效成長。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ TESTIMONIALS ══════════════════════════ -->
+<section class="rn-testimonials">
+  <div class="container">
+    <div class="section-label" style="text-align:center">STUDENT VOICES</div>
+    <h2 class="section-title reveal" style="text-align:center">學員怎麼說</h2>
+    <div class="rn-testi-grid">
+      <div class="rn-testi-card reveal">
+        <div class="rn-testi-quote">以前覺得學完課程就夠了，但 AI 變化實在太快。訂閱每日知識後，每天花 10 分鐘就能跟上最新趨勢，超值得。</div>
+        <div class="rn-testi-author">
+          <div class="rn-testi-avatar">W</div>
+          <div><div class="rn-testi-name">Wei</div><div class="rn-testi-role">平面設計師 / 知識方案學員</div></div>
+        </div>
+      </div>
+      <div class="rn-testi-card reveal" style="transition-delay:0.1s">
+        <div class="rn-testi-quote">進化包的每週實戰課真的改變了我的工作方式。上週學的 AI Agent 自動化，這週就用在客戶專案上了。</div>
+        <div class="rn-testi-author">
+          <div class="rn-testi-avatar">J</div>
+          <div><div class="rn-testi-name">Jenny</div><div class="rn-testi-role">自媒體創作者 / 進化包學員</div></div>
+        </div>
+      </div>
+      <div class="rn-testi-card reveal" style="transition-delay:0.2s">
+        <div class="rn-testi-quote">分 36 期等於每天不到 30 塊，比買一杯咖啡還便宜，但換來的是一整年的 AI 競爭力，怎麼算都划算。</div>
+        <div class="rn-testi-author">
+          <div class="rn-testi-avatar">K</div>
+          <div><div class="rn-testi-name">Kevin</div><div class="rn-testi-role">前端工程師 / 進化包學員</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label" style="text-align:center">FAQ</div>
+    <h2 class="section-title reveal" style="text-align:center">常見問題</h2>
+    <div class="rn-faq-list reveal">
+      <div class="rn-faq-item">
+        <button class="rn-faq-q">
+          續購方案跟之前的課程有什麼不同？
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="rn-faq-a"><div class="rn-faq-a-inner">之前的課程是完整的職能培訓，幫你建立基礎能力。續購方案則是持續性的知識更新服務，確保你的 AI 能力不會隨著技術演進而落伍。兩者是互補的關係——先打好基礎，再持續進化。</div></div>
+      </div>
+      <div class="rn-faq-item">
+        <button class="rn-faq-q">
+          分期付款怎麼運作？有利息嗎？
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="rn-faq-a"><div class="rn-faq-a-inner">我們與合作金融機構提供最多 36 期的分期方案。具體的分期利率與條件會依合作銀行而異，歡迎諮詢了解最新的分期優惠方案。</div></div>
+      </div>
+      <div class="rn-faq-item">
+        <button class="rn-faq-q">
+          我可以先訂知識方案，之後再升級嗎？
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="rn-faq-a"><div class="rn-faq-a-inner">當然可以！你可以先從每日 AI 知識方案開始體驗，之後隨時補差價升級到 AI 進化包，已繳費用會全額折抵。</div></div>
+      </div>
+      <div class="rn-faq-item">
+        <button class="rn-faq-q">
+          每日知識內容是什麼形式？
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="rn-faq-a"><div class="rn-faq-a-inner">包含圖文教學、短影片、工具評測文章、Prompt 模板等多元格式，每天推送到你的學習平台。內容由教學團隊每日精選策展，確保你接收到的都是最重要、最實用的 AI 資訊。</div></div>
+      </div>
+      <div class="rn-faq-item">
+        <button class="rn-faq-q">
+          實戰課程跟大師講座可以回看嗎？
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="rn-faq-a"><div class="rn-faq-a-inner">可以！所有課程和講座都會錄影保存，你可以在方案期間內無限次回看。就算錯過直播，也不會錯過任何內容。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ CTA ══════════════════════════ -->
+<section class="rn-cta" id="cta">
+  <div class="rn-cta-glow"></div>
+  <div class="container">
+    <h2 class="reveal">AI 不會等你準備好<br><em>現在就開始持續進化</em></h2>
+    <p class="reveal">
+      你的同行已經在用 AI 加速了。每晚一天開始，就多一天的差距。<br>
+      選擇你的方案，從今天開始累積 AI 複利。
+    </p>
+  </div>
+</section>
+
+
+<script>
+// ── Reveal on scroll ──
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── FAQ toggle ──
+document.querySelectorAll('.rn-faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.rn-faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+
+// ── Particles ──
+(function() {
+  const container = document.getElementById('particles');
+  // Bright dots — fast, sharp
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'rn-particle dot';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    const size = 2 + Math.random() * 5;
+    p.style.width = p.style.height = size + 'px';
+    container.appendChild(p);
+  }
+  // Soft glows — large, slow, ambient
+  for (let i = 0; i < 10; i++) {
+    const p = document.createElement('div');
+    p.className = 'rn-particle glow';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (14 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 15) + 's';
+    const size = 20 + Math.random() * 40;
+    p.style.width = p.style.height = size + 'px';
+    container.appendChild(p);
+  }
+  // Streaks — thin vertical lines shooting up
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'rn-particle streak';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (4 + Math.random() * 6) + 's';
+    p.style.animationDelay = (Math.random() * 14) + 's';
+    p.style.height = (30 + Math.random() * 60) + 'px';
+    container.appendChild(p);
+  }
+})();
+
+// ── Smooth scroll for anchor links ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
