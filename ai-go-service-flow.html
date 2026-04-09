@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI GO 服務流程與收費架構</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f8fafd;
+  --surface2: #f0f4f9;
+  --border: rgba(15,40,80,0.07);
+  --accent: #2563eb;
+  --accent2: #1d4ed8;
+  --accent-light: #eff6ff;
+  --text: #0f172a;
+  --text-muted: rgba(15,23,42,0.40);
+  --text-sub: rgba(15,23,42,0.58);
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --orange: #ea580c;
+  --orange-light: #fff7ed;
+  --red: #dc2626;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.03);
+  --shadow-md: 0 4px 6px rgba(15,23,42,0.04), 0 10px 15px rgba(15,23,42,0.03);
+  --shadow-lg: 0 10px 25px rgba(15,23,42,0.06), 0 20px 48px rgba(15,23,42,0.04);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --gradient: linear-gradient(135deg, #3b82f6, #2563eb, #1d4ed8);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--surface);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans TC', -apple-system, sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+/* ── Header ── */
+.page-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.page-header .logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.page-header .badge {
+  display: inline-block;
+  padding: 4px 14px;
+  background: var(--accent-light);
+  border: 1px solid rgba(37,99,235,0.15);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+.page-header h1 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+.page-header h1 em {
+  font-style: normal;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.page-header p {
+  font-size: 1rem;
+  color: var(--text-sub);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Flow section ── */
+.flow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Connector line ── */
+.connector {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  height: 48px;
+}
+.connector::before {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(37,99,235,0.2), rgba(37,99,235,0.35));
+}
+.connector::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid rgba(37,99,235,0.35);
+}
+.connector.short { height: 32px; }
+
+/* ── Contract node ── */
+.contract-node {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+.contract-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  border-radius: 100px;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.25);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.contract-badge .icon {
+  width: 20px; height: 20px;
+}
+.contract-sub {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ── Phase card ── */
+.phase-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.phase-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+.phase-card .top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.phase-card .phase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.phase-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.phase-label .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.price-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.price-tag.free {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid rgba(5,150,105,0.15);
+}
+.price-tag.paid {
+  background: var(--orange-light);
+  color: var(--orange);
+  border: 1px solid rgba(234,88,12,0.15);
+}
+
+.phase-card h3 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.phase-card .subtitle {
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  margin-bottom: 20px;
+}
+
+/* ── Item list ── */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+.item .icon-wrap {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.item .icon-wrap svg {
+  width: 14px; height: 14px;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.item strong { color: var(--text); font-weight: 600; }
+
+/* ── Output badge ── */
+.output-row {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.output-row .arrow {
+  font-size: 0.7rem;
+}
+
+/* ── Pricing detail box ── */
+.pricing-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 16px;
+}
+.pricing-box .title {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.pricing-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.pricing-item .num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+.pricing-item .desc {
+  font-size: 0.78rem;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+
+/* ── Phase 3 split ── */
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.split-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.split-card .top-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.split-card h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.split-card h4 .icon-sm {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.split-card h4 .icon-sm svg {
+  width: 12px; height: 12px;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fee-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.84rem;
+}
+.fee-row:last-child { border-bottom: none; }
+.fee-row .label { color: var(--text-sub); }
+.fee-row .value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+}
+
+/* ── Formula bar ── */
+.formula-bar {
+  margin-top: 24px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.04), rgba(124,58,237,0.04));
+  border: 1px solid rgba(37,99,235,0.1);
+  border-radius: var(--radius);
+  text-align: center;
+}
+.formula-bar .label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.formula-bar .formula {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+.formula-bar .formula span {
+  padding: 2px 8px;
+  background: var(--accent-light);
+  border-radius: 6px;
+  margin: 0 2px;
+}
+
+/* ── Lifecycle timeline ── */
+.lifecycle {
+  margin-top: 64px;
+}
+.lifecycle h2 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.tl-item {
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+  border-right: 1px solid var(--border);
+}
+.tl-item:last-child { border-right: none; }
+.tl-item .month {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.tl-item .phase-name {
+  font-weight: 700;
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+.tl-item .tl-fee {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+.tl-item .tl-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ── Trial calc ── */
+.calc-section {
+  margin-top: 48px;
+}
+.calc-section h2 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.calc-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.calc-card .top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.calc-card .card-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.calc-card .workflows {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 1.6rem;
+  margin-bottom: 2px;
+}
+.calc-card .sub {
+  font-size: 0.78rem;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+}
+.calc-card .divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 -18px 14px;
+}
+.calc-card .line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  padding: 4px 0;
+}
+.calc-card .line .l { color: var(--text-sub); }
+.calc-card .line .r { font-weight: 600; }
+.calc-card .total-line {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+.calc-card .total-line .l { font-weight: 700; }
+.calc-card .total-line .r {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+}
+
+/* ── Contract terms ── */
+.terms-section {
+  margin-top: 48px;
+}
+.terms-section h2 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.terms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.term-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.term-card .term-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.term-card .term-icon svg {
+  width: 18px; height: 18px;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.term-card h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.term-card p {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+
+/* ── Footer ── */
+.page-footer {
+  margin-top: 64px;
+  text-align: center;
+  padding: 24px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ── RWD ── */
+@media (max-width: 768px) {
+  .container { padding: 40px 16px 60px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .split-container { grid-template-columns: 1fr; }
+  .timeline { grid-template-columns: 1fr; }
+  .tl-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .tl-item:last-child { border-bottom: none; }
+  .calc-grid { grid-template-columns: 1fr 1fr; }
+  .terms-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══ Header ═══ -->
+  <div class="page-header">
+    <div class="logo-row">
+      <span class="badge">適才科技 AI GO</span>
+    </div>
+    <h1>服務流程與<em>收費架構</em></h1>
+    <p>從需求訪談到工作流落地，完整服務旅程一覽。有成效才收費，用多少付多少。</p>
+  </div>
+
+  <!-- ═══ Flow ═══ -->
+  <div class="flow">
+
+    <!-- Phase 0 -->
+    <div class="phase-card">
+      <div class="top-bar" style="background:linear-gradient(90deg,#34d399,var(--green));"></div>
+      <div class="phase-header">
+        <div class="phase-label" style="color:var(--green);"><div class="dot" style="background:var(--green);"></div>PHASE 0 — 業務拜訪</div>
+        <div class="price-tag free">免費</div>
+      </div>
+      <h3>了解你的問題，秀給你看我們怎麼解</h3>
+      <p class="subtitle">第一次接觸，建立信任。帶著 Demo 進場，用訪談架構釐清需求。</p>
+      <div class="item-list">
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--green-light);"><svg viewBox="0 0 24 24" style="stroke:var(--green);"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg></div>
+          <div><strong>公司介紹</strong> — 說明 AI GO 服務內容與收費方式</div>
+        </div>
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--green-light);"><svg viewBox="0 0 24 24" style="stroke:var(--green);"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+          <div><strong>現場 Demo</strong> — 直接展示可解決的情境，讓客戶看到成果</div>
+        </div>
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--green-light);"><svg viewBox="0 0 24 24" style="stroke:var(--green);"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div>
+          <div><strong>訪談 + 錄音</strong> — 結構化訪談搜集客戶需求，作為 POC 素材</div>
+        </div>
+      </div>
+      <div class="output-row">
+        <span class="arrow">&#10132;</span> 產出：POC 準備素材
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- Phase 1 -->
+    <div class="phase-card">
+      <div class="top-bar" style="background:linear-gradient(90deg,var(--green),var(--accent));"></div>
+      <div class="phase-header">
+        <div class="phase-label" style="color:var(--accent);"><div class="dot" style="background:var(--accent);"></div>PHASE 1 — 需求確認會議</div>
+        <div class="price-tag free">免費</div>
+      </div>
+      <h3>展示 POC，明定要做的事</h3>
+      <p class="subtitle">第二次會議。基於訪談產出的 POC 展示成果，雙方確認合作範圍。</p>
+      <div class="item-list">
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--accent-light);"><svg viewBox="0 0 24 24" style="stroke:var(--accent);"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div><strong>展示 POC</strong> — 針對客戶場景的概念驗證，讓對方看到可能性</div>
+        </div>
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--accent-light);"><svg viewBox="0 0 24 24" style="stroke:var(--accent);"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <div><strong>明定情境</strong> — 確認要解決哪些問題、需要幾條工作流</div>
+        </div>
+        <div class="item">
+          <div class="icon-wrap" style="background:var(--accent-light);"><svg viewBox="0 0 24 24" style="stroke:var(--accent);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><strong>人力 & 時程</strong> — FDE 配置、完成時間評估</div>
+        </div>
+      </div>
+      <div class="output-row">
+        <span class="arrow">&#10132;</span> 產出：專案規格 + 報價單
+      </div>
+    </div>
+
+    <div class="connector short"></div>
+
+    <!-- Contract node -->
+    <div class="contract-node">
+      <div>
+        <div class="contract-badge">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
+          簽約 — 合約期一年
+        </div>
+        <div class="contract-sub">可提前 30 天書面通知解約</div>
+      </div>
+    </div>
+
+    <div class="connector short"></div>
+
+    <!-- Phase 2 -->
+    <div class="phase-card">
+      <div class="top-bar" style="background:linear-gradient(90deg,var(--accent),var(--purple));"></div>
+      <div class="phase-header">
+        <div class="phase-label" style="color:var(--purple);"><div class="dot" style="background:var(--purple);"></div>PHASE 2 — FDE 建置期</div>
+        <div class="price-tag paid">收費開始</div>
+      </div>
+      <h3>工程師進場，目標一個月落地</h3>
+      <p class="subtitle">FDE 前線部署工程師進入客戶現場，建置並驗證工作流。成功上線後進入維運。</p>
+
+      <div class="pricing-box">
+        <div class="title" style="color:var(--purple);">FDE 人天費用</div>
+        <div class="pricing-grid">
+          <div class="pricing-item">
+            <div class="num" style="color:var(--purple);">NT$8,000</div>
+            <div class="desc">人天單價</div>
+          </div>
+          <div class="pricing-item">
+            <div class="num" style="color:var(--purple);">NT$4,000</div>
+            <div class="desc">最低 0.5 天計費</div>
+          </div>
+          <div class="pricing-item">
+            <div class="num" style="color:var(--purple);">1:1</div>
+            <div class="desc">1 人出勤 1 天 = 1 人天</div>
+          </div>
+          <div class="pricing-item">
+            <div class="num" style="color:var(--purple);">2:2</div>
+            <div class="desc">2 人同日 = 2 人天，無並行折扣</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-row" style="margin-top:20px;">
+        <span class="arrow">&#10132;</span> 工作流驗證上線 → 次月啟動維運服務
+      </div>
+    </div>
+
+    <div class="connector"></div>
+
+    <!-- Phase 3 -->
+    <div class="phase-card">
+      <div class="top-bar" style="background:linear-gradient(90deg,var(--accent2),var(--accent));"></div>
+      <div class="phase-header">
+        <div class="phase-label" style="color:var(--accent);"><div class="dot" style="background:var(--accent);"></div>PHASE 3 — 月維運服務</div>
+        <div class="price-tag paid">每月收費</div>
+      </div>
+      <h3>落地次月啟動，持續運作與擴展</h3>
+      <p class="subtitle">工作流上線後按月收取維運費。條數增減時費用同步調整，用多少付多少。</p>
+
+      <div class="split-container">
+        <!-- Fixed fees -->
+        <div class="split-card">
+          <div class="top-accent" style="background:var(--gradient);"></div>
+          <h4>
+            <div class="icon-sm" style="background:var(--accent-light);"><svg viewBox="0 0 24 24" style="stroke:var(--accent);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
+            固定月費
+          </h4>
+          <div class="fee-row">
+            <span class="label">5 條工作流以內</span>
+            <span class="value" style="color:var(--accent);">NT$12,000/月</span>
+          </div>
+          <div class="fee-row">
+            <span class="label">每增加 1 條</span>
+            <span class="value" style="color:var(--accent);">+NT$3,000/月</span>
+          </div>
+          <div class="fee-row">
+            <span class="label">條數減少時</span>
+            <span class="value" style="color:var(--green);">費用同步下調</span>
+          </div>
+        </div>
+
+        <!-- Variable fees -->
+        <div class="split-card">
+          <div class="top-accent" style="background:linear-gradient(90deg,var(--orange),#f59e0b);"></div>
+          <h4>
+            <div class="icon-sm" style="background:var(--orange-light);"><svg viewBox="0 0 24 24" style="stroke:var(--orange);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            變動費用
+          </h4>
+          <div class="fee-row">
+            <span class="label">Token 使用費</span>
+            <span class="value" style="color:var(--orange);">實報實銷</span>
+          </div>
+          <div class="fee-row">
+            <span class="label">FDE 人天（需求時）</span>
+            <span class="value" style="color:var(--orange);">NT$8,000/天</span>
+          </div>
+          <div class="fee-row">
+            <span class="label">超規格需求</span>
+            <span class="value" style="color:var(--text-muted);">客製化報價</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formula -->
+      <div class="formula-bar">
+        <div class="label">月費公式</div>
+        <div class="formula">
+          <span>基礎維運費</span> + <span>超出條數 × $3,000</span> + <span>Token 實際用量</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.flow -->
+
+  <!-- ═══ Lifecycle ═══ -->
+  <div class="lifecycle">
+    <h2>客戶生命週期費用</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="month">M0</div>
+        <div class="phase-name" style="color:var(--green);">拜訪 + POC</div>
+        <div class="tl-fee" style="background:var(--green-light);color:var(--green);">$0</div>
+        <div class="tl-note">免費獲客階段</div>
+      </div>
+      <div class="tl-item">
+        <div class="month">M1</div>
+        <div class="phase-name" style="color:var(--purple);">FDE 建置</div>
+        <div class="tl-fee" style="background:var(--purple-light);color:var(--purple);">人天費</div>
+        <div class="tl-note">一次性建置成本</div>
+      </div>
+      <div class="tl-item">
+        <div class="month">M2</div>
+        <div class="phase-name" style="color:var(--accent);">維運啟動</div>
+        <div class="tl-fee" style="background:var(--accent-light);color:var(--accent);">月費</div>
+        <div class="tl-note">維運 + Token</div>
+      </div>
+      <div class="tl-item" style="background:var(--surface);">
+        <div class="month">M3~M11</div>
+        <div class="phase-name" style="color:var(--accent);">持續維運</div>
+        <div class="tl-fee" style="background:var(--accent-light);color:var(--accent);">月費</div>
+        <div class="tl-note">可擴展場景</div>
+      </div>
+      <div class="tl-item">
+        <div class="month">M12</div>
+        <div class="phase-name" style="color:var(--accent);">約期屆滿</div>
+        <div class="tl-fee" style="background:var(--accent-light);color:var(--accent);">續約</div>
+        <div class="tl-note">或提前 30 天解約</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Trial calc ═══ -->
+  <div class="calc-section">
+    <h2>月維運費試算</h2>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="top-bar" style="background:linear-gradient(90deg,#34d399,var(--green));"></div>
+        <div class="card-label">小型客戶</div>
+        <div class="workflows" style="color:var(--green);">3 條</div>
+        <div class="sub">工作流</div>
+        <div class="divider"></div>
+        <div class="line"><span class="l">基礎維運</span><span class="r">$12,000</span></div>
+        <div class="line"><span class="l">Token（估）</span><span class="r">$2,000</span></div>
+        <div class="total-line"><span class="l">月費</span><span class="r" style="color:var(--green);">$14,000</span></div>
+      </div>
+      <div class="calc-card">
+        <div class="top-bar" style="background:var(--gradient);"></div>
+        <div class="card-label">中型客戶</div>
+        <div class="workflows" style="color:var(--accent);">5 條</div>
+        <div class="sub">工作流</div>
+        <div class="divider"></div>
+        <div class="line"><span class="l">基礎維運</span><span class="r">$12,000</span></div>
+        <div class="line"><span class="l">Token（估）</span><span class="r">$5,000</span></div>
+        <div class="total-line"><span class="l">月費</span><span class="r" style="color:var(--accent);">$17,000</span></div>
+      </div>
+      <div class="calc-card">
+        <div class="top-bar" style="background:linear-gradient(90deg,var(--accent),var(--purple));"></div>
+        <div class="card-label">成長客戶</div>
+        <div class="workflows" style="color:var(--purple);">8 條</div>
+        <div class="sub">工作流</div>
+        <div class="divider"></div>
+        <div class="line"><span class="l">基礎維運</span><span class="r">$12,000</span></div>
+        <div class="line"><span class="l">超出 3 條</span><span class="r">+$9,000</span></div>
+        <div class="line"><span class="l">Token（估）</span><span class="r">$8,000</span></div>
+        <div class="total-line"><span class="l">月費</span><span class="r" style="color:var(--purple);">$29,000</span></div>
+      </div>
+      <div class="calc-card">
+        <div class="top-bar" style="background:linear-gradient(90deg,var(--purple),#a855f7);"></div>
+        <div class="card-label">大型客戶</div>
+        <div class="workflows" style="color:var(--purple);">15 條</div>
+        <div class="sub">工作流</div>
+        <div class="divider"></div>
+        <div class="line"><span class="l">基礎維運</span><span class="r">$12,000</span></div>
+        <div class="line"><span class="l">超出 10 條</span><span class="r">+$30,000</span></div>
+        <div class="line"><span class="l">Token（估）</span><span class="r">$15,000</span></div>
+        <div class="total-line"><span class="l">月費</span><span class="r" style="color:var(--purple);">$57,000</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Contract terms ═══ -->
+  <div class="terms-section">
+    <h2>合約與服務條款</h2>
+    <div class="terms-grid">
+      <div class="term-card">
+        <div class="term-icon" style="background:var(--accent-light);">
+          <svg viewBox="0 0 24 24" style="stroke:var(--accent);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h4>合約期一年</h4>
+        <p>可提前 30 天書面通知解約。不綁長約也不鎖死。</p>
+      </div>
+      <div class="term-card">
+        <div class="term-icon" style="background:var(--green-light);">
+          <svg viewBox="0 0 24 24" style="stroke:var(--green);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h4>費用隨條數調整</h4>
+        <p>工作流增加或減少時，維運費同步調整，透明公平。</p>
+      </div>
+      <div class="term-card">
+        <div class="term-icon" style="background:var(--purple-light);">
+          <svg viewBox="0 0 24 24" style="stroke:var(--purple);"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h4>維運不含修改</h4>
+        <p>維運含系統運作維持；任何流程調整或修改另計 FDE 人天。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    適才科技 AI GO &middot; 服務流程與收費架構 &middot; 2026/04
+  </div>
+
+</div>
+
+</body>
+</html>
